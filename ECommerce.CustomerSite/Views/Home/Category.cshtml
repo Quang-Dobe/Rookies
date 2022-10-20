@@ -1,0 +1,50 @@
+﻿@using System.IO
+@model List<ShowedProductDTO>
+@{
+    ViewData["Title"] = "Category";
+}
+<link rel="stylesheet" href="../css/Home/Menu.css" />
+<link href="~/css/product/rating.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-4">
+        <div id="menu">
+            <i class="fa-solid fa-list"></i>
+            <h3>Menu</h3>
+        </div>
+        <div id="listMenu">
+            <ul>
+                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=0>CPU</a></li>
+                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=1>Mainboard</a></li>
+                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=2>RAM</a></li>
+                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=3>HardDisk</a></li>
+                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=4>PSU</a></li>
+                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=5>VGA</a></li>
+                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=6>Case</a></li>
+                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=7>Monitor</a></li>
+                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=8>Other</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-8">
+        @{
+            if (Model != null) {
+                foreach (ShowedProductDTO product in Model)
+                {
+                    <div class="card">
+                        <img src="@product.productImg" class="card-img-top" alt="@product.productName">
+                        <div class="card-body">
+                            <h5 class="card-title">@product.productName</h5>
+                            <h4 style="color: red;">@product.price</h4>
+                            <i data-star=@product.rating></i>
+                            <a class="btn btn-primary" asp-controller="Product" asp-action="Detail" asp-route-id=@product.id>Buy</a>
+                        </div>
+                    </div>
+                }
+            }
+        }
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript" src="../js/Home/Category.js"></script>
+}

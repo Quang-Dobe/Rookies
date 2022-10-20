@@ -1,0 +1,25 @@
+﻿@using System.IO
+@model int
+@{
+    ViewData["Title"] = "Home";
+}
+
+<link rel="stylesheet" href="../css/Home/Menu.css" />
+
+
+<div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        @{
+            foreach (string file in Directory.GetFiles("wwwroot/img/img_ads", "*.jpg"))
+            {
+                var link = "../img/img_ads/" + file.Replace("wwwroot/img/img_ads\\", "");
+                <div class="carousel-item active">
+                    <img src=@link class="d-block w-100" alt=file>
+                </div>
+            };
+        }
+    </div>
+</div>
+
+
+
