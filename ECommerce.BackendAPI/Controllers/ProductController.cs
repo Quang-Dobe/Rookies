@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using ECommerce.BackendAPI.Repository;
 using ECommerce.Data.Data;
+using ECommerce.Data.Enums;
 using ECommerce.Data.Model;
 using ECommerce.SharedView.DTO;
 using ECommerce.SharedView.Enum;
@@ -12,54 +14,72 @@ namespace ECommerce.BackendAPI.Controllers
     [ApiController]
     public class ProductController : Controller
     {
-        private readonly ECommerceDBContext eCommerceDBContext;
+        private ECommerceDBContext eCommerceDBContext;
+        private IProductRepository _productRepository;
         private IMapper _mapper;
 
-        public ProductController(ECommerceDBContext eCommerceDBContext, IMapper mapper)
+        public ProductController(IProductRepository productRepository, ECommerceDBContext eCommerceDBContext, IMapper mapper)
         {
+            this._productRepository = productRepository;
             this.eCommerceDBContext = eCommerceDBContext;
-            _mapper = mapper;
+            this._mapper = mapper;
         }
 
 
-        [HttpPost]
-        public async Task<IResult> CreateNewProduct(ProductDTO productDTO)
-        {
-            Product product = _mapper.Map<Product>(productDTO);
-            await eCommerceDBContext.products.AddAsync(product);
-            await eCommerceDBContext.SaveChangesAsync();
-            return Results.Ok();
-        }
 
-        [HttpGet]
-        [Route("{id:int}")]
-        public async Task<IResult> GetProductByID([FromRoute] int id)
-        {
-            Product product = await eCommerceDBContext.products.FindAsync(id);
-            if (product == null)
-            {
-                return Results.NotFound("There is no product with given ID");
-            }
-            //OrderDetail orderDetail = await (from o in eCommerceDBContext.orderDetails
-            //                                 where o.productId == product
-            //                                 select o).ToListAsync();
-            return Results.Ok(product);
-        }
+        // Methods
 
         [HttpGet]
         [Route("{type:int}")]
         public async Task<ActionResult<List<ShowedProductDTO>>> GetProductByType([FromRoute] int type)
         {
-            List<Product> listProducts = await eCommerceDBContext.products.Where(product => (ProductType)(product.productType) == (ProductType)type).ToListAsync();
-            List<ShowedProductDTO> listProductsDTO = _mapper.Map<List<Product>, List<ShowedProductDTO>>(listProducts);
-            return Json(listProductsDTO);
+            List<Product> listProducts = await _productRepository.GetProductByType(type);
+            List<ShowedProductDTO> showedProductDTOs = _mapper.Map<List<ShowedProductDTO>>(listProducts);
+            return Json(showedProductDTOs);
         }
 
         [HttpGet]
-        public async Task<IResult> GetProducts()
+        public async Task<ActionResult<List<ProductDTO>>> GetAllOf()
         {
-            IEnumerable<Product> allProducts = await eCommerceDBContext.products.ToListAsync();
-            return Results.Ok(allProducts);
+            List<Product> allProduct = await _productRepository.GetProducts();
+            List<ProductDTO> allProductDTO = _mapper.Map<List<ProductDTO>>(allProduct);
+            return Json(allProductDTO);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> CreateNewProduct(ProductDTO productDTO)
+        {
+            Product product = _mapper.Map<Product>(productDTO);
+            await _productRepository.CreateProduct(product);
+            await _productRepository.Save();
+            return Json("Success: Create successfully!");
+        }
+
+
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<ActionResult<detailProductDTO>> GetProductByID([FromRoute] int id)
+        {
+            Product product = await _productRepository.GetProductById(id);
+            if (product == null)
+            {
+                return Json("Error: No product with given ID!");
+            }
+
+            detailProductDTO data = _mapper.Map<detailProductDTO>(product);
+            data.reviewProductDTOs = await (from oD in eCommerceDBContext.orderDetails
+                                            where oD.productId.id == product.id
+                                            join o in eCommerceDBContext.orders on oD.orderId.id equals o.id
+                                            select new ReviewProductDTO
+                                            {
+                                                userName = o.userID.UserName,
+                                                comment = oD.comment,
+                                                rating = (int)(oD.rating)
+                                            }).ToListAsync();
+            return Json(data);
         }
     }
+
+
 }
