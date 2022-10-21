@@ -6,6 +6,7 @@ namespace ECommerce.Data.Data
 {
     public class ECommerceDBContext : IdentityDbContext
     {
+        public ECommerceDBContext() { }
         public ECommerceDBContext(DbContextOptions<ECommerceDBContext> options) : base(options) { }
         public DbSet<Product> products { get; set; }
         public DbSet<Order> orders { get; set; }

@@ -11,6 +11,8 @@ namespace ECommerce.Data.Model
 
         public Product productId { get; set; }
 
+        public Order orderId { get; set; }
+
         [Column("Number of product")]
         public int number { get; set; }
 
