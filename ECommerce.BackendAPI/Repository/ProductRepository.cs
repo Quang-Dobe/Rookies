@@ -17,7 +17,7 @@ namespace ECommerce.BackendAPI.Repository
 
         // Methods
 
-        public async Task<IEnumerable<Product>> GetProducts()
+        public async Task<List<Product>> GetProducts()
         {
             return await _dbContext.products.ToListAsync();
         }
@@ -32,7 +32,7 @@ namespace ECommerce.BackendAPI.Repository
             return await _dbContext.products.Where(product => product.productName == name).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetProductByType(int type)
+        public async Task<List<Product>> GetProductByType(int type)
         {
             return await _dbContext.products.Where(product => (int)(product.productType) == type).ToListAsync();
         }

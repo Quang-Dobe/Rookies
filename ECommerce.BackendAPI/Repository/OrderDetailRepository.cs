@@ -35,7 +35,7 @@ namespace ECommerce.BackendAPI.Repository
             return await _dbContext.orderDetails.Where(orderDetail => orderDetail.orderId.id == orderId.id).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<OrderDetail>> GetOrderDetails()
+        public async Task<List<OrderDetail>> GetOrderDetails()
         {
             return await _dbContext.orderDetails.ToListAsync();
         }

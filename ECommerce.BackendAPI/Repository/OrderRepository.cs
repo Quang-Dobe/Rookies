@@ -20,7 +20,7 @@ namespace ECommerce.BackendAPI.Repository
 
         // Methods
 
-        public async Task<IEnumerable<Order>> GetOrder()
+        public async Task<List<Order>> GetOrder()
         {
             return await _dbContext.orders.ToListAsync();
         }
