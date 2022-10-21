@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using ECommerce.SharedView.Enum;
 
 namespace ECommerce.SharedView.DTO
 {
@@ -7,17 +8,12 @@ namespace ECommerce.SharedView.DTO
     {
         public string productImg { get; set; }
 
-        [Required(ErrorMessage = "Please fill in the required information")]
-        [Column("Product's name")]
         public string productName { get; set; }
 
-        [Required(ErrorMessage = "Please fill in the required information")]
         public string description { get; set; }
 
-        [Required(ErrorMessage = "Please fill in the required information")]
-        public string productType { get; set; }
+        public ProductType productType { get; set; }
 
-        [Required(ErrorMessage = "Please fill in the required information")]
         public int price { get; set; }
     }
 }
