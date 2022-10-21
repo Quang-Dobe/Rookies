@@ -3,13 +3,15 @@
 @{
     ViewData["Title"] = "Category";
 }
-<link rel="stylesheet" href="../css/Home/Menu.css" />
+<link href="../css/Home/Menu.css" rel="stylesheet" />
 <link href="~/css/product/rating.css" rel="stylesheet" />
+<link href="~/css/product/card.css" rel="stylesheet" />
+
 <div class="row">
     <div class="col-4">
         <div id="menu">
             <i class="fa-solid fa-list"></i>
-            <h3>Menu</h3>
+            <h3 style="font-size:large; font-weight: 500">Menu</h3>
         </div>
         <div id="listMenu">
             <ul>
@@ -26,22 +28,27 @@
         </div>
     </div>
     <div class="col-8">
-        @{
-            if (Model != null) {
-                foreach (ShowedProductDTO product in Model)
-                {
-                    <div class="card">
-                        <img src="@product.productImg" class="card-img-top" alt="@product.productName">
-                        <div class="card-body">
-                            <h5 class="card-title">@product.productName</h5>
-                            <h4 style="color: red;">@product.price</h4>
-                            <i data-star=@product.rating></i>
-                            <a class="btn btn-primary" asp-controller="Product" asp-action="Detail" asp-route-id=@product.id>Buy</a>
-                        </div>
-                    </div>
+        <div class="row">
+            @{
+                if (Model != null) {
+                    foreach (ShowedProductDTO product in Model)
+                    {
+                            <div class="col-4 card">
+                                <div class="card-img" style="height: 60%">
+                                    <img src="@product.productImg" class="card-img-top" alt="@product.productName" style="object-fit:scale-down">
+                                </div>
+                                <div class="card-body">
+                                <h5 class="card-title" style="overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; line-clamp:2;">
+                                    @product.productName
+                                </h5>
+                                    <h4 style="color: red;">@Convert.ToDecimal(product.price).ToString("C0")</h4>
+                                    <i data-star=@product.rating></i>
+                                    <a class="btn btn-primary" asp-controller="Product" asp-action="Detail" asp-route-id=@product.id>Buy</a>
+                                </div>
+                            </div>
+                    }
                 }
             }
-        }
     </div>
 </div>
 
