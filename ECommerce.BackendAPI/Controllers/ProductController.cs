@@ -39,7 +39,7 @@ namespace ECommerce.BackendAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ProductDTO>>> GetAllOf()
+        public async Task<ActionResult<List<ProductDTO>>> GetAllProducts()
         {
             List<Product> allProduct = await _productRepository.GetProducts();
             List<ProductDTO> allProductDTO = _mapper.Map<List<ProductDTO>>(allProduct);
@@ -68,12 +68,13 @@ namespace ECommerce.BackendAPI.Controllers
             }
 
             detailProductDTO data = _mapper.Map<detailProductDTO>(product);
+
             data.reviewProductDTOs = await (from oD in eCommerceDBContext.orderDetails
-                                            where oD.productId.id == product.id
-                                            join o in eCommerceDBContext.orders on oD.orderId.id equals o.id
+                                            where oD.productId == product.Id
+                                            join o in eCommerceDBContext.orders on oD.orderId equals o.Id
                                             select new ReviewProductDTO
                                             {
-                                                userName = o.userID.UserName,
+                                                userName = o.user.UserName,
                                                 comment = oD.comment,
                                                 rating = (int)(oD.rating)
                                             }).ToListAsync();

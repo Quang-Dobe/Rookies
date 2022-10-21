@@ -27,12 +27,12 @@ namespace ECommerce.BackendAPI.Repository
 
         public async Task<OrderDetail> GetOrderDetail(Product productId)
         {
-            return await _dbContext.orderDetails.Where(orderDetail => orderDetail.productId.id == productId.id).FirstOrDefaultAsync();
+            return await _dbContext.orderDetails.Where(orderDetail => orderDetail.productId == productId.Id).FirstOrDefaultAsync();
         }
 
         public async Task<OrderDetail> GetOrderDetail(Order orderId)
         {
-            return await _dbContext.orderDetails.Where(orderDetail => orderDetail.orderId.id == orderId.id).FirstOrDefaultAsync();
+            return await _dbContext.orderDetails.Where(orderDetail => orderDetail.orderId == orderId.Id).FirstOrDefaultAsync();
         }
 
         public async Task<List<OrderDetail>> GetOrderDetails()

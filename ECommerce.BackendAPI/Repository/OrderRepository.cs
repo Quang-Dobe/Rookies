@@ -32,7 +32,7 @@ namespace ECommerce.BackendAPI.Repository
 
         public async Task<Order> GetOrder(IdentityUser user)
         {
-            return await _dbContext.orders.Where(order => order.userID.Id == user.Id).SingleOrDefaultAsync();
+            return await _dbContext.orders.Where(order => order.userId == user.Id).SingleOrDefaultAsync();
         }
 
 
