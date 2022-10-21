@@ -52,7 +52,7 @@ namespace ECommerce.Data.Migrations
                 name: "products",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     productImg = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Productsname = table.Column<string>(name: "Product's name", type: "nvarchar(max)", nullable: false),
@@ -67,7 +67,7 @@ namespace ECommerce.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_products", x => x.id);
+                    table.PrimaryKey("PK_products", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -180,47 +180,56 @@ namespace ECommerce.Data.Migrations
                 name: "orders",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    userIDId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    userId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    orderDetailsId = table.Column<int>(type: "int", nullable: false),
                     dateOfPurchase = table.Column<DateTime>(type: "datetime2", nullable: false),
                     total = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_orders", x => x.id);
+                    table.PrimaryKey("PK_orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_orders_AspNetUsers_userIDId",
-                        column: x => x.userIDId,
+                        name: "FK_orders_AspNetUsers_userId",
+                        column: x => x.userId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "orderDetails",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    productIdid = table.Column<int>(type: "int", nullable: false),
+                    productId = table.Column<int>(type: "int", nullable: false),
+                    orderId = table.Column<int>(type: "int", nullable: false),
                     Numberofproduct = table.Column<int>(name: "Number of product", type: "int", nullable: false),
                     comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     rating = table.Column<int>(type: "int", nullable: false),
-                    Orderid = table.Column<int>(type: "int", nullable: true)
+                    orderDetailsId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_orderDetails", x => x.id);
+                    table.PrimaryKey("PK_orderDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_orderDetails_orders_Orderid",
-                        column: x => x.Orderid,
+                        name: "FK_orderDetails_orders_orderDetailsId",
+                        column: x => x.orderDetailsId,
                         principalTable: "orders",
-                        principalColumn: "id");
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_orderDetails_products_productIdid",
-                        column: x => x.productIdid,
+                        name: "FK_orderDetails_orders_orderId",
+                        column: x => x.orderId,
+                        principalTable: "orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_orderDetails_products_productId",
+                        column: x => x.productId,
                         principalTable: "products",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -264,19 +273,24 @@ namespace ECommerce.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_orderDetails_Orderid",
+                name: "IX_orderDetails_orderDetailsId",
                 table: "orderDetails",
-                column: "Orderid");
+                column: "orderDetailsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_orderDetails_productIdid",
+                name: "IX_orderDetails_orderId",
                 table: "orderDetails",
-                column: "productIdid");
+                column: "orderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_orders_userIDId",
+                name: "IX_orderDetails_productId",
+                table: "orderDetails",
+                column: "productId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_orders_userId",
                 table: "orders",
-                column: "userIDId");
+                column: "userId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

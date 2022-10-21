@@ -7,9 +7,11 @@ namespace ECommerce.Data.Model;
 public class Order
 {
     [Key]
-    public int id { get; set; }
+    public int Id { get; set; }
 
-    public IdentityUser userID { get; set; }
+    public string userId { get; set; }
+    [ForeignKey("userId")]
+    public IdentityUser user { get; set; }
 
     public List<OrderDetail> orderDetails { get; set; }
 

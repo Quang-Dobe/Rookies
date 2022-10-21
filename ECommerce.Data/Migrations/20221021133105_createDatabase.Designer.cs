@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Data.Migrations
 {
     [DbContext(typeof(ECommerceDBContext))]
-    [Migration("20221020114700_createDatabase")]
+    [Migration("20221021133105_createDatabase")]
     partial class createDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,38 +26,39 @@ namespace ECommerce.Data.Migrations
 
             modelBuilder.Entity("ECommerce.Data.Model.Order", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("dateOfPurchase")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("orderDetailsId")
+                        .HasColumnType("int");
+
                     b.Property<double>("total")
                         .HasColumnType("float");
 
-                    b.Property<string>("userIDId")
+                    b.Property<string>("userId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("userIDId");
+                    b.HasIndex("userId");
 
                     b.ToTable("orders");
                 });
 
             modelBuilder.Entity("ECommerce.Data.Model.OrderDetail", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<int?>("Orderid")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("comment")
                         .IsRequired()
@@ -67,28 +68,36 @@ namespace ECommerce.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("Number of product");
 
-                    b.Property<int>("productIdid")
+                    b.Property<int?>("orderDetailsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("orderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("productId")
                         .HasColumnType("int");
 
                     b.Property<int>("rating")
                         .HasColumnType("int");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("Orderid");
+                    b.HasIndex("orderDetailsId");
 
-                    b.HasIndex("productIdid");
+                    b.HasIndex("orderId");
+
+                    b.HasIndex("productId");
 
                     b.ToTable("orderDetails");
                 });
 
             modelBuilder.Entity("ECommerce.Data.Model.Product", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("createdDate")
                         .HasColumnType("datetime2");
@@ -124,7 +133,7 @@ namespace ECommerce.Data.Migrations
                     b.Property<DateTime>("updatedDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.ToTable("products");
                 });
@@ -333,26 +342,36 @@ namespace ECommerce.Data.Migrations
 
             modelBuilder.Entity("ECommerce.Data.Model.Order", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "userID")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "user")
                         .WithMany()
-                        .HasForeignKey("userIDId");
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("userID");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("ECommerce.Data.Model.OrderDetail", b =>
                 {
                     b.HasOne("ECommerce.Data.Model.Order", null)
                         .WithMany("orderDetails")
-                        .HasForeignKey("Orderid");
+                        .HasForeignKey("orderDetailsId");
 
-                    b.HasOne("ECommerce.Data.Model.Product", "productId")
+                    b.HasOne("ECommerce.Data.Model.Order", "order")
                         .WithMany()
-                        .HasForeignKey("productIdid")
+                        .HasForeignKey("orderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("productId");
+                    b.HasOne("ECommerce.Data.Model.Product", "product")
+                        .WithMany()
+                        .HasForeignKey("productId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("order");
+
+                    b.Navigation("product");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

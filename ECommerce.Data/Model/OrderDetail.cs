@@ -7,11 +7,15 @@ namespace ECommerce.Data.Model
     public class OrderDetail
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
 
-        public Product productId { get; set; }
+        public int productId { get; set; }
+        [ForeignKey("productId")]
+        public Product product { get; set; }
 
-        public Order orderId { get; set; }
+        public int orderId { get; set; }
+        [ForeignKey("orderId")]
+        public Order order { get; set; }
 
         [Column("Number of product")]
         public int number { get; set; }

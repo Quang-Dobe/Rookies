@@ -7,7 +7,7 @@ namespace ECommerce.Data.Model
     public class Product
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
 
         public string productImg { get; set; }
 
