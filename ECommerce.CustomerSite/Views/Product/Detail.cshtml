@@ -1,0 +1,54 @@
+﻿@model detailProductDTO
+@{
+    ViewData["Title"] = "Product Detail";
+}
+
+<link href="~/css/product/productdetail.css" rel="stylesheet" />
+
+<div id="services" class="services section-bg">
+    <div class="container-fluid">
+        <div class="row row-sm">
+            <div class="col-md-6" style="position:relative; display:flex; justify-content:center">
+                <img class="my_img" src=@Model.productImg alt=@Model.productName>
+            </div>
+            <div class="col-md-6">
+                <div class="_product-detail-content">
+                    <p class="_p-name">@Model.productName</p>
+                    <div class="_p-price-box">
+                        <div class="p-list">
+                            <span>
+                                <i class="fa-sharp fa-solid fa-dollar-sign"></i>
+                                <span class="price">@Model.price</span>
+                            </span>
+                        </div>
+                        <div class="_p-add-cart">
+                            <div class="_p-qty">
+                                <span>Add Quantity</span>
+                                <div class="value-button decrease_" id="" value="Decrease Value">-</div>
+                                <input type="number" name="qty" id="number" value="1" />
+                                <div class="value-button increase_" id="" value="Increase Value">+</div>
+                            </div>
+                        </div>
+                        <div class="_p-features">
+                            <span> Description about this product: </span>
+                            @Model.description
+                        </div>
+                        <form action="" method="post" accept-charset="utf-8">
+                            <div class="_p-qty-and-cart">
+                                <div class="_p-add-cart">
+                                    <button class="btn-theme btn buy-btn" tabindex="0">
+                                        <i class="fa fa-shopping-cart"></i> Buy Now
+                                    </button>
+                                    <button class="btn-theme btn btn-success" tabindex="0">
+                                        <i class="fa fa-shopping-cart"></i> Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

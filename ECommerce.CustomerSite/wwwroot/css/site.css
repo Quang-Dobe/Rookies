@@ -16,3 +16,12 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+:root {
+    --text-color: #333;
+    --decorate-color: #ee4d2d;
+    --background-color: #fff;
+    --background-color-notify: rgba(255, 40, 0, 0.05);
+    --grid-size: calc((100vw - 1.2rem) / 12) --width: 1516px;
+    --height: 730px;
+}
