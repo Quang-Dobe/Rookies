@@ -1,7 +1,10 @@
-﻿using ECommerce.SharedView.DTO.Account;
+﻿using ECommerce.CustomerSite.Services.Interface;
+using ECommerce.SharedView;
+using ECommerce.SharedView.DTO.Account;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SharedView.DTO.Account;
+using System.Diagnostics;
 using System.Text;
 
 namespace ECommerce.CustomerSite.Controllers
@@ -10,31 +13,29 @@ namespace ECommerce.CustomerSite.Controllers
     public class AuthController : Controller
     {
         private IHttpClientFactory clientFactory;
+        private readonly IIdentityUserService identityUserService;
 
-        public AuthController(IHttpClientFactory clientFactory)
+        // Intialize
+        public AuthController(IIdentityUserService identityUserService)
         {
-            this.clientFactory = clientFactory;
+            this.identityUserService = identityUserService;
         }
 
+
+        // Methods
         public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginRequestDTO model)
+        public async Task<IActionResult> Login(LoginRequestDTO loginRequestDTO)
         {
             if (ModelState.IsValid)
             {
-                // Create a client
-                var client = clientFactory.CreateClient();
-
-                var jsonInString = JsonConvert.SerializeObject(model);
-
-                var response = await client.PostAsync("Auth/Login", new StringContent(jsonInString, Encoding.UTF8, "application/json"));
-                var contents = await response.Content.ReadAsStringAsync();
-                var data = JsonConvert.DeserializeObject<LoginResponseDTO>(contents);
-
+                String stringData = await identityUserService.Login(loginRequestDTO);
+                LoginResponseDTO data = JsonConvert.DeserializeObject<LoginResponseDTO>(stringData);
+            
                 if (data != null && data.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     Request.HttpContext.Session.SetString("JWT", data.Value);
@@ -45,8 +46,7 @@ namespace ECommerce.CustomerSite.Controllers
                     ModelState.AddModelError("", "Invalid username or password");
                 }
             }
-
-            return Redirect("/Home/Index");
+            return RedirectToAction("Error");
         }
 
         public IActionResult Register()
@@ -55,26 +55,30 @@ namespace ECommerce.CustomerSite.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterRequestDTO model)
+        public async Task<IActionResult> Register(RegisterRequestDTO registerRequestDTO)
         {
-            var client = clientFactory.CreateClient();
-
-            var jsonInString = JsonConvert.SerializeObject(model);
-
-            var response = await client.PostAsync("Auth/Register", new StringContent(jsonInString, Encoding.UTF8, "application/json"));
-            var contents = await response.Content.ReadAsStringAsync();
-            var data = JsonConvert.DeserializeObject<RegisterResponseDTO>(contents);
-
-            if (data != null && data.StatusCode == System.Net.HttpStatusCode.OK)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                ModelState.AddModelError("", "Failed to register");
-            }
+                String stringData = await identityUserService.Register(registerRequestDTO);
+                RegisterResponseDTO data = JsonConvert.DeserializeObject<RegisterResponseDTO>(stringData);
 
-            return Redirect("Home/Index");
+                if (data != null && data.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Failed to register");
+                }
+            }
+            return RedirectToAction("Error");
+        }
+
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

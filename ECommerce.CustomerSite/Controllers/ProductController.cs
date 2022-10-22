@@ -1,4 +1,5 @@
-﻿using ECommerce.SharedView.DTO;
+﻿using ECommerce.CustomerSite.Services.Interface;
+using ECommerce.SharedView.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -7,27 +8,18 @@ namespace ECommerce.CustomerSite.Controllers
     public class ProductController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private IHttpClientFactory clientFactory;
+        private IProductService productService;
 
-        public ProductController(ILogger<HomeController> logger, IHttpClientFactory clientFactory)
+        public ProductController(ILogger<HomeController> logger, IProductService productService)
         {
-            _logger = logger;
-            this.clientFactory = clientFactory;
+            this._logger = logger;
+            this.productService = productService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Detail([FromQuery] int id)
         {
-            detailProductDTO productDTO = new detailProductDTO();
-            using(var client = clientFactory.CreateClient())
-            {
-                // Waiting for response
-                var response = await client.GetAsync("Product/GetProductByID/" + id.ToString());
-                // Read data from content
-                var content = await response.Content.ReadAsStringAsync();
-                // Convert Json to ProductDTO type
-                productDTO = JsonConvert.DeserializeObject<detailProductDTO>(content);
-            }
+            detailProductDTO productDTO = await productService.GetProductByID(id);
             return View(productDTO);
         }
     }

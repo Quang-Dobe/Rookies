@@ -1,4 +1,7 @@
+using ECommerce.CustomerSite.Services;
+using ECommerce.CustomerSite.Services.Interface;
 using Microsoft.Extensions.FileProviders;
+using Refit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +19,13 @@ builder.Services.AddHttpClient("", opt =>
 {
     opt.BaseAddress = new Uri(builder.Configuration["ApiUrl"] ?? "");
 });
+
+// Add RefitClient (Instead of using normal HttpClientFactory, we use Refit to call API (Follow Restful API)
+//builder.Services.AddRefitClient<IProduct>().ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration["ApiUrl"] ?? ""));
+
+// Add Services to DI Container
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IIdentityUserService, IdentityUserService>();
 
 var app = builder.Build();
 
