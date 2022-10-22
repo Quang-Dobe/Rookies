@@ -1,4 +1,6 @@
-﻿using ECommerce.SharedView.DTO.Account;
+﻿using AutoMapper;
+using ECommerce.BackendAPI.Repository;
+using ECommerce.SharedView.DTO.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -15,12 +17,16 @@ namespace ECommerce.BackendAPI.Controllers
     public class AuthController : Controller
     {
         private readonly IConfiguration config;
+        private readonly IUserRepository userRepository;
+        private readonly IMapper mapper;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly UserManager<IdentityUser> userManager;
 
-        public AuthController(IConfiguration config, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
+        public AuthController(IConfiguration config, IUserRepository userRepository, IMapper mapper, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
         {
             this.config = config;
+            this.userRepository = userRepository;
+            this.mapper = mapper;
             this.signInManager = signInManager;
             this.userManager = userManager;
         }
@@ -56,7 +62,7 @@ namespace ECommerce.BackendAPI.Controllers
                     SecurityAlgorithms.HmacSha512Signature)
                 };
 
-                var identityUser = await userManager.FindByEmailAsync(loginRequestModel.UserName);
+                IdentityUser identityUser = await userRepository.GetUserByEmail(loginRequestModel.UserName);
                 var roles = await userManager.GetRolesAsync(identityUser);
 
                 foreach (var role in roles)
@@ -80,13 +86,7 @@ namespace ECommerce.BackendAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser
-                {
-                    //Id = Guid.NewGuid().ToString(),
-                    UserName = registerRequestModel.UserName,
-                    Email = registerRequestModel.UserName
-                };
-
+                IdentityUser user = mapper.Map<IdentityUser>(registerRequestModel);
                 var createUserResult = await userManager.CreateAsync(user, registerRequestModel.Password);
 
                 if (createUserResult.Succeeded)

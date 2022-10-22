@@ -1,22 +1,52 @@
 ﻿@model RegisterRequestDTO
-
 @{
     ViewData["Title"] = "Register";
 }
+<link href="~/css/account/base.css" rel="stylesheet" />
+
 
 <h1>Register</h1>
-
 <form method="post" asp-controller="Auth" asp-action="Register">
-    <label asp-for="UserName"></label>
-    <input asp-for="UserName" />
-    <span asp-validation-for="UserName" class="text-danger"></span>
+    @*Email*@
+    <div class="input-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" type="text" placeholder="Your email ...">
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
 
-    <br />
-    <label asp-for="Password"></label>
-    <input asp-for="Password" />
-    <span asp-validation-for="Password" class="text-danger"></span>
-    <br />
-    <input type="submit" title="Login" />
-    <br />
+    @*Username*@
+    <div class="input-group">
+        <label asp-for="UserName"></label>
+        <input asp-for="UserName" type="text" placeholder="Your username ...">
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+
+    @*Password*@
+    <div class="input-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" placeholder="Your password ...">
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    @*Confirm Password*@
+    <div class="input-group">
+        <label asp-for="ConfirmPassword"></label>
+        <input asp-for="ConfirmPassword" placeholder="Confirm your password...">
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    @*Phone number*@
+    <div class="input-group">
+        <label asp-for="PhoneNumber"></label>
+        <input asp-for="PhoneNumber" type="text" placeholder="Your phone number...">
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+    <input class="btn btn--primary" type="submit" title="Register" />
     @Html.ValidationSummary()
 </form>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
