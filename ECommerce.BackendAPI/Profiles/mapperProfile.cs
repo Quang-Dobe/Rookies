@@ -20,6 +20,20 @@ namespace ECommerce.BackendAPI.Profiles
                 .ForMember(dest => dest.productType, act => act.MapFrom(src => src.productType));
 
             CreateMap<RegisterRequestDTO, IdentityUser>();
+
+
+            CreateMap<Cart, CartDTO>();
+            CreateMap<CartDTO, Cart>();
+
+            CreateMap<CartDetail, ShowedCartDetailDTO>()
+                .ForMember(des => des.showedProductDTO, act => act.MapFrom(src => new ShowedProductDTO
+                {
+                    id = src.Id,
+                    productImg = src.product.productImg,
+                    productName = src.product.productName,
+                    price = src.product.price,
+                    rating = src.product.rating,
+                }));
         }
     }
 }

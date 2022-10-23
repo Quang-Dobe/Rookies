@@ -72,7 +72,7 @@ namespace ECommerce.BackendAPI.Controllers
             data.reviewProductDTOs = await (from oD in eCommerceDBContext.orderDetails
                                             where oD.productId == product.Id
                                             join o in eCommerceDBContext.orders on oD.orderId equals o.Id
-                                            select new ReviewProductDTO
+                                            select new ReviewDTO
                                             {
                                                 userName = o.user.UserName,
                                                 comment = oD.comment,
