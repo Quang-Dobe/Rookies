@@ -7,7 +7,10 @@ namespace ECommerce.BackendAPI.Repository
         Task<List<OrderDetail>> GetOrderDetails();
 
         Task<OrderDetail> GetOrderDetail(int id);
-        Task<OrderDetail> GetOrderDetail(Product productId);
-        Task<OrderDetail> GetOrderDetail(Order orderId);
+        Task<List<OrderDetail>> GetOrderDetail(Product productId);
+        Task<List<OrderDetail>> GetOrderDetail(Order orderId);
+        Task<List<OrderDetail>> GetListOrderDetailByProduct(List<int> listProductId);
+        Task<List<OrderDetail>> GetListOrderDetailByOrder(List<int> listOrderId);
+        Task Save();
     }
 }

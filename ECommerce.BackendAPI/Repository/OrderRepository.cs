@@ -35,6 +35,10 @@ namespace ECommerce.BackendAPI.Repository
             return await _dbContext.orders.Where(order => order.userId == user.Id).SingleOrDefaultAsync();
         }
 
+        public async Task Save()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
 
         protected virtual void Dispose(bool disposing)
         {

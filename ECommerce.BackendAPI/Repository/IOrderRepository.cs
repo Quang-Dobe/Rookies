@@ -8,6 +8,6 @@ namespace ECommerce.BackendAPI.Repository
         Task<List<Order>> GetOrder();
         Task<Order> GetOrder(int id);
         Task<Order> GetOrder(IdentityUser user);
-
+        Task Save();
     }
 }
