@@ -18,6 +18,6 @@ namespace ECommerce.SharedView.DTO
         public int inventoryNumber { get; set; } = 0;
         public double rating { get; set; }
 
-        public List<ReviewProductDTO> reviewProductDTOs { get; set; }
+        public List<ReviewDTO> reviewProductDTOs { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 namespace ECommerce.SharedView.DTO
 {
-    public class ReviewProductDTO
+    public class ReviewDTO
     {
         public string userName { get; set; }
 
