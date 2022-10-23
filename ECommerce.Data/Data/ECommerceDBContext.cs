@@ -11,6 +11,8 @@ namespace ECommerce.Data.Data
         public DbSet<Product> products { get; set; }
         public DbSet<Order> orders { get; set; }
         public DbSet<OrderDetail> orderDetails { get; set; }
+        public DbSet<Cart> carts { get; set; }
+        public DbSet<CartDetail> cartDetails { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
