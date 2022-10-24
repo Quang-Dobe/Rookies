@@ -1,0 +1,111 @@
+﻿#toast {
+    position: fixed;
+    top: 32px;
+    right: 32px;
+}
+
+
+/* Toast default */
+
+.toast {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-left: 2px solid;
+    border-radius: 2px;
+    width: 300px;
+    background-color: white;
+    padding: 10px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    /* Add multi animations. In the second animation, 1s is how long it faded and 3s is delay time. Forward for stop at current state */
+    animation: goInLeft 1s ease forwards, faded 1s ease 0.5s forwards;
+}
+
+
+
+.toast__icon {
+    font-size: 32px;
+    border-radius: 50%;
+}
+
+.toast__body {
+    margin: 0 10px;
+    line-height: 2px;
+    min-width: 200px;
+}
+
+.toast__exit {
+    font-size: 20px;
+    border-radius: 50%;
+    background-color: lightgray;
+}
+
+.toast__msg {
+    font-size: smaller;
+    color: gray;
+    max-height: 200px;
+}
+
+
+/* Toast success */
+
+.toast--success {
+    border-left-color: lawngreen;
+}
+
+.toast--success .toast__icon {
+    background-color: lawngreen;
+}
+
+.toast--success .toast__content {
+    color: lawngreen
+}
+
+
+/* Toast error */
+
+.toast--error {
+    border-left-color: maroon;
+}
+
+.toast--error .toast__icon {
+    background-color: maroon;
+}
+
+.toast--error .toast__content {
+    color: maroon;
+}
+
+/* Button */
+#btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+}
+
+
+
+@keyframes goInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(calc(100% + 32px));
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes faded {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(calc(100% + 32px));
+    }
+}

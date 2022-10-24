@@ -9,7 +9,7 @@ function getNotice(divToastElement, type) {
     // Create toast-div
     let toastElement = document.createElement('div')
     toastElement.classList.add('toast')
-    toastElement.classList.add((type === 'success') ? 'toast--success' : 'toast--error')
+    toastElement.classList.add((type==='success') ? 'toast--success' : 'toast--error')
 
 
     // Create and Add child element for toast__icon
@@ -24,11 +24,11 @@ function getNotice(divToastElement, type) {
     let toast__body_element = document.createElement('div')
     let h3_toast__body = document.createElement('h3')
     h3_toast__body.classList.add('toast__content')
-    h3_toast__body.innerText = (type === 'success') ? "Success" : "Error"
+    h3_toast__body.innerText = (type==='success') ?  "Success" : "Error"
     toast__body_element.appendChild(h3_toast__body)
     let p_toast__body = document.createElement('p')
     p_toast__body.classList.add('toast__msg')
-    p_toast__body.innerText = (type === 'success') ? "Buy successfully" : "Sorry. There is something went wrong!"
+    p_toast__body.innerText = (type==='success') ? "Buy successfully" : "Sorry. There is something went wrong!"
     toast__body_element.appendChild(p_toast__body)
 
 
@@ -39,7 +39,7 @@ function getNotice(divToastElement, type) {
     icon_toast__exit.classList.add('fa-circle-xmark')
     toast__exit_element.appendChild(icon_toast__exit)
 
-    toast__exit_element.onclick = function (e) {
+    toast__exit_element.onclick = function(e) {
         divToastElement.removeChild(toastElement)
     }
 
@@ -50,7 +50,7 @@ function getNotice(divToastElement, type) {
 
     divToastElement.appendChild(toastElement)
 
-    setTimeout(function () {
+    setTimeout(function() {
         divToastElement.removeChild(toastElement)
     }, 4010)
 }
@@ -58,19 +58,18 @@ function getNotice(divToastElement, type) {
 const userAction = async () => {
     var number = $('.container .container-fluid ._product-detail-content ._p-price-box ._p-add-cart ._p-qty input').value
     var productId = $('.container #productId').innerText
-    var userId = "dee6f815-209c-4bfd-8d91-cadbd30d6011";
 
-    fetch("https://localhost:7173/CartDetail/CreateCartDetail/" + productId + "?userId=" + userId,
+    fetch("https://localhost:7173/CartDetail/CreateCartDetail/" + productId + "?userId=dee6f815-209c-4bfd-8d91-cadbd30d6011",
         {
             method: 'POST',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: JSON.stringify(number)
         })
         .then(response => response.json())
-        .then(data => console.log(data))
+        .then(data => console.log(data) )
         .catch(error => console.error('Unable to add item.', error));
 }
-
+console.log([AddToCartElement])
 AddToCartElement.onclick = async function (e) {
     await userAction();
     getNotice(divToastElement, 'success')

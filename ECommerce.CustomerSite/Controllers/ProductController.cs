@@ -8,12 +8,14 @@ namespace ECommerce.CustomerSite.Controllers
     public class ProductController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private IProductService productService;
+        private readonly IProductService productService;
+        private readonly ICartService cartService;
 
-        public ProductController(ILogger<HomeController> logger, IProductService productService)
+        public ProductController(ILogger<HomeController> logger, IProductService productService, ICartService cartService)
         {
             this._logger = logger;
             this.productService = productService;
+            this.cartService = cartService;
         }
 
         [HttpGet]
@@ -21,6 +23,14 @@ namespace ECommerce.CustomerSite.Controllers
         {
             detailProductDTO productDTO = await productService.GetProductByID(id);
             return View(productDTO);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Buy()
+        {
+            string userId = "dee6f815-209c-4bfd-8d91-cadbd30d6011";
+            List<ShowedCartDetailDTO> showedCartDetailDTOs = await cartService.GetAllCardDetailByCart(userId);
+            return View(showedCartDetailDTOs);
         }
     }
 }

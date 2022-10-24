@@ -4,7 +4,12 @@
 }
 
 <link href="~/css/product/productdetail.css" rel="stylesheet" />
+<link href="~/css/product/addtocart.css" rel="stylesheet" />
 
+
+<p style="display: none; opacity: 0" id="productId">@Model.id</p>
+<div id="toast">
+</div>
 <div id="services" class="services section-bg">
     <div class="container-fluid">
         <div class="row row-sm">
@@ -33,18 +38,16 @@
                             <span> Description about this product: </span>
                             @Model.description
                         </div>
-                        <form action="" method="post" accept-charset="utf-8">
+                        <br />
+                        <div accept-charset="utf-8">
                             <div class="_p-qty-and-cart">
                                 <div class="_p-add-cart">
-                                    <button class="btn-theme btn buy-btn" tabindex="0">
-                                        <i class="fa fa-shopping-cart"></i> Buy Now
-                                    </button>
-                                    <button class="btn-theme btn btn-success" tabindex="0">
+                                    <a class="btn-theme btn btn-success _AddToCart" tabindex="0" href="#">
                                         <i class="fa fa-shopping-cart"></i> Add to Cart
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -52,3 +55,6 @@
     </div>
 </div>
 
+@section Scripts{
+    <script src="~/js/product/productDetail.js"></script>
+}
