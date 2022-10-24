@@ -36,6 +36,18 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+//var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("_myAllowSpecificOrigins",
+                      policy =>
+                      {
+                          policy.WithOrigins("https://localhost:7076")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                      });
+});
+
 // Add HttpClientFactory
 builder.Services.AddHttpClient("", opts =>
 {
@@ -67,7 +79,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
+
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();

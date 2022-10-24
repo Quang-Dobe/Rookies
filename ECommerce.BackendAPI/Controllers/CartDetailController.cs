@@ -2,6 +2,7 @@
 using ECommerce.BackendAPI.Repository;
 using ECommerce.Data.Model;
 using ECommerce.SharedView.DTO;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.BackendAPI.Controllers
@@ -44,6 +45,7 @@ namespace ECommerce.BackendAPI.Controllers
             }
         }
 
+        [EnableCors("_myAllowSpecificOrigins")]
         [HttpGet]
         public async Task<ActionResult<List<ShowedCartDetailDTO>>> GetAllCartDetail()
         {
@@ -66,9 +68,18 @@ namespace ECommerce.BackendAPI.Controllers
             {
                 Cart cart = await _cartRepository.GetCart(userid);
                 List<CartDetail> listCartDetail = await _cartDetailRepository.GetCartDetail(cart);
-                // Here, Mapper is failed (return null), I will fix this tomorrow (24/10)
-                List<ShowedCartDetailDTO> data = _mapper.Map<List<ShowedCartDetailDTO>>(listCartDetail);
-                return Json(data);
+                List<ShowedCartDetailDTO> showedCartDetailDTOs = new List<ShowedCartDetailDTO>();
+                for (int i = 0; i < listCartDetail.Count; i++)
+                {
+                    Product product = await _productRepository.GetProductById(listCartDetail[i].productId);
+                    showedCartDetailDTOs.Add(new ShowedCartDetailDTO
+                    {
+                        Id = listCartDetail[i].Id,
+                        number = listCartDetail[i].number,
+                        showedProductDTO = _mapper.Map<ShowedProductDTO>(product)
+                    });
+                }
+                return Json(showedCartDetailDTOs);
             }
             catch(Exception ex)
             {
@@ -78,6 +89,7 @@ namespace ECommerce.BackendAPI.Controllers
 
 
 
+        [EnableCors("_myAllowSpecificOrigins")]
         [HttpPost]
         [Route("{productId:int}")]
         public async Task<ActionResult> CreateCartDetail([FromQuery] string userId, [FromRoute] int productId, [FromBody] int number)
@@ -119,6 +131,7 @@ namespace ECommerce.BackendAPI.Controllers
             }
         }
 
+        [EnableCors("_myAllowSpecificOrigins")]
         [HttpPut]
         [Route("{productId:int}")]
         public async Task<ActionResult> UpdateCartDetail([FromQuery] string userId, [FromRoute] int productId, [FromBody] int number)
@@ -145,6 +158,7 @@ namespace ECommerce.BackendAPI.Controllers
             }
         }
 
+        [EnableCors("_myAllowSpecificOrigins")]
         [HttpDelete]
         [Route("{productId:int}")]
         public async Task<ActionResult> DeleteCartDetail([FromQuery] string userId, [FromRoute] int productId, [FromBody] int number)

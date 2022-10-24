@@ -2,6 +2,7 @@
 using ECommerce.BackendAPI.Repository;
 using ECommerce.Data.Model;
 using ECommerce.SharedView.DTO;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.BackendAPI.Controllers
@@ -28,6 +29,7 @@ namespace ECommerce.BackendAPI.Controllers
         // Cart
 
         // Maybe this method will never be called :D
+        [DisableCors]
         [HttpPost]
         public async Task<ActionResult> CreateCart([FromQuery] string userId)
         {
@@ -43,6 +45,7 @@ namespace ECommerce.BackendAPI.Controllers
             }
         }
 
+        [DisableCors]
         // Maybe this method is useless :D
         [HttpGet]
         public async Task<ActionResult<CartDTO>> GetCartByUserId([FromQuery] string userId)
@@ -60,6 +63,7 @@ namespace ECommerce.BackendAPI.Controllers
             }
         }
 
+        [DisableCors]
         // Maybe this method is the same as both, useless (Because we just create users when they register but never delete user from database)
         [HttpDelete]
         public async Task<ActionResult> DeleteCart([FromQuery] string userId)
