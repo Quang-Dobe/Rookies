@@ -22,32 +22,32 @@
                 foreach (ShowedCartDetailDTO item in Model)
                 {
                     var total = item.showedProductDTO.price * item.number;
-                                    <div class="d-flex flex-row justify-content-between align-items-center p-2 bg-white mt-4 px-3 rounded">
-                                        <div class="mr-1"><img class="rounded" src=@item.showedProductDTO.productImg width="70"></div>
-                                        <div class="d-flex flex-column align-items-center product-details">
-                                            <span style="display: none; opacity: 0">@item.showedProductDTO.id</span>
-                                            <span class="font-weight-bold">@item.showedProductDTO.productName</span>
-                                        </div>
+                            <div class="d-flex flex-row justify-content-between align-items-center p-2 bg-white mt-4 px-3 rounded">
+                                <div class="mr-1"><img class="rounded" src=@item.showedProductDTO.productImg width="70"></div>
+                                <div class="d-flex flex-column align-items-center product-details">
+                                    <span style="display: none; opacity: 0">@item.showedProductDTO.id</span>
+                                    <span class="font-weight-bold">@item.showedProductDTO.productName</span>
+                                </div>
 
-                                        <div class="d-flex flex-row align-items-center qty">
-                                            <button type="button" class="btn btn-light decreaseButton" >
-                                                -
-                                            </button>
-                                            <h5 class="text-grey mt-1 mr-1 ml-1">@item.number</h5>
-                                            <button type="button" class="btn btn-light increaseButton">
-                                                +
-                                            </button>
-                                        </div>
+                                <div class="d-flex flex-row align-items-center qty">
+                                    <button type="button" class="btn btn-light decreaseButton" >
+                                        -
+                                    </button>
+                                    <h5 class="text-grey mt-1 mr-1 ml-1">@item.number</h5>
+                                    <button type="button" class="btn btn-light increaseButton">
+                                        +
+                                    </button>
+                                </div>
 
-                                        <div class="sub-total">
-                                            <h5 class="text-grey">@total</h5>
-                                        </div>
-                                        <div class="d-flex align-items-center">
-                                            <button type="button" class="btn btn-danger">
-                                                <i class="fa fa-trash mb-1"></i>
-                                            </button>
-                                        </div>
-                                    </div>
+                                <div class="sub-total">
+                                    <h5 class="text-grey">@total</h5>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <button type="button" class="btn btn-danger">
+                                        <i class="fa fa-trash mb-1"></i>
+                                    </button>
+                                </div>
+                            </div>
                 }
             }
 
@@ -107,7 +107,7 @@
                 var number = e.target.parentElement.querySelector('h5')
                 var productId = e.target.parentElement.parentElement.querySelector('.product-details span')
                 number.innerText = parseInt(number.innerText) - 1;
-                var userId = "dee6f815-209c-4bfd-8d91-cadbd30d6011"
+                var userId = "38cd5450-4071-453d-b146-5940453bbe50"
                 fetch("https://localhost:7173/CartDetail/UpdateCartDetail/" + productId.innerText + "?userId=" + userId,
                 {
                     method: 'POST',
@@ -130,7 +130,7 @@
                 var number = e.target.parentElement.querySelector('h5')
                 var productId = e.target.parentElement.parentElement.querySelector('.product-details span')
                 number.innerText = parseInt(number.innerText) + 1;
-                var userId = "dee6f815-209c-4bfd-8d91-cadbd30d6011"
+                var userId = "38cd5450-4071-453d-b146-5940453bbe50"
                 fetch("https://localhost:7173/CartDetail/UpdateCartDetail/" + productId.innerText + "?userId=" + userId,
                 {
                     method: 'POST',
@@ -153,7 +153,7 @@
                 var product = e.target.parentElement.parentElement
                 var number = e.target.parentElement.parentElement.querySelector('h5')
                 var productId = e.target.parentElement.parentElement.querySelector('.product-details span')
-                var userId = "dee6f815-209c-4bfd-8d91-cadbd30d6011"
+                var userId = "38cd5450-4071-453d-b146-5940453bbe50"
                 fetch("https://localhost:7173/CartDetail/DeleteCartDetail/" + productId.innerText + "?userId=" + userId,
                 {
                     method: 'DELETE',
@@ -171,9 +171,36 @@
         })
     }
 
+    function buy() {
+        var buyButton = document.querySelector(".checkout")
+        buyButton.onclick = function (e) {
+            var eachProduct = e.target.parentElement.querySelectorAll("div.rounded")
+            var data = []
+            eachProduct.forEach(item => {
+                data.unshift({ productId: item.querySelector(".product-details span").innerText, number: item.querySelector(".qty h5").innerText })
+            })
+
+            var userId = "38cd5450-4071-453d-b146-5940453bbe50"
+            fetch("https://localhost:7173/OrderDetail/CreateOrderDetail" + "?userId=" + userId,
+                {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(response =>
+                    response.json())
+                .then(data => {
+                    console.log(data)
+                    location.replace("https://localhost:7076/")
+                })
+                .catch(error => console.error('Unable to add item.', error));
+        }
+    }
+
     decrease()
     increase()
     remove()
+    buy()
     recalculateCart()
 </script>
 

@@ -1,4 +1,5 @@
-﻿using ECommerce.BackendAPI.Repository;
+﻿using AutoMapper;
+using ECommerce.BackendAPI.Repository;
 using ECommerce.Data.Enums;
 using ECommerce.Data.Model;
 using ECommerce.SharedView.DTO;
@@ -16,36 +17,73 @@ namespace ECommerce.BackendAPI.Controllers
         private readonly ICartDetailRepository _cartDetailRepository;
         private readonly ICartRepository _cartRepository;
         private readonly IProductRepository _productRepository;
+        private readonly IMapper _mapper;
 
 
         // Initialize
-        public OrderDetailController(IOrderRepository orderRepository, IOrderDetailRepository orderDetailRepository, ICartDetailRepository cartDetailRepository, ICartRepository cartRepository, IProductRepository productRepository)
+        public OrderDetailController(IOrderRepository orderRepository, 
+            IOrderDetailRepository orderDetailRepository, 
+            ICartDetailRepository cartDetailRepository, 
+            ICartRepository cartRepository, 
+            IProductRepository productRepository,
+            IMapper mapper)
         {
             this._orderRepository = orderRepository;
             this._orderDetailRepository = orderDetailRepository;
             this._cartDetailRepository = cartDetailRepository;
             this._cartRepository = cartRepository;
             this._productRepository = productRepository;
+            this._mapper = mapper;
         }
 
 
         // Methods
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpGet]
+        public async Task<ActionResult<List<ShowedOrderDetailDTO>>> GetAllOrderDetailByOrder([FromQuery] string userId)
+        {
+            try
+            {
+                Order order = await _orderRepository.GetOrder(userId);
+                List<OrderDetail> listOrderDetails = await _orderDetailRepository.GetOrderDetail(order);
+                List<ShowedOrderDetailDTO> showedOrderDetailDTOs = new List<ShowedOrderDetailDTO>();
+                for (int i = 0; i < listOrderDetails.Count; i++)
+                {
+                    Product product = await _productRepository.GetProductById(listOrderDetails[i].productId);
+                    showedOrderDetailDTOs.Add(new ShowedOrderDetailDTO
+                    {
+                        Id = listOrderDetails[i].Id,
+                        number = listOrderDetails[i].number,
+                        showedProductDTO = _mapper.Map<ShowedProductDTO>(product)
+                    });
+                }
+                return StatusCode(200, showedOrderDetailDTOs);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet]
         [Route("{orderDetailId:int}")]
-        public async Task<ActionResult> GetOrderDetail([FromQuery] string userId, [FromRoute] int orderDetailId)
+        public async Task<ActionResult<ShowedOrderDetailDTO>> GetOrderDetail([FromQuery] string userId, [FromRoute] int orderDetailId)
         {
             try
             {
                 OrderDetail orderDetail = await _orderDetailRepository.GetOrderDetail(orderDetailId);
-                Console.Write(orderDetail.Id);
-                return StatusCode(200, "Ok you got it!");
+                ShowedOrderDetailDTO showedOrderDetailDTO = _mapper.Map<ShowedOrderDetailDTO>(orderDetail);
+                return StatusCode(200, showedOrderDetailDTO);
             }
             catch(Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
         }
+
+
 
 
         [EnableCors("_myAllowSpecificOrigins")]

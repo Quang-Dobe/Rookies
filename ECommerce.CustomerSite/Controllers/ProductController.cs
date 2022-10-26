@@ -28,7 +28,7 @@ namespace ECommerce.CustomerSite.Controllers
         [HttpGet]
         public async Task<IActionResult> Buy()
         {
-            string userId = "dee6f815-209c-4bfd-8d91-cadbd30d6011";
+            string userId = "38cd5450-4071-453d-b146-5940453bbe50";
             List<ShowedCartDetailDTO> showedCartDetailDTOs = await cartService.GetAllCardDetailByCart(userId);
             return View(showedCartDetailDTOs);
         }
