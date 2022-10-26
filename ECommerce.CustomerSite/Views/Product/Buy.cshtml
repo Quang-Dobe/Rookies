@@ -5,70 +5,178 @@
 
 <link href="~/css/product/buy.css" rel="stylesheet" />
 
-
 <h1>Shopping Cart</h1>
 
-<div class="shopping-cart">
 
-    <div class="column-labels">
-        <label class="product-image">Image</label>
-        <label class="product-details">Product</label>
-        <label class="product-price">Price</label>
-        <label class="product-quantity">Quantity</label>
-        <label class="product-removal">Remove</label>
-        <label class="product-line-price">Total</label>
-    </div>
 
-    @{
-        foreach(ShowedCartDetailDTO item in Model) {
-            float total = item.number * item.showedProductDTO.price;
-                <div class="product">
-                    <div class="product-image">
-                        <img src=@item.showedProductDTO.productImg>
-                    </div>
-                    <div class="product-details">
-                        <p class="product-id" style="display: none; opacity: 0">@item.Id</p>
-                        <div class="product-title">@item.showedProductDTO.productName</div>
-                        <p class="product-description"></p>
-                    </div>
-                    <div class="product-price">@item.showedProductDTO.price</div>
-                    <div class="product-quantity">
-                        <input type="number" value=@item.number min="1">
-                    </div>
-                    <div class="product-removal">
-                        <button class="remove-product">
-                            Remove
-                        </button>
-                    </div>
-                    <div class="product-line-price">@total</div>
+
+<div class="container mt-5 mb-5">
+    <div class="d-flex justify-content-center row">
+        <div class="col-md-8">
+            @*<div class="p-2">
+                <h4>Shopping cart</h4>
+                <div class="d-flex flex-row align-items-center pull-right"><span class="mr-1">Sort by:</span><span class="mr-1 font-weight-bold">Price</span><i class="fa fa-angle-down"></i></div>
+            </div>*@
+
+            @{
+                foreach (ShowedCartDetailDTO item in Model)
+                {
+                    var total = item.showedProductDTO.price * item.number;
+                                    <div class="d-flex flex-row justify-content-between align-items-center p-2 bg-white mt-4 px-3 rounded">
+                                        <div class="mr-1"><img class="rounded" src=@item.showedProductDTO.productImg width="70"></div>
+                                        <div class="d-flex flex-column align-items-center product-details">
+                                            <span style="display: none; opacity: 0">@item.showedProductDTO.id</span>
+                                            <span class="font-weight-bold">@item.showedProductDTO.productName</span>
+                                        </div>
+
+                                        <div class="d-flex flex-row align-items-center qty">
+                                            <button type="button" class="btn btn-light decreaseButton" >
+                                                -
+                                            </button>
+                                            <h5 class="text-grey mt-1 mr-1 ml-1">@item.number</h5>
+                                            <button type="button" class="btn btn-light increaseButton">
+                                                +
+                                            </button>
+                                        </div>
+
+                                        <div class="sub-total">
+                                            <h5 class="text-grey">@total</h5>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <button type="button" class="btn btn-danger">
+                                                <i class="fa fa-trash mb-1"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                }
+            }
+
+            <div class="totals">
+                <div class="totals-item">
+                    <label>Subtotal</label>
+                    <div class="totals-value" id="cart-subtotal">0</div>
                 </div>
-        }
-    }
-    
+                <div class="totals-item">
+                    <label>Tax (5%)</label>
+                    <div class="totals-value" id="cart-tax">0.05%</div>
+                </div>
+                <div class="totals-item">
+                    <label>Shipping</label>
+                    <div class="totals-value" id="cart-shipping">15.00%</div>
+                </div>
+                <div class="totals-item totals-item-total">
+                    <label>Grand Total</label>
+                    <div class="totals-value" id="cart-total">0</div>
+                </div>
+            </div>
 
-    <div class="totals">
-        <div class="totals-item">
-            <label>Subtotal</label>
-            <div class="totals-value" id="cart-subtotal">0</div>
-        </div>
-        <div class="totals-item">
-            <label>Tax (5%)</label>
-            <div class="totals-value" id="cart-tax">0</div>
-        </div>
-        <div class="totals-item">
-            <label>Shipping</label>
-            <div class="totals-value" id="cart-shipping">0</div>
-        </div>
-        <div class="totals-item totals-item-total">
-            <label>Grand Total</label>
-            <div class="totals-value" id="cart-total">0</div>
+            <button class="checkout">Buy</button>
         </div>
     </div>
-
-    <button class="checkout">Checkout</button>
-
 </div>
 
-@section Scripts{
+
+<script>
+    var taxRate = 0.05;
+    var shippingRate = 15.00;
+    var fadeTime = 300;
+    const $ = document.querySelector.bind(document)
+    const $$ = document.querySelectorAll.bind(document)
+
+    function recalculateCart() {
+        var subtotal = 0;
+
+        /* Sum up row totals */
+        var allSubtotal = document.querySelectorAll(".sub-total")
+        allSubtotal.forEach(item => subtotal += parseInt(item.querySelector('h5').innerText))
+
+        /* Calculate totals */
+        var tax = subtotal * taxRate;
+        var shipping = (subtotal > 0 ? shippingRate : 0);
+        var total = subtotal + tax + shipping;
+
+        /* Update totals display */
+        document.querySelector(".totals .totals-value").innerText = subtotal
+        document.querySelector(".totals .totals-item-total div").innerText = subtotal + 0.05 * subtotal / 100 + 15 * subtotal / 100;
+    }
+    
+    function decrease() {
+        var allDecreaseButton = document.querySelectorAll(".qty .decreaseButton")
+        allDecreaseButton.forEach(item => {
+            item.onclick = function(e) {
+                var number = e.target.parentElement.querySelector('h5')
+                var productId = e.target.parentElement.parentElement.querySelector('.product-details span')
+                number.innerText = parseInt(number.innerText) - 1;
+                var userId = "dee6f815-209c-4bfd-8d91-cadbd30d6011"
+                fetch("https://localhost:7173/CartDetail/UpdateCartDetail/" + productId.innerText + "?userId=" + userId,
+                {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify(parseInt(number.innerText))
+                })
+                .then(response =>
+                    response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Unable to add item.', error));
+                recalculateCart()
+            }
+        })
+    }
+
+    function increase() {
+        var allDecreaseButton = document.querySelectorAll(".qty .increaseButton")
+        allDecreaseButton.forEach(item => {
+            item.onclick = function (e) {
+                var number = e.target.parentElement.querySelector('h5')
+                var productId = e.target.parentElement.parentElement.querySelector('.product-details span')
+                number.innerText = parseInt(number.innerText) + 1;
+                var userId = "dee6f815-209c-4bfd-8d91-cadbd30d6011"
+                fetch("https://localhost:7173/CartDetail/UpdateCartDetail/" + productId.innerText + "?userId=" + userId,
+                {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify(parseInt(number.innerText))
+                })
+                .then(response =>
+                    response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Unable to add item.', error));
+                recalculateCart()
+            }
+        })
+    }
+
+    function remove() {
+        var removeBtn = document.querySelectorAll(".btn-danger")
+        removeBtn.forEach(item => {
+            item.onclick = function(e) {
+                var product = e.target.parentElement.parentElement
+                var number = e.target.parentElement.parentElement.querySelector('h5')
+                var productId = e.target.parentElement.parentElement.querySelector('.product-details span')
+                var userId = "dee6f815-209c-4bfd-8d91-cadbd30d6011"
+                fetch("https://localhost:7173/CartDetail/DeleteCartDetail/" + productId.innerText + "?userId=" + userId,
+                {
+                    method: 'DELETE',
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify(parseInt(number.innerText))
+                })
+                .then(response =>
+                    response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Unable to add item.', error));
+                
+                product.remove()
+                recalculateCart()
+            }
+        })
+    }
+
+    decrease()
+    increase()
+    remove()
+    recalculateCart()
+</script>
+
+@*@section Scripts{
     <script src="~/js/product/buy.js"></script>
-}
+}*@

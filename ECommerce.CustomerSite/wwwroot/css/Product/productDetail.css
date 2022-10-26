@@ -37,10 +37,10 @@
     margin-right: 15px;
 }
 
-    .p-list span.price {
-        font-size: 25px;
-        color: #318234;
-    }
+.p-list span.price {
+    font-size: 25px;
+    color: #318234;
+}
 
 ._p-qty > span {
     color: black;
