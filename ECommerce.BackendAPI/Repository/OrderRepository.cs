@@ -30,9 +30,26 @@ namespace ECommerce.BackendAPI.Repository
             return await _dbContext.orders.FindAsync(id);
         }
 
-        public async Task<Order> GetOrder(IdentityUser user)
+        public async Task<Order> GetOrder(string userId)
         {
-            return await _dbContext.orders.Where(order => order.userId == user.Id).SingleOrDefaultAsync();
+            return await _dbContext.orders.Where(order => order.userId == userId).SingleOrDefaultAsync();
+        }
+
+        public async Task CreateOrder(string userId)
+        {
+            await _dbContext.orders.AddAsync(new Order
+            {
+                userId = userId,
+                user = await _dbContext.Users.FindAsync(userId),
+                orderDetails = new List<OrderDetail>(),
+                dateOfPurchase = DateTime.Today,
+                total = 0
+            });
+        }
+
+        public void UpdateOrder(Order order)
+        {
+            _dbContext.Entry(order).State = EntityState.Modified;
         }
 
         public async Task Save()

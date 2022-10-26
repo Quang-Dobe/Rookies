@@ -132,7 +132,7 @@ namespace ECommerce.BackendAPI.Controllers
         }
 
         [EnableCors("_myAllowSpecificOrigins")]
-        [HttpPut]
+        [HttpPost]
         [Route("{productId:int}")]
         public async Task<ActionResult> UpdateCartDetail([FromQuery] string userId, [FromRoute] int productId, [FromBody] int number)
         {

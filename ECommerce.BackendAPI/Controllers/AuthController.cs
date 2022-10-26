@@ -19,6 +19,7 @@ namespace ECommerce.BackendAPI.Controllers
         private readonly IConfiguration config;
         private readonly IUserRepository userRepository;
         private readonly ICartRepository cartRepository;
+        private readonly IOrderRepository orderRepository;
         private readonly IMapper mapper;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly UserManager<IdentityUser> userManager;
@@ -26,6 +27,7 @@ namespace ECommerce.BackendAPI.Controllers
         public AuthController(IConfiguration config, 
             IUserRepository userRepository, 
             ICartRepository cartRepository,
+            IOrderRepository orderRepository,
             IMapper mapper, 
             SignInManager<IdentityUser> signInManager, 
             UserManager<IdentityUser> userManager)
@@ -33,6 +35,7 @@ namespace ECommerce.BackendAPI.Controllers
             this.config = config;
             this.userRepository = userRepository;
             this.cartRepository = cartRepository;
+            this.orderRepository = orderRepository;
             this.mapper = mapper;
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -100,6 +103,10 @@ namespace ECommerce.BackendAPI.Controllers
                 {
                     // If user register sucessfully, create for him/her an empty cart to store what they like to buy
                     await cartRepository.CreateCart(user.Id);
+                    await orderRepository.CreateOrder(user.Id);
+
+                    await cartRepository.Save();
+                    await orderRepository.Save();
                     return Results.Ok();
                 }
                 else

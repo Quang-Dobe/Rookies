@@ -20,6 +20,8 @@ namespace ECommerce.Data.Model
         [Column("Number of product")]
         public int number { get; set; }
 
+        public DateTime datePurchase { get; set; }
+
         public string comment { get; set; }
 
         public ProductRating rating { get; set; }

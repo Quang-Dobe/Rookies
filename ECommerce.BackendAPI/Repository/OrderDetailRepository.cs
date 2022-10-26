@@ -19,10 +19,22 @@ namespace ECommerce.BackendAPI.Repository
 
 
         // Methods
+        public async Task<List<OrderDetail>> GetOrderDetail()
+        {
+            return await _dbContext.orderDetails.ToListAsync();
+        }
 
         public async Task<OrderDetail> GetOrderDetail(int id)
         {
             return await _dbContext.orderDetails.FindAsync(id);
+        }
+
+        public async Task<OrderDetail> GetOrderDetail(int orderId, int productId)
+        {
+            OrderDetail orderDetail = await (from oD in _dbContext.orderDetails
+                                           where oD.orderId == orderId && oD.productId == productId
+                                           select oD).FirstOrDefaultAsync();
+            return orderDetail;
         }
 
         public async Task<List<OrderDetail>> GetOrderDetail(Product productId)
@@ -43,17 +55,14 @@ namespace ECommerce.BackendAPI.Repository
             return data;
         }
 
-        public async Task<List<OrderDetail>> GetListOrderDetailByOrder(List<int> listOrderId)
+        public async Task CreateOrderDetail(OrderDetail orderDetail)
         {
-            List<OrderDetail> data = await (from oD in _dbContext.orderDetails
-                                            where listOrderId.Any(id => id == oD.orderId)
-                                            select oD).ToListAsync();
-            return data;
+            await _dbContext.orderDetails.AddAsync(orderDetail);
         }
 
-        public async Task<List<OrderDetail>> GetOrderDetails()
+        public void UpdateOrderDetail(OrderDetail orderDetail)
         {
-            return await _dbContext.orderDetails.ToListAsync();
+            _dbContext.Entry(orderDetail).State = EntityState.Modified;
         }
 
         public async Task Save()

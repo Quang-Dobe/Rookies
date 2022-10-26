@@ -7,7 +7,9 @@ namespace ECommerce.BackendAPI.Repository
     {
         Task<List<Order>> GetOrder();
         Task<Order> GetOrder(int id);
-        Task<Order> GetOrder(IdentityUser user);
+        Task<Order> GetOrder(string userId);
+        Task CreateOrder(string userId);
+        void UpdateOrder(Order order);
         Task Save();
     }
 }

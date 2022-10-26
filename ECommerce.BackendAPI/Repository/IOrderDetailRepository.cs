@@ -4,13 +4,14 @@ namespace ECommerce.BackendAPI.Repository
 {
     public interface IOrderDetailRepository
     {
-        Task<List<OrderDetail>> GetOrderDetails();
-
+        Task<List<OrderDetail>> GetOrderDetail();
         Task<OrderDetail> GetOrderDetail(int id);
+        Task<OrderDetail> GetOrderDetail(int orderId, int productId);
         Task<List<OrderDetail>> GetOrderDetail(Product productId);
         Task<List<OrderDetail>> GetOrderDetail(Order orderId);
         Task<List<OrderDetail>> GetListOrderDetailByProduct(List<int> listProductId);
-        Task<List<OrderDetail>> GetListOrderDetailByOrder(List<int> listOrderId);
+        Task CreateOrderDetail(OrderDetail orderDetail);
+        void UpdateOrderDetail(OrderDetail orderDetail);
         Task Save();
     }
 }
