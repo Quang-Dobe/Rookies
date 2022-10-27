@@ -28,7 +28,7 @@ namespace ECommerce.BackendAPI.Profiles
             CreateMap<CartDetail, ShowedCartDetailDTO>()
                 .ForMember(des => des.showedProductDTO, act => act.MapFrom(src => new ShowedProductDTO
                 {
-                    id = src.Id,
+                    id = src.product.Id,
                     productImg = src.product.productImg,
                     productName = src.product.productName,
                     price = src.product.price,
@@ -37,7 +37,7 @@ namespace ECommerce.BackendAPI.Profiles
             CreateMap<OrderDetail, ShowedOrderDetailDTO>()
                 .ForMember(des => des.showedProductDTO, act => act.MapFrom(src => new ShowedProductDTO
                 {
-                    id = src.Id,
+                    id = src.product.Id,
                     productImg = src.product.productImg,
                     productName = src.product.productName,
                     price = src.product.price,

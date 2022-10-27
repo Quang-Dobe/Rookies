@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Execution;
 using ECommerce.BackendAPI.Repository;
 using ECommerce.Data.Enums;
 using ECommerce.Data.Model;
@@ -54,6 +55,8 @@ namespace ECommerce.BackendAPI.Controllers
                     {
                         Id = listOrderDetails[i].Id,
                         number = listOrderDetails[i].number,
+                        comment = listOrderDetails[i].comment,
+                        rating = (int)listOrderDetails[i].rating,
                         showedProductDTO = _mapper.Map<ShowedProductDTO>(product)
                     });
                 }
@@ -74,7 +77,15 @@ namespace ECommerce.BackendAPI.Controllers
             try
             {
                 OrderDetail orderDetail = await _orderDetailRepository.GetOrderDetail(orderDetailId);
-                ShowedOrderDetailDTO showedOrderDetailDTO = _mapper.Map<ShowedOrderDetailDTO>(orderDetail);
+                Product product = await _productRepository.GetProductById(orderDetail.productId);
+                ShowedOrderDetailDTO showedOrderDetailDTO = new ShowedOrderDetailDTO
+                {
+                    Id = orderDetail.Id,
+                    number = orderDetail.number,
+                    comment = orderDetail.comment,
+                    rating = (int)orderDetail.rating,
+                    showedProductDTO = _mapper.Map<ShowedProductDTO>(product)
+                };
                 return StatusCode(200, showedOrderDetailDTO);
             }
             catch(Exception ex)

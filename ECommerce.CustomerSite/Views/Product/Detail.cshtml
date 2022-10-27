@@ -55,6 +55,22 @@
     </div>
 </div>
 
+@*<h2>Review</h2>
+<div>
+    @{
+        foreach(ReviewDTO item in Model.reviewProductDTOs) {
+            <h5>@item.userName</h5>
+            for(int i = 1; i<= item.rating; i++){
+                <i class="fa-solid fa-star"></i>
+            };
+            for (int i=5; i>item.rating; i++){
+                <i class="fa-regular fa-star"></i>
+            }
+            <p>@item.comment</p>
+        }
+    }
+</div>
+*@
 @section Scripts{
     <script src="~/js/product/productDetail.js"></script>
 }

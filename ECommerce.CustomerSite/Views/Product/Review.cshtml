@@ -1,0 +1,161 @@
+﻿@model ShowedOrderDetailDTO
+@{
+    ViewData["Title"] = "Review" + Model.showedProductDTO.productName;
+}
+
+@*Source: https://codepen.io/Mavidelaru/pen/GRxrYNY*@
+
+<style>
+    .my_img {
+        object-fit: scale-down;
+        vertical-align: middle;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        height: 100%;
+    }
+
+    .center {
+        width: 100vw;
+        height: 40vh;
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    label {
+        float: right;
+        font-size: 0;
+        color: #E5E5E5;
+        margin: 1vw;
+    }
+
+    label::before {
+        content: "\f005";
+        font-family: 'Font Awesome 5 free';
+        font-size: 8vh;
+    }
+
+    label:hover, label:hover ~ label {
+        color: #FCA311;
+        transition: 0.8s;
+        font-weight: 900;
+    }
+
+    .active {
+        color: #FCA311;
+        font-weight: 900;
+    }
+</style>
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+<script src="https://kit.fontawesome.com/3db4948ff0.js" crossorigin="anonymous"></script>
+
+
+<h1>Review Product <b>@Model.showedProductDTO.productName</b></h1>
+
+<div class="row row-sm">
+    <div class="col-md-3" style="position:relative; display:flex; justify-content:center">
+        <img class="my_img" src=@Model.showedProductDTO.productImg alt=@Model.showedProductDTO.productName>
+    </div>
+    <div class="col-md-9">
+        <div class="product-detail">
+            <div class="product-detail-content">
+                <h2>@Model.showedProductDTO.productName</h2>
+                <h1>@Model.showedProductDTO.price</h1>
+            </div>
+            <p>Quatity: @Model.number</p>
+        </div>
+    </div>
+</div>
+
+
+<h3 style="margin-bottom: 0px">Rating</h3>
+<div class="row justify-content-start align-items-start" style="height: auto">
+    <div class="center col-12 col-md-6" style="height: fit-content">
+        <div id="rate" class="rate">
+            <label class="ratingStar" id="star5" onclick="(e) => @Model.rating=5"></label>
+            <label class="ratingStar" id="star4" onclick="(e) => @Model.rating=4"></label>
+            <label class="ratingStar" id="star3" onclick="(e) => @Model.rating=3"></label>
+            <label class="ratingStar" id="star2" onclick="(e) => @Model.rating=2"></label>
+            <label class="ratingStar" id="star1" onclick="(e) => @Model.rating=1"></label>
+        </div>
+    </div>
+</div>
+
+<h3>Add your comment</h3>
+<div class="row justify-content-start align-items-start" style="padding: 0px 5px">
+    <div>
+        <textarea rows="3" cols="80" onchange="(e) => @Model.comment = e.target.value"></textarea>
+    </div>
+</div>
+
+<div style="padding: 0px 5px">
+    <span style="display:none; opacity:0">@Model.Id</span>
+    <a class="btn btn-primary">Add review</a>
+</div>
+
+
+
+<script>
+    var rating = 4;
+
+    function addRating(value) {
+        clearRates();
+        addRates(value);
+        rating = value;
+    }
+    
+    function clearRates() {
+        for(var i=1; i <=5; i ++)
+        {
+            document.querySelector(".rate #star" + i).classList.remove("active");
+        }
+    }
+    
+    function addRates(value) {
+        for(var i=1; i <=value; i ++)
+        {
+            document.querySelector(".rate #star" + i).classList.add("active");
+        }
+    }
+    
+    function AddEventRating() {
+        document.querySelectorAll(".rate .ratingStar").forEach((item, index) => {
+            item.addEventListener("click", function (e) {
+                addRating(5 - index);
+            })
+        })
+    }
+
+    function AddReview() {
+        document.querySelector(".btn-primary").onclick = function (e) {
+            var userId = "38cd5450-4071-453d-b146-5940453bbe50";
+            var orderDetailId = e.target.parentElement.querySelector("span").innerText;
+            var reviewOrderDetailDTO = {
+                comment: document.querySelector("textarea").value,
+                rating: rating
+            }
+            fetch("https://localhost:7173/OrderDetail/UpdateOrderDetail/" + orderDetailId + "?userId=" + userId,
+                {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify(reviewOrderDetailDTO)
+                })
+                .then(response =>
+                    response.json())
+                .then(data => { 
+                    console.log(data)
+                    location.replace("https://localhost:7076/")
+                })
+                .catch(error => console.error('Unable to add item.', error));
+            
+        }
+    }
+
+    AddEventRating();
+    AddReview();
+</script>
