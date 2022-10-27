@@ -15,6 +15,7 @@ namespace ECommerce.SharedView.DTO.Account
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Password should not be empty")]
+        [DataType(DataType.Password)]
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
 

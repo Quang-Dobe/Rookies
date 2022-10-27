@@ -55,22 +55,48 @@
     </div>
 </div>
 
-@*<h2>Review</h2>
+<br /> <br />
+<h2>Review</h2>
 <div>
     @{
         foreach(ReviewDTO item in Model.reviewProductDTOs) {
-            <h5>@item.userName</h5>
-            for(int i = 1; i<= item.rating; i++){
-                <i class="fa-solid fa-star"></i>
-            };
-            for (int i=5; i>item.rating; i++){
-                <i class="fa-regular fa-star"></i>
-            }
-            <p>@item.comment</p>
+            <div>
+                <h5 style="margin:5px 0px;">@item.userName</h5>
+                <div style="margin-left:10px">
+                    @{
+                        for (int i = 1; i <= item.rating; i++)
+                        {
+                            <i class="fa-solid fa-star" style="color:#FF9529"></i>
+                        };
+                        for (int i = 5; i > item.rating; i--)
+                        {
+                            <i class="fa-regular fa-star" style="color:#FF9529"></i>
+                        }
+                    }
+                </div>
+                <p style="margin-bottom:20px; margin-left:10px">@item.comment</p>
+            </div>
         }
     }
 </div>
-*@
+
+<script>
+    function InDeQuantity() {
+        var decreaseButton = document.querySelector('.container .container-fluid ._product-detail-content ._p-price-box ._p-add-cart ._p-qty .decrease_')
+        var increaseButton = document.querySelector('.container .container-fluid ._product-detail-content ._p-price-box ._p-add-cart ._p-qty .increase_')
+        decreaseButton.onclick = function (e) {
+            var quantity = document.querySelector('.container .container-fluid ._product-detail-content ._p-price-box ._p-add-cart ._p-qty input')
+            var newQuantity = parseInt(quantity.value)
+            if (newQuantity > 1)
+                quantity.value = (parseInt(quantity.value) - 1).toString()
+        }
+        increaseButton.onclick = function (e) {
+            var quantity = document.querySelector('.container .container-fluid ._product-detail-content ._p-price-box ._p-add-cart ._p-qty input')
+            quantity.value = (parseInt(quantity.value) + 1).toString()
+        }
+    }
+    InDeQuantity()
+</script>
 @section Scripts{
     <script src="~/js/product/productDetail.js"></script>
 }
