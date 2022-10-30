@@ -37,11 +37,11 @@ namespace ECommerce.BackendAPI.Controllers
             {
                 CartDetail cartDetail = await _cartDetailRepository.GetCartDetail(id);
                 ShowedCartDetailDTO data = _mapper.Map<ShowedCartDetailDTO>(cartDetail);
-                return Json(data);
+                return Ok(data);
             }
             catch(Exception ex)
             {
-                return Json(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -53,11 +53,11 @@ namespace ECommerce.BackendAPI.Controllers
             {
                 List<CartDetail> listCartDetail = await _cartDetailRepository.GetCartDetail();
                 List<ShowedCartDetailDTO> data = _mapper.Map<List<ShowedCartDetailDTO>>(listCartDetail);
-                return Json(data);
+                return Ok(data);
             }
             catch(Exception ex)
             {
-                return Json(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -79,11 +79,11 @@ namespace ECommerce.BackendAPI.Controllers
                         showedProductDTO = _mapper.Map<ShowedProductDTO>(product)
                     });
                 }
-                return Json(showedCartDetailDTOs);
+                return Ok(showedCartDetailDTOs);
             }
             catch(Exception ex)
             {
-                return Json(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -104,7 +104,7 @@ namespace ECommerce.BackendAPI.Controllers
                 {
                     checkCartDetail.number += number;
                     await _cartDetailRepository.Save();
-                    return Json("Update your cart instead of adding new one");
+                    return Ok("Update your cart instead of adding new one");
                 }
                 else
                 {
@@ -121,13 +121,13 @@ namespace ECommerce.BackendAPI.Controllers
                     // Because the Save()-methods in all Repository is same, so we just need only one Save()
                     await _cartDetailRepository.Save();
 
-                    return Json("Create CartDetail sucessfully");
+                    return Ok("Create CartDetail sucessfully");
                 }
             }
             catch(Exception ex)
             {
                 // I will modified this response here in near future (It's look like litle poor :D)
-                return Json(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -150,11 +150,11 @@ namespace ECommerce.BackendAPI.Controllers
                 _cartDetailRepository.UpdateCartDetail(cartDetail);
                 await _cartDetailRepository.Save();
 
-                return Json("Update CartDetail sucessfully");
+                return Ok("Update CartDetail sucessfully");
             }
             catch(Exception ex)
             {
-                return Json(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -174,11 +174,11 @@ namespace ECommerce.BackendAPI.Controllers
                 _cartDetailRepository.DeleteCartDetail(cartDetail);
                 await _cartDetailRepository.Save();
 
-                return Json("Delete CartDetail sucessfully");
+                return Ok("Delete CartDetail sucessfully");
             }
             catch(Exception ex)
             {
-                return Json(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
     }
