@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SharedView.DTO.Account;
 using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace ECommerce.CustomerSite.Controllers
@@ -12,7 +13,7 @@ namespace ECommerce.CustomerSite.Controllers
     [Route("/[controller]/[action]")]
     public class AuthController : Controller
     {
-        private IHttpClientFactory clientFactory;
+        private readonly IHttpClientFactory clientFactory;
         private readonly IIdentityUserService identityUserService;
 
         // Intialize
@@ -34,11 +35,16 @@ namespace ECommerce.CustomerSite.Controllers
             if (ModelState.IsValid)
             {
                 String stringData = await identityUserService.Login(loginRequestDTO);
-                LoginResponseDTO data = JsonConvert.DeserializeObject<LoginResponseDTO>(stringData);
-            
-                if (data != null && data.StatusCode == System.Net.HttpStatusCode.OK)
+                //LoginResponseDTO data = JsonConvert.DeserializeObject<LoginResponseDTO>(stringData);
+                var stream = "[encoded jwt]";
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(stringData);
+                var tokenS = jsonToken as JwtSecurityToken;
+                var nameid = tokenS.Claims.First(claim => claim.Type == "nameid").Value;
+                Console.WriteLine(nameid);
+                if (stringData != null)
                 {
-                    Request.HttpContext.Session.SetString("JWT", data.Value);
+                    Request.HttpContext.Session.SetString("JWT", stringData);
                     return RedirectToAction("Index", "Home");
                 }
                 else

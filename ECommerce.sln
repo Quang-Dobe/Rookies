@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerce.BackendAPI", "ECo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerce.SharedView", "ECommerce.SharedView\ECommerce.SharedView.csproj", "{F4AC021C-89F5-4AF0-99BF-02453D7756C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.TestBackendAPI", "ECommerce.TestBackendAPI\ECommerce.TestBackendAPI.csproj", "{D7B7B05E-B3DA-4B0A-B4A4-5AEEF669DB78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F4AC021C-89F5-4AF0-99BF-02453D7756C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4AC021C-89F5-4AF0-99BF-02453D7756C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4AC021C-89F5-4AF0-99BF-02453D7756C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7B7B05E-B3DA-4B0A-B4A4-5AEEF669DB78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7B7B05E-B3DA-4B0A-B4A4-5AEEF669DB78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7B7B05E-B3DA-4B0A-B4A4-5AEEF669DB78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7B7B05E-B3DA-4B0A-B4A4-5AEEF669DB78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -13,6 +13,7 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Refit" Version="6.3.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.10.0" />
   </ItemGroup>
 
   <ItemGroup>

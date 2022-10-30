@@ -1,5 +1,7 @@
-﻿using ECommerce.Data.Data;
+﻿using AutoMapper;
+using ECommerce.Data.Data;
 using ECommerce.Data.Model;
+using ECommerce.SharedView.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.BackendAPI.Repository
@@ -7,11 +9,13 @@ namespace ECommerce.BackendAPI.Repository
     public class ProductRepository : IProductRepository
     {
         private ECommerceDBContext _dbContext;
+        private IMapper _mapper;
         private bool disposed = false;
 
-        public ProductRepository(ECommerceDBContext eCommerceDBContext)
+        public ProductRepository(ECommerceDBContext eCommerceDBContext, IMapper mapper)
         {
             _dbContext = eCommerceDBContext;
+            _mapper = mapper;
         }
 
 
@@ -25,6 +29,28 @@ namespace ECommerce.BackendAPI.Repository
         public async Task<Product> GetProductById(int id)
         {
             return await _dbContext.products.FindAsync(id);
+        }
+
+        public async Task<detailProductDTO> GetProductDetailById(int id)
+        {
+            Product product = await _dbContext.products.FindAsync(id);
+            if (product == null)
+            {
+                return null;
+            }
+
+            detailProductDTO data = _mapper.Map<detailProductDTO>(product);
+
+            data.reviewProductDTOs = await (from oD in _dbContext.orderDetails
+                                            where oD.productId == product.Id
+                                            join o in _dbContext.orders on oD.orderId equals o.Id
+                                            select new ReviewDTO
+                                            {
+                                                userName = o.user.UserName,
+                                                comment = oD.comment,
+                                                rating = (int)(oD.rating)
+                                            }).ToListAsync();
+            return data;
         }
 
         public async Task<Product> GetProductByName(string name)

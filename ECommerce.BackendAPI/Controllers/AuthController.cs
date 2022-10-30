@@ -42,7 +42,7 @@ namespace ECommerce.BackendAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IResult> Login([FromBody] LoginRequestDTO loginRequestModel)
+        public async Task<ActionResult> Login([FromBody] LoginRequestDTO loginRequestModel)
         {
             // Get request successfully
             var result = await signInManager.PasswordSignInAsync(loginRequestModel.UserName, loginRequestModel.Password, false, lockoutOnFailure: true);
@@ -75,24 +75,32 @@ namespace ECommerce.BackendAPI.Controllers
                 IdentityUser identityUser = await userRepository.GetUserByEmail(loginRequestModel.UserName);
                 var roles = await userManager.GetRolesAsync(identityUser);
 
-                foreach (var role in roles)
+                var claims = new[] {
+                    new Claim(ClaimTypes.Name, identityUser.UserName),
+                    new Claim(ClaimTypes.NameIdentifier, identityUser.Id)
+                };
+                foreach (var item in claims)
                 {
-                    tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, role));
+                    tokenDescriptor.Subject.AddClaim(item);
                 }
+                //foreach (var role in roles)
+                //{
+                //    tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, role));
+                //}
 
                 // generate token with the above information
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var stringToken = tokenHandler.WriteToken(token);
 
-                return Results.Ok(stringToken);
+                return StatusCode(200, stringToken);
             }
 
-            return Results.Unauthorized();
+            return StatusCode(401, "");
         }
 
         [HttpPost]
-        public async Task<IResult> Register([FromBody] RegisterRequestDTO registerRequestModel)
+        public async Task<ActionResult> Register([FromBody] RegisterRequestDTO registerRequestModel)
         {
             if (ModelState.IsValid)
             {
@@ -107,15 +115,15 @@ namespace ECommerce.BackendAPI.Controllers
 
                     await cartRepository.Save();
                     await orderRepository.Save();
-                    return Results.Ok();
+                    return StatusCode(200, "");
                 }
                 else
                 {
-                    return Results.BadRequest(createUserResult.Errors);
+                    return StatusCode(401, createUserResult.Errors);
                 }
             }
 
-            return Results.BadRequest(ModelState.Values.SelectMany(x => x.Errors));
+            return StatusCode(400, ModelState.Values.SelectMany(x => x.Errors));
         }
     }
 }
