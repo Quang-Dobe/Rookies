@@ -60,7 +60,7 @@ namespace ECommerce.BackendAPI.Controllers
                         showedProductDTO = _mapper.Map<ShowedProductDTO>(product)
                     });
                 }
-                return StatusCode(200, showedOrderDetailDTOs);
+                return Ok(showedOrderDetailDTOs);
             }
             catch (Exception ex)
             {
@@ -86,7 +86,7 @@ namespace ECommerce.BackendAPI.Controllers
                     rating = (int)orderDetail.rating,
                     showedProductDTO = _mapper.Map<ShowedProductDTO>(product)
                 };
-                return StatusCode(200, showedOrderDetailDTO);
+                return Ok(showedOrderDetailDTO);
             }
             catch(Exception ex)
             {
@@ -131,11 +131,11 @@ namespace ECommerce.BackendAPI.Controllers
                     }
                     else
                     {
-                        return StatusCode(400, "Product " + product.productName + " with number of product " + item.number + " is invalid");
+                        return BadRequest("Product " + product.productName + " with number of product " + item.number + " is invalid");
                     }
                 }
                 await _orderRepository.Save();
-                return StatusCode(200, "Order sucessfully!");
+                return Ok("Order sucessfully!");
             }
             catch(Exception ex)
             {
@@ -161,7 +161,7 @@ namespace ECommerce.BackendAPI.Controllers
                 _orderDetailRepository.UpdateOrderDetail(orderDetail);
                 await _orderDetailRepository.Save();
 
-                return StatusCode(200, "Update OrderDetail sucessfully");
+                return Ok("Update OrderDetail sucessfully");
             }
             catch(Exception ex)
             {

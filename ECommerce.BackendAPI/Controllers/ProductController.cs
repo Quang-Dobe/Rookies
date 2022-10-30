@@ -17,6 +17,8 @@ namespace ECommerce.BackendAPI.Controllers
         private IProductRepository _productRepository;
         private IMapper _mapper;
 
+
+        // Initialization
         public ProductController(IProductRepository productRepository, IMapper mapper)
         {
             this._productRepository = productRepository;
@@ -24,8 +26,18 @@ namespace ECommerce.BackendAPI.Controllers
         }
 
 
-
         // Methods
+
+        #region This logic is used for writing unit test
+        //[HttpGet]
+        //public async Task<JsonResult> TestLogicForWritingTest()
+        //{
+        //    List<Product> allProduct = await _productRepository.GetProducts();
+        //    List<ProductDTO> allProductDTO = _mapper.Map<List<ProductDTO>>(allProduct);
+        //    return Json(allProductDTO);
+        //}
+        #endregion
+
 
         [HttpGet]
         [Route("{type:int}")]
@@ -35,6 +47,7 @@ namespace ECommerce.BackendAPI.Controllers
             List<ShowedProductDTO> showedProductDTOs = _mapper.Map<List<ShowedProductDTO>>(listProducts);
             return Ok(showedProductDTOs);
         }
+        
 
         [HttpGet]
         public async Task<ActionResult<List<ProductDTO>>> GetAllProducts()
@@ -43,57 +56,6 @@ namespace ECommerce.BackendAPI.Controllers
             List<ProductDTO> allProductDTO = _mapper.Map<List<ProductDTO>>(allProduct);
             return Ok(allProductDTO);
         }
-
-
-
-
-
-        [HttpGet]
-        public async Task<ActionResult<List<ProductDTO>>> Test()
-        {
-            return Json(new List<ProductDTO>
-            {
-                new ProductDTO {
-                    productImg = "https://lh3.googleusercontent.com/Omba4ZoTRs4tR_2u3eD7455PuuwCyoHXLF5rfn0vi9v6H2k_ji_RrYzyVWw9g2P8JmbKDQ16Q17q31IiFgC1=w500-rw",
-                    productName = "CPU Intel Core I5-7600",
-                    description = "Socket: LGA 1151 , Intel Core thế hệ thứ 7",
-                    productType = 0,
-                    price = 4690
-                },
-                new ProductDTO {
-                    productImg = "https://lh3.googleusercontent.com/UwKfc2vSQGNYIHP23DfTWcToEmsIaxjQsdx0DtIEbqCeZ5dnGBPS7d7WCVW9TOiIkfAh2ddgwDvnOR5U_jg=w500-rw",
-                    productName = "CPU INTEL Core i5-10400",
-                    description = "Socket: LGA 1200 , Intel Core thế hệ thứ 10",
-                    productType = 0,
-                    price = 4429
-                },
-                new ProductDTO {
-                    productImg = "https://lh3.googleusercontent.com/3K84fNb4XFMvh7JyJ1-itImN6petr8lxpeLhNCIEpidnZGc0fOIjN5SQiHvWM3InvCFzJjwrpOpK3sY0P95o7ZA4VV-aB1JxiA=w500-rw",
-                    productName = "CPU INTEL Core i5-11600K",
-                    description = "Socket: 1200, Intel Core thế hệ thứ 11",
-                    productType = 0,
-                    price = 6099
-                }
-            });
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> TestWithString()
-        {
-            return Json("Thís logic is OK");
-        }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         [HttpPost]
