@@ -1,9 +1,67 @@
 ﻿using ECommerce.Data.Model;
+using ECommerce.SharedView.DTO;
 
 namespace ECommerce.TestBackendAPI.MockData
 {
     public class MockData_Product
     {
+        public static List<ProductDTO> CreateProductDTO()
+        {
+            return new List<ProductDTO>
+            {
+                new ProductDTO {
+                    productImg = "https://lh3.googleusercontent.com/Omba4ZoTRs4tR_2u3eD7455PuuwCyoHXLF5rfn0vi9v6H2k_ji_RrYzyVWw9g2P8JmbKDQ16Q17q31IiFgC1=w500-rw",
+                    productName = "CPU Intel Core I5-7600",
+                    description = "Socket: LGA 1151 , Intel Core thế hệ thứ 7",
+                    productType = 0,
+                    price = 4690
+                },
+                new ProductDTO {
+                    productImg = "https://lh3.googleusercontent.com/UwKfc2vSQGNYIHP23DfTWcToEmsIaxjQsdx0DtIEbqCeZ5dnGBPS7d7WCVW9TOiIkfAh2ddgwDvnOR5U_jg=w500-rw",
+                    productName = "CPU INTEL Core i5-10400",
+                    description = "Socket: LGA 1200 , Intel Core thế hệ thứ 10",
+                    productType = 0,
+                    price = 4429
+                },
+                new ProductDTO {
+                    productImg = "https://lh3.googleusercontent.com/3K84fNb4XFMvh7JyJ1-itImN6petr8lxpeLhNCIEpidnZGc0fOIjN5SQiHvWM3InvCFzJjwrpOpK3sY0P95o7ZA4VV-aB1JxiA=w500-rw",
+                    productName = "CPU INTEL Core i5-11600K",
+                    description = "Socket: 1200, Intel Core thế hệ thứ 11",
+                    productType = 0,
+                    price = 6099
+                }
+            };
+        }
+
+
+        public static List<detailProductDTO> CreateDetailProductDTO()
+        {
+            return new List<detailProductDTO>
+            {
+                new detailProductDTO
+                {
+                    id = 1,
+                    productImg = "https://lh3.googleusercontent.com/Omba4ZoTRs4tR_2u3eD7455PuuwCyoHXLF5rfn0vi9v6H2k_ji_RrYzyVWw9g2P8JmbKDQ16Q17q31IiFgC1=w500-rw",
+                    productName = "CPU Intel Core I5-7600",
+                    description = "Socket: LGA 1151 , Intel Core thế hệ thứ 7",
+                    productType = "CPU",
+                    price = 4690,
+                    inventoryNumber = 0,
+                    rating = 1,
+                    reviewProductDTOs = new List<ReviewDTO>
+                    {
+                        new ReviewDTO
+                        {
+                            userName = "Admin",
+                            comment = "Everything is Ok now",
+                            rating = 4
+                        }
+                    }
+                }
+            };
+        }
+
+
         public static List<Product> GetProducts()
         {
             return new List<Product>
