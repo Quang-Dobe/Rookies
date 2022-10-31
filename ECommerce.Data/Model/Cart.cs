@@ -14,12 +14,12 @@ namespace ECommerce.Data.Model
         [Key]
         public int Id { get; set; }
 
-        public string userId { get; set; }
-        [ForeignKey("userId")]
-        public IdentityUser user { get; set; }
+        public string UserId { get; set; }
+        [ForeignKey("UserId")]
+        public IdentityUser User { get; set; }
 
-        public List<CartDetail> cartDetails { get; set; }
+        public List<CartDetail> CartDetails { get; set; }
 
-        public double total { get; set; }
+        public double Total { get; set; }
     }
 }

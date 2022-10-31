@@ -11,8 +11,8 @@ namespace ECommerce.TestBackendAPI.MockData
                 new Cart
                 {
                     Id = 1,
-                    userId = "38cd5450-4071-453d-b146-5940453bbe50",
-                    user = new Microsoft.AspNetCore.Identity.IdentityUser
+                    UserId = "38cd5450-4071-453d-b146-5940453bbe50",
+                    User = new Microsoft.AspNetCore.Identity.IdentityUser
                     {
                         Id = "38cd5450-4071-453d-b146-5940453bbe50",
                         UserName = "tdquangcr",
@@ -30,8 +30,8 @@ namespace ECommerce.TestBackendAPI.MockData
                         LockoutEnabled = true,
                         AccessFailedCount = 0,
                     },
-                    cartDetails = new List<CartDetail> { },
-                    total = 0
+                    CartDetails = new List<CartDetail> { },
+                    Total = 0
                 }
             };
         }
@@ -43,46 +43,46 @@ namespace ECommerce.TestBackendAPI.MockData
                 new CartDetail
                 {
                     Id = 1,
-                    productId = 1,
-                    product = new Product
+                    ProductId = 1,
+                    Product = new Product
                     {
                         Id = 1,
-                        productImg = "https://lh3.googleusercontent.com/Omba4ZoTRs4tR_2u3eD7455PuuwCyoHXLF5rfn0vi9v6H2k_ji_RrYzyVWw9g2P8JmbKDQ16Q17q31IiFgC1=w500-rw",
-                        productName = "CPU Intel Core I5-7600",
-                        description = "Socket: LGA 1151 , Intel Core thế hệ thứ 7",
-                        productType = (ECommerce.Data.Enums.ProductType)0,
-                        price = 4690,
-                        quantity = 0,
-                        inventoryNumber = 0,
-                        rating = 1,
+                        ProductImg = "https://lh3.googleusercontent.com/Omba4ZoTRs4tR_2u3eD7455PuuwCyoHXLF5rfn0vi9v6H2k_ji_RrYzyVWw9g2P8JmbKDQ16Q17q31IiFgC1=w500-rw",
+                        ProductName = "CPU Intel Core I5-7600",
+                        Description = "Socket: LGA 1151 , Intel Core thế hệ thứ 7",
+                        ProductType = (ECommerce.Data.Enums.ProductType)0,
+                        Price = 4690,
+                        Quantity = 50,
+                        InventoryNumber = 50,
+                        Rating = 1,
                         createdDate = DateTime.Parse("2022-10-26 14:21:58.1796606"),
                         updatedDate = DateTime.Parse("2022-10-26 14:21:58.1796638")
                     },
-                    cartId = cart.Id,
-                    cart = cart,
-                    number = 1
+                    CartId = cart.Id,
+                    Cart = cart,
+                    Number = 1
                 },
                 new CartDetail
                 {
                     Id = 2,
-                    productId = 2,
-                    product = new Product
+                    ProductId = 2,
+                    Product = new Product
                     {
                         Id = 2,
-                        productImg = "https://lh3.googleusercontent.com/UwKfc2vSQGNYIHP23DfTWcToEmsIaxjQsdx0DtIEbqCeZ5dnGBPS7d7WCVW9TOiIkfAh2ddgwDvnOR5U_jg=w500-rw",
-                        productName = "CPU INTEL Core i5-10400",
-                        description = "Socket: LGA 1200 , Intel Core thế hệ thứ 10",
-                        productType = (ECommerce.Data.Enums.ProductType)1,
-                        price = 4429,
-                        quantity = 0,
-                        inventoryNumber = 0,
-                        rating = 1,
+                        ProductImg = "https://lh3.googleusercontent.com/UwKfc2vSQGNYIHP23DfTWcToEmsIaxjQsdx0DtIEbqCeZ5dnGBPS7d7WCVW9TOiIkfAh2ddgwDvnOR5U_jg=w500-rw",
+                        ProductName = "CPU INTEL Core i5-10400",
+                        Description = "Socket: LGA 1200 , Intel Core thế hệ thứ 10",
+                        ProductType = (ECommerce.Data.Enums.ProductType)1,
+                        Price = 4429,
+                        Quantity = 50,
+                        InventoryNumber = 50,
+                        Rating = 1,
                         createdDate = DateTime.Parse("2022-10-26 14:22:38.2973197"),
                         updatedDate = DateTime.Parse("2022-10-26 14:22:38.2973213")
                     },
-                    cartId = cart.Id,
-                    cart = cart,
-                    number = 2
+                    CartId = cart.Id,
+                    Cart = cart,
+                    Number = 2
                 }
             };
         }

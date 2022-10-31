@@ -34,18 +34,18 @@ namespace ECommerce.BackendAPI.Repository
 
         public async Task<Cart> GetCart(string userId)
         {
-            return await _dbContext.carts.Where(Cart => Cart.userId == userId).SingleOrDefaultAsync();
+            return await _dbContext.carts.Where(Cart => Cart.UserId == userId).SingleOrDefaultAsync();
         }
 
         public void AddCartDetail(Cart cart, CartDetail cartDetail)
         {
-            cart.cartDetails.Add(cartDetail);
+            cart.CartDetails.Add(cartDetail);
             UpdateCart(cart);
         }
 
         public void DelCartDetail(Cart cart, CartDetail cartDetail)
         {
-            cart.cartDetails.Remove(cartDetail);
+            cart.CartDetails.Remove(cartDetail);
             UpdateCart(cart);
         }
 
@@ -53,10 +53,10 @@ namespace ECommerce.BackendAPI.Repository
         {
             await _dbContext.carts.AddAsync(new Cart
             {
-                userId = userId,
-                user = await _dbContext.Users.FindAsync(userId),
-                cartDetails = new List<CartDetail>(),
-                total = 0
+                UserId = userId,
+                User = await _dbContext.Users.FindAsync(userId),
+                CartDetails = new List<CartDetail>(),
+                Total = 0
             });
         }
 

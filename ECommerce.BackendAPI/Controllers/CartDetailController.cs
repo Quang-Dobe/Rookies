@@ -71,11 +71,11 @@ namespace ECommerce.BackendAPI.Controllers
                 List<ShowedCartDetailDTO> showedCartDetailDTOs = new List<ShowedCartDetailDTO>();
                 for (int i = 0; i < listCartDetail.Count; i++)
                 {
-                    Product product = await _productRepository.GetProductById(listCartDetail[i].productId);
+                    Product product = await _productRepository.GetProductById(listCartDetail[i].ProductId);
                     showedCartDetailDTOs.Add(new ShowedCartDetailDTO
                     {
                         Id = listCartDetail[i].Id,
-                        number = listCartDetail[i].number,
+                        number = listCartDetail[i].Number,
                         showedProductDTO = _mapper.Map<ShowedProductDTO>(product)
                     });
                 }
@@ -102,7 +102,7 @@ namespace ECommerce.BackendAPI.Controllers
                 CartDetail checkCartDetail = await _cartDetailRepository.GetCartDetail(cart.Id, productId);
                 if (checkCartDetail != null)
                 {
-                    checkCartDetail.number += number;
+                    checkCartDetail.Number += number;
                     await _cartDetailRepository.Save();
                     return Ok("Update your cart instead of adding new one");
                 }
@@ -110,12 +110,12 @@ namespace ECommerce.BackendAPI.Controllers
                 {
                     CartDetail cartDetail = new CartDetail
                     {
-                        productId = productId,
-                        product = product,
-                        cartId = cart.Id,
+                        ProductId = productId,
+                        Product = product,
+                        CartId = cart.Id,
                         // If I do this, it will automatically add this CartDetail into List<CartDetail> of user's Cart
-                        cart = cart,
-                        number = number
+                        Cart = cart,
+                        Number = number
                     };
                     await _cartDetailRepository.CreateCartDetail(cartDetail);
                     // Because the Save()-methods in all Repository is same, so we just need only one Save()
@@ -146,7 +146,7 @@ namespace ECommerce.BackendAPI.Controllers
                 {
                     return BadRequest("Your cart is empty to update something inside!");
                 }
-                cartDetail.number = number;
+                cartDetail.Number = number;
                 _cartDetailRepository.UpdateCartDetail(cartDetail);
                 await _cartDetailRepository.Save();
 

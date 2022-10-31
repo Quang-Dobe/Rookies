@@ -9,21 +9,21 @@ namespace ECommerce.Data.Model
         [Key]
         public int Id { get; set; }
 
-        public int productId { get; set; }
-        [ForeignKey("productId")]
-        public Product product { get; set; }
+        public int ProductId { get; set; }
+        [ForeignKey("ProductId")]
+        public Product Product { get; set; }
 
-        public int orderId { get; set; }
-        [ForeignKey("orderId")]
-        public Order order { get; set; }
+        public int OrderId { get; set; }
+        [ForeignKey("OrderId")]
+        public Order Order { get; set; }
 
         [Column("Number of product")]
-        public int number { get; set; }
+        public int Number { get; set; }
 
-        public DateTime datePurchase { get; set; }
+        public DateTime DatePurchase { get; set; }
 
-        public string comment { get; set; }
+        public string Comment { get; set; }
 
-        public ProductRating rating { get; set; }
+        public ProductRating Rating { get; set; }
     }
 }

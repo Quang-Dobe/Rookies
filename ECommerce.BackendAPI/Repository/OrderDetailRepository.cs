@@ -32,25 +32,25 @@ namespace ECommerce.BackendAPI.Repository
         public async Task<OrderDetail> GetOrderDetail(int orderId, int productId)
         {
             OrderDetail orderDetail = await (from oD in _dbContext.orderDetails
-                                           where oD.orderId == orderId && oD.productId == productId
+                                           where oD.OrderId == orderId && oD.ProductId == productId
                                            select oD).FirstOrDefaultAsync();
             return orderDetail;
         }
 
         public async Task<List<OrderDetail>> GetOrderDetail(Product productId)
         {
-            return await _dbContext.orderDetails.Where(orderDetail => orderDetail.productId == productId.Id).ToListAsync();
+            return await _dbContext.orderDetails.Where(orderDetail => orderDetail.ProductId == productId.Id).ToListAsync();
         }
 
         public async Task<List<OrderDetail>> GetOrderDetail(Order orderId)
         {
-            return await _dbContext.orderDetails.Where(orderDetail => orderDetail.orderId == orderId.Id).ToListAsync();
+            return await _dbContext.orderDetails.Where(orderDetail => orderDetail.OrderId == orderId.Id).ToListAsync();
         }
 
         public async Task<List<OrderDetail>> GetListOrderDetailByProduct(List<int> listProductId)
         {
             List<OrderDetail> data = await (from oD in _dbContext.orderDetails
-                                            where listProductId.Any(id => id == oD.productId)
+                                            where listProductId.Any(id => id == oD.ProductId)
                                             select oD).ToListAsync();
             return data;
         }

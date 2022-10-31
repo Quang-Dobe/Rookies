@@ -13,15 +13,15 @@ namespace ECommerce.Data.Model
         [Key]
         public int Id { get; set; }
 
-        public int productId { get; set; }
-        [ForeignKey("productId")]
-        public Product product { get; set; }
+        public int ProductId { get; set; }
+        [ForeignKey("ProductId")]
+        public Product Product { get; set; }
 
-        public int cartId { get; set; }
-        [ForeignKey("cartId")]
-        public Cart cart { get; set; }
+        public int CartId { get; set; }
+        [ForeignKey("CartId")]
+        public Cart Cart { get; set; }
 
         [Column("Number of product")]
-        public int number { get; set; }
+        public int Number { get; set; }
     }
 }

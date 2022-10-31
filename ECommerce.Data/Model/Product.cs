@@ -9,29 +9,27 @@ namespace ECommerce.Data.Model
         [Key]
         public int Id { get; set; }
 
-        public string productImg { get; set; }
+        public string ProductImg { get; set; }
 
         [Required(ErrorMessage = "Please fill in the required information")]
         [Column("Product's name")]
-        public string productName { get; set; }
+        public string ProductName { get; set; }
 
         [Required(ErrorMessage = "Please fill in the required information")]
-        public string description { get; set; }
+        public string Description { get; set; }
 
         [Required(ErrorMessage = "Please fill in the required information")]
-        public ProductType productType { get; set; }
+        public ProductType ProductType { get; set; }
 
         [Required(ErrorMessage = "Please fill in the required information")]
-        public int price { get; set; }
+        public int Price { get; set; }
 
         [Required(ErrorMessage = "Please fill in the required information")]
-        public int quantity { get; set; } = 0;
+        public int Quantity { get; set; } = 50;
 
-        public int inventoryNumber { get; set; } = 0;
+        public int InventoryNumber { get; set; } = 50;
 
-        public double rating { get; set; } = 1;
-
-        //public ProductSite productSiteId { get; set; }
+        public double Rating { get; set; } = 4;
 
 
         public DateTime createdDate { get; set; } = DateTime.Now;

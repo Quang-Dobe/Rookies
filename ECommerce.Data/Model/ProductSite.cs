@@ -5,17 +5,17 @@ namespace ECommerce.Data.Model
     public class ProductSite
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Please fill in the required information")]
-        public string country { get; set; }
+        public string Country { get; set; }
 
         [Required(ErrorMessage = "Please fill in the required information")]
-        public string address { get; set; }
+        public string Address { get; set; }
 
         [Required(ErrorMessage = "Please fill in the required information")]
-        public string companyName { get; set; }
+        public string CompanyName { get; set; }
 
-        public List<Product> products { get; set; }
+        public List<Product> Products { get; set; }
     }
 }

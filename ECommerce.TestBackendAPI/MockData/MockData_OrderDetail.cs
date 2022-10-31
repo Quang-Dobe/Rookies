@@ -13,8 +13,8 @@ namespace ECommerce.TestBackendAPI.MockData
                 new Order
                 {
                     Id = 1,
-                    userId = "38cd5450-4071-453d-b146-5940453bbe50",
-                    user = new Microsoft.AspNetCore.Identity.IdentityUser
+                    UserId = "38cd5450-4071-453d-b146-5940453bbe50",
+                    User = new Microsoft.AspNetCore.Identity.IdentityUser
                     {
                         Id = "38cd5450-4071-453d-b146-5940453bbe50",
                         UserName = "tdquangcr",
@@ -32,9 +32,9 @@ namespace ECommerce.TestBackendAPI.MockData
                         LockoutEnabled = true,
                         AccessFailedCount = 0,
                     },
-                    orderDetails = new List<OrderDetail> { },
-                    dateOfPurchase = DateTime.Today,
-                    total = 0
+                    OrderDetails = new List<OrderDetail> { },
+                    DateOfPurchase = DateTime.Today,
+                    Total = 0
                 }
             };
         }
@@ -46,52 +46,52 @@ namespace ECommerce.TestBackendAPI.MockData
                 new OrderDetail
                 {
                     Id = 1,
-                    productId = 1,
-                    product = new Product
+                    ProductId = 1,
+                    Product = new Product
                     {
                         Id = 1,
-                        productImg = "https://lh3.googleusercontent.com/Omba4ZoTRs4tR_2u3eD7455PuuwCyoHXLF5rfn0vi9v6H2k_ji_RrYzyVWw9g2P8JmbKDQ16Q17q31IiFgC1=w500-rw",
-                        productName = "CPU Intel Core I5-7600",
-                        description = "Socket: LGA 1151 , Intel Core thế hệ thứ 7",
-                        productType = (ECommerce.Data.Enums.ProductType)0,
-                        price = 4690,
-                        quantity = 0,
-                        inventoryNumber = 0,
-                        rating = 1,
+                        ProductImg = "https://lh3.googleusercontent.com/Omba4ZoTRs4tR_2u3eD7455PuuwCyoHXLF5rfn0vi9v6H2k_ji_RrYzyVWw9g2P8JmbKDQ16Q17q31IiFgC1=w500-rw",
+                        ProductName = "CPU Intel Core I5-7600",
+                        Description = "Socket: LGA 1151 , Intel Core thế hệ thứ 7",
+                        ProductType = (ECommerce.Data.Enums.ProductType)0,
+                        Price = 4690,
+                        Quantity = 50,
+                        InventoryNumber = 50,
+                        Rating = 1,
                         createdDate = DateTime.Parse("2022-10-26 14:21:58.1796606"),
                         updatedDate = DateTime.Parse("2022-10-26 14:21:58.1796638")
                     },
-                    orderId = order.Id,
-                    order = order,
-                    number = 1,
-                    datePurchase = DateTime.Today,
-                    comment = "This is just a test comment",
-                    rating = (ProductRating)5
+                    OrderId = order.Id,
+                    Order = order,
+                    Number = 1,
+                    DatePurchase = DateTime.Today,
+                    Comment = "This is just a test comment",
+                    Rating = (ProductRating)5
                 },
                 new OrderDetail
                 {
                     Id = 2,
-                    productId = 2,
-                    product = new Product
+                    ProductId = 2,
+                    Product = new Product
                     {
                         Id = 2,
-                        productImg = "https://lh3.googleusercontent.com/UwKfc2vSQGNYIHP23DfTWcToEmsIaxjQsdx0DtIEbqCeZ5dnGBPS7d7WCVW9TOiIkfAh2ddgwDvnOR5U_jg=w500-rw",
-                        productName = "CPU INTEL Core i5-10400",
-                        description = "Socket: LGA 1200 , Intel Core thế hệ thứ 10",
-                        productType = (ECommerce.Data.Enums.ProductType)1,
-                        price = 4429,
-                        quantity = 0,
-                        inventoryNumber = 0,
-                        rating = 1,
+                        ProductImg = "https://lh3.googleusercontent.com/UwKfc2vSQGNYIHP23DfTWcToEmsIaxjQsdx0DtIEbqCeZ5dnGBPS7d7WCVW9TOiIkfAh2ddgwDvnOR5U_jg=w500-rw",
+                        ProductName = "CPU INTEL Core i5-10400",
+                        Description = "Socket: LGA 1200 , Intel Core thế hệ thứ 10",
+                        ProductType = (ECommerce.Data.Enums.ProductType)1,
+                        Price = 4429,
+                        Quantity = 0,
+                        InventoryNumber = 0,
+                        Rating = 1,
                         createdDate = DateTime.Parse("2022-10-26 14:22:38.2973197"),
                         updatedDate = DateTime.Parse("2022-10-26 14:22:38.2973213")
                     },
-                    orderId = order.Id,
-                    order = order,
-                    number = 2,
-                    datePurchase = DateTime.Today,
-                    comment = "This is just another test comment",
-                    rating = (ProductRating)4
+                    OrderId = order.Id,
+                    Order = order,
+                    Number = 2,
+                    DatePurchase = DateTime.Today,
+                    Comment = "This is just another test comment",
+                    Rating = (ProductRating)4
                 }
             };
         }

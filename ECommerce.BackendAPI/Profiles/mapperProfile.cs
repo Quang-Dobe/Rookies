@@ -13,11 +13,11 @@ namespace ECommerce.BackendAPI.Profiles
         {
             CreateMap<Product, ShowedProductDTO>();
             CreateMap<Product, ProductDTO>()
-                .ForMember(des => des.productType, act => act.MapFrom(src => src.productType));
+                .ForMember(des => des.productType, act => act.MapFrom(src => src.ProductType));
             CreateMap<ProductDTO, Product>()
-                .ForMember(des => des.productType, act => act.MapFrom(src => src.productType));
+                .ForMember(des => des.ProductType, act => act.MapFrom(src => src.productType));
             CreateMap<Product, detailProductDTO>()
-                .ForMember(dest => dest.productType, act => act.MapFrom(src => src.productType));
+                .ForMember(dest => dest.productType, act => act.MapFrom(src => src.ProductType));
 
             CreateMap<RegisterRequestDTO, IdentityUser>();
 
@@ -28,22 +28,22 @@ namespace ECommerce.BackendAPI.Profiles
             CreateMap<CartDetail, ShowedCartDetailDTO>()
                 .ForMember(des => des.showedProductDTO, act => act.MapFrom(src => new ShowedProductDTO
                 {
-                    id = src.product.Id,
-                    productImg = src.product.productImg,
-                    productName = src.product.productName,
-                    price = src.product.price,
-                    rating = src.product.rating,
+                    id = src.Product.Id,
+                    productImg = src.Product.ProductImg,
+                    productName = src.Product.ProductName,
+                    price = src.Product.Price,
+                    rating = src.Product.Rating,
                 }));
             CreateMap<OrderDetail, ShowedOrderDetailDTO>()
                 .ForMember(des => des.showedProductDTO, act => act.MapFrom(src => new ShowedProductDTO
                 {
-                    id = src.product.Id,
-                    productImg = src.product.productImg,
-                    productName = src.product.productName,
-                    price = src.product.price,
-                    rating = src.product.rating,
+                    id = src.Product.Id,
+                    productImg = src.Product.ProductImg,
+                    productName = src.Product.ProductName,
+                    price = src.Product.Price,
+                    rating = src.Product.Rating,
                 }))
-                .ForMember(des => des.rating, act => act.MapFrom(src => (int)src.rating));
+                .ForMember(des => des.rating, act => act.MapFrom(src => (int)src.Rating));
         }
     }
 }

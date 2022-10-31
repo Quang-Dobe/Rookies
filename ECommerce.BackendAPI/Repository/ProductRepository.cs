@@ -42,25 +42,25 @@ namespace ECommerce.BackendAPI.Repository
             detailProductDTO data = _mapper.Map<detailProductDTO>(product);
 
             data.reviewProductDTOs = await (from oD in _dbContext.orderDetails
-                                            where oD.productId == product.Id
-                                            join o in _dbContext.orders on oD.orderId equals o.Id
+                                            where oD.ProductId == product.Id
+                                            join o in _dbContext.orders on oD.OrderId equals o.Id
                                             select new ReviewDTO
                                             {
-                                                userName = o.user.UserName,
-                                                comment = oD.comment,
-                                                rating = (int)(oD.rating)
+                                                userName = o.User.UserName,
+                                                comment = oD.Comment,
+                                                rating = (int)(oD.Rating)
                                             }).ToListAsync();
             return data;
         }
 
         public async Task<Product> GetProductByName(string name)
         {
-            return await _dbContext.products.Where(product => product.productName == name).FirstOrDefaultAsync();
+            return await _dbContext.products.Where(product => product.ProductName == name).FirstOrDefaultAsync();
         }
 
         public async Task<List<Product>> GetProductByType(int type)
         {
-            return await _dbContext.products.Where(product => (int)(product.productType) == type).ToListAsync();
+            return await _dbContext.products.Where(product => (int)(product.ProductType) == type).ToListAsync();
         }
 
         public async Task CreateProduct(Product product)

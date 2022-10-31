@@ -32,25 +32,25 @@ namespace ECommerce.BackendAPI.Repository
         public async Task<CartDetail> GetCartDetail(int cartId, int productId)
         {
             CartDetail cartDetail = await (from cD in _dbContext.cartDetails
-                                           where cD.cartId == cartId && cD.productId == productId
+                                           where cD.CartId == cartId && cD.ProductId == productId
                                            select cD).FirstOrDefaultAsync();
             return cartDetail;
         }
 
         public async Task<List<CartDetail>> GetCartDetail(Product productId)
         {
-            return await _dbContext.cartDetails.Where(CartDetail => CartDetail.productId == productId.Id).ToListAsync();
+            return await _dbContext.cartDetails.Where(CartDetail => CartDetail.ProductId == productId.Id).ToListAsync();
         }
 
         public async Task<List<CartDetail>> GetCartDetail(Cart cart)
         {
-            return await _dbContext.cartDetails.Where(CartDetail => CartDetail.cartId == cart.Id).ToListAsync();
+            return await _dbContext.cartDetails.Where(CartDetail => CartDetail.CartId == cart.Id).ToListAsync();
         }
 
         public async Task<List<CartDetail>> GetListCartDetailByProduct(List<int> listProductId)
         {
             List<CartDetail> data = await (from cD in _dbContext.cartDetails
-                                            where listProductId.Any(id => id == cD.productId)
+                                            where listProductId.Any(id => id == cD.ProductId)
                                             select cD).ToListAsync();
             return data;
         }

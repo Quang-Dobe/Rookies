@@ -50,13 +50,13 @@ namespace ECommerce.BackendAPI.Controllers
                 List<ShowedOrderDetailDTO> showedOrderDetailDTOs = new List<ShowedOrderDetailDTO>();
                 for (int i = 0; i < listOrderDetails.Count; i++)
                 {
-                    Product product = await _productRepository.GetProductById(listOrderDetails[i].productId);
+                    Product product = await _productRepository.GetProductById(listOrderDetails[i].ProductId);
                     showedOrderDetailDTOs.Add(new ShowedOrderDetailDTO
                     {
                         Id = listOrderDetails[i].Id,
-                        number = listOrderDetails[i].number,
-                        comment = listOrderDetails[i].comment,
-                        rating = (int)listOrderDetails[i].rating,
+                        number = listOrderDetails[i].Number,
+                        comment = listOrderDetails[i].Comment,
+                        rating = (int)listOrderDetails[i].Rating,
                         showedProductDTO = _mapper.Map<ShowedProductDTO>(product)
                     });
                 }
@@ -77,13 +77,13 @@ namespace ECommerce.BackendAPI.Controllers
             try
             {
                 OrderDetail orderDetail = await _orderDetailRepository.GetOrderDetail(orderDetailId);
-                Product product = await _productRepository.GetProductById(orderDetail.productId);
+                Product product = await _productRepository.GetProductById(orderDetail.ProductId);
                 ShowedOrderDetailDTO showedOrderDetailDTO = new ShowedOrderDetailDTO
                 {
                     Id = orderDetail.Id,
-                    number = orderDetail.number,
-                    comment = orderDetail.comment,
-                    rating = (int)orderDetail.rating,
+                    number = orderDetail.Number,
+                    comment = orderDetail.Comment,
+                    rating = (int)orderDetail.Rating,
                     showedProductDTO = _mapper.Map<ShowedProductDTO>(product)
                 };
                 return Ok(showedOrderDetailDTO);
@@ -111,19 +111,19 @@ namespace ECommerce.BackendAPI.Controllers
                     Product product = await _productRepository.GetProductById(item.productId);
                     OrderDetail orderDetail = new OrderDetail
                     {
-                        productId = item.productId,
-                        product = product,
-                        orderId = order.Id,
-                        order = order,
-                        number = item.number,
-                        datePurchase = DateTime.Today,
-                        comment = "",
-                        rating = (ProductRating)4
+                        ProductId = item.productId,
+                        Product = product,
+                        OrderId = order.Id,
+                        Order = order,
+                        Number = item.number,
+                        DatePurchase = DateTime.Today,
+                        Comment = "",
+                        Rating = (ProductRating)4
                     };
                     CartDetail cartDetail = await _cartDetailRepository.GetCartDetail(cart.Id, item.productId);
-                    if (cartDetail != null && cartDetail.number == item.number)
+                    if (cartDetail != null && cartDetail.Number == item.number)
                     {
-                        order.total += (product.price * item.number);
+                        order.Total += (product.Price * item.number);
                         await _orderDetailRepository.CreateOrderDetail(orderDetail);
                         await _orderDetailRepository.Save();
                         _cartDetailRepository.DeleteCartDetail(cartDetail);
@@ -131,7 +131,7 @@ namespace ECommerce.BackendAPI.Controllers
                     }
                     else
                     {
-                        return BadRequest("Product " + product.productName + " with number of product " + item.number + " is invalid");
+                        return BadRequest("Product " + product.ProductName + " with number of product " + item.number + " is invalid");
                     }
                 }
                 await _orderRepository.Save();
@@ -156,8 +156,8 @@ namespace ECommerce.BackendAPI.Controllers
                 {
                     return BadRequest("Invalid OrderDetailID");
                 }
-                orderDetail.rating = (ProductRating)reviewOrderDetailDTO.rating;
-                orderDetail.comment = reviewOrderDetailDTO.comment;
+                orderDetail.Rating = (ProductRating)reviewOrderDetailDTO.rating;
+                orderDetail.Comment = reviewOrderDetailDTO.comment;
                 _orderDetailRepository.UpdateOrderDetail(orderDetail);
                 await _orderDetailRepository.Save();
 

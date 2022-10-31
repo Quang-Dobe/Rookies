@@ -88,7 +88,7 @@ namespace ECommerce.TestBackendAPI
             // Setup for ProductRepository
             for(int i=0; i<cartDetails.Count; i++)
             {
-                _productRepository.Setup(_ => _.GetProductById(cartDetails[i].productId)).ReturnsAsync(cartDetails[i].product);
+                _productRepository.Setup(_ => _.GetProductById(cartDetails[i].ProductId)).ReturnsAsync(cartDetails[i].Product);
             }
 
             // Act
@@ -101,7 +101,7 @@ namespace ECommerce.TestBackendAPI
             Assert.Equal(data.Count, cartDetails.Count);
             for(int i=0; i<cartDetails.Count; i++)
             {
-                Assert.Equal(data[i].showedProductDTO.id, cartDetails[i].productId);
+                Assert.Equal(data[i].showedProductDTO.id, cartDetails[i].ProductId);
             }
         }
 
@@ -118,7 +118,7 @@ namespace ECommerce.TestBackendAPI
             _cartRepository.Setup(_ => _.GetCart(userId)).ReturnsAsync(cart);
             // Setup for ProductRepository
             // Product here I've already setted productId same as productId above (=1)
-            Product product = MockData_CartDetail.GetListCartDetail(cart).ElementAt(0).product;
+            Product product = MockData_CartDetail.GetListCartDetail(cart).ElementAt(0).Product;
             _productRepository.Setup(_ => _.GetProductById(productId)).ReturnsAsync(product);
             // Setup for CartDetailRepository
             // It the same result (Same CartDetail) as above (When getting Product)

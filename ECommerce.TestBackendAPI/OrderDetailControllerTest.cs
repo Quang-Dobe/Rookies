@@ -53,7 +53,7 @@ namespace ECommerce.TestBackendAPI
             // Setup for MockProductRepository
             for(int i=0; i<orderDetails.Count; i++)
             {
-                _productRepository.Setup(_ => _.GetProductById(orderDetails[i].Id)).ReturnsAsync(orderDetails[i].product);
+                _productRepository.Setup(_ => _.GetProductById(orderDetails[i].Id)).ReturnsAsync(orderDetails[i].Product);
             }
 
             // Act
@@ -79,8 +79,8 @@ namespace ECommerce.TestBackendAPI
             OrderDetail orderDetail = MockData_OrderDetail.GetListOrderDetail(order).ElementAt(0);
             _orderDetailRepository.Setup(_ => _.GetOrderDetail(orderDetailId)).ReturnsAsync(orderDetail);
             // Setup ProductRepository
-            Product product = orderDetail.product;
-            _productRepository.Setup(_ => _.GetProductById(orderDetail.productId)).ReturnsAsync(product);
+            Product product = orderDetail.Product;
+            _productRepository.Setup(_ => _.GetProductById(orderDetail.ProductId)).ReturnsAsync(product);
 
             // Act
             var actionResult = await _orderDetailController.GetOrderDetail(userId, orderDetailId);
@@ -91,7 +91,7 @@ namespace ECommerce.TestBackendAPI
             Assert.NotNull(data);
             Assert.Equal(data.Id, orderDetail.Id);
             Assert.Equal(data.showedProductDTO.id, product.Id);
-            Assert.Equal(data.showedProductDTO.productName, product.productName);
+            Assert.Equal(data.showedProductDTO.productName, product.ProductName);
         }
 
 
@@ -117,7 +117,7 @@ namespace ECommerce.TestBackendAPI
                 //   { Id: 1, ... , product: { productId: 1, ...}, ... , number: 1 }
                 //   { Id: 2, ... , product: { productId: 2, ...}, ... , number: 2 }
                 // So It's Ok to think that all of orderDetailDTOs are already in cartDetails
-                _productRepository.Setup(_ => _.GetProductById(orderDetailDTOs[i].productId)).ReturnsAsync(cartDetails[i].product);
+                _productRepository.Setup(_ => _.GetProductById(orderDetailDTOs[i].productId)).ReturnsAsync(cartDetails[i].Product);
                 _cartDetailRepository.Setup(_ => _.GetCartDetail(cart.Id, orderDetailDTOs[i].productId)).ReturnsAsync(cartDetails[i]);
             }
 

@@ -9,13 +9,13 @@ public class Order
     [Key]
     public int Id { get; set; }
 
-    public string userId { get; set; }
-    [ForeignKey("userId")]
-    public IdentityUser user { get; set; }
+    public string UserId { get; set; }
+    [ForeignKey("UserId")]
+    public IdentityUser User { get; set; }
 
-    public List<OrderDetail> orderDetails { get; set; }
+    public List<OrderDetail> OrderDetails { get; set; }
 
-    public DateTime dateOfPurchase { get; set; }
+    public DateTime DateOfPurchase { get; set; }
 
-    public double total { get; set; }
+    public double Total { get; set; }
 }
