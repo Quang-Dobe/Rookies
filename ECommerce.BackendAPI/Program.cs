@@ -40,12 +40,19 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("_myAllowSpecificOrigins",
-                      policy =>
-                      {
-                          policy.WithOrigins("https://localhost:7076")
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
-                      });
+                            policy =>
+                            {
+                                policy.WithOrigins("https://localhost:7076")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                            });
+    options.AddPolicy("_myAdminSite", 
+                            policy =>
+                            {
+                                policy.WithOrigins("https://localhost:3000")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                            });
 });
 
 // Add HttpClientFactory

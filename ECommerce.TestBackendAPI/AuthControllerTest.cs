@@ -3,6 +3,7 @@ using ECommerce.BackendAPI.Controllers;
 using ECommerce.BackendAPI.Profiles;
 using ECommerce.BackendAPI.Repository;
 using ECommerce.SharedView.DTO.Account;
+using ECommerce.SharedView.DTO.AdminSiteDTO;
 using ECommerce.TestBackendAPI.MockData;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -96,6 +97,24 @@ namespace ECommerce.TestBackendAPI
             Assert.NotNull(okData);
             Assert.Null(badrequestData);
             Assert.Equal(okData, "Create sucessfully!");
+        }
+
+
+        [Fact]
+        public async void GetAllUser_WithoutParams_Ok_ListAllUserDTO()
+        {
+            // Arrange
+            List<IdentityUser> userList = MockData_User.GetUsers();
+            _userRepository.Setup(_ => _.GetUsers()).ReturnsAsync(userList);
+
+            // Act
+            var actionResult = await _authController.GetAllUser();
+            var okActionResult = actionResult.Result as OkObjectResult;
+            List<AllUserDTO> data = okActionResult.Value as List<AllUserDTO>;
+
+            // Assert
+            Assert.NotNull(data);
+            Assert.Equal(data.Count, userList.Count);
         }
     }
 }

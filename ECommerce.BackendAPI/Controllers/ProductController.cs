@@ -4,7 +4,9 @@ using ECommerce.Data.Data;
 using ECommerce.Data.Enums;
 using ECommerce.Data.Model;
 using ECommerce.SharedView.DTO;
+using ECommerce.SharedView.DTO.AdminSiteDTO;
 using ECommerce.SharedView.Enum;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,8 +40,8 @@ namespace ECommerce.BackendAPI.Controllers
         //}
         #endregion
 
-
         [HttpGet]
+        [EnableCors("_myAdminSite")]
         [Route("{type:int}")]
         public async Task<ActionResult<List<ShowedProductDTO>>> GetProductByType([FromRoute] int type)
         {
@@ -50,26 +52,18 @@ namespace ECommerce.BackendAPI.Controllers
         
 
         [HttpGet]
-        public async Task<ActionResult<List<ProductDTO>>> GetAllProducts()
+        [EnableCors("_myAdminSite")]
+        public async Task<ActionResult<List<AllProductDTO>>> GetAllProducts()
         {
             List<Product> allProduct = await _productRepository.GetProducts();
-            List<ProductDTO> allProductDTO = _mapper.Map<List<ProductDTO>>(allProduct);
+            List<AllProductDTO> allProductDTO = _mapper.Map<List<AllProductDTO>>(allProduct);
             return Ok(allProductDTO);
-        }
-
-
-        [HttpPost]
-        public async Task<ActionResult> CreateNewProduct(ProductDTO productDTO)
-        {
-            Product product = _mapper.Map<Product>(productDTO);
-            await _productRepository.CreateProduct(product);
-            await _productRepository.Save();
-            return Ok("Success: Create successfully!");
         }
 
 
         [HttpGet]
         [Route("{id:int}")]
+        [EnableCors("_myAdminSite")]
         public async Task<ActionResult<detailProductDTO>> GetProductByID([FromRoute] int id)
         {
             detailProductDTO data = await _productRepository.GetProductDetailById(id);
@@ -78,6 +72,74 @@ namespace ECommerce.BackendAPI.Controllers
                 return BadRequest("No product with given ID!");
             }
             return Ok(data);
+        }
+        
+        
+        [HttpPost]
+        [EnableCors("_myAdminSite")]
+        public async Task<ActionResult> CreateNewProduct(AllProductDTO allProductDTO)
+        {
+            Product product = _mapper.Map<Product>(allProductDTO);
+            await _productRepository.CreateProduct(product);
+            await _productRepository.Save();
+            return Ok("Success: Create successfully!");
+        }
+
+
+        [HttpPost]
+        [Route("{id:int}")]
+        [EnableCors("_myAdminSite")]
+        public async Task<ActionResult> UpdateProduct([FromRoute] int id, [FromBody] AllProductDTO allProductDTO)
+        {
+            try
+            {
+                Product product = await _productRepository.GetProductById(id);
+                if (product != null)
+                {
+                    product.Id = allProductDTO.id;
+                    product.ProductImg = allProductDTO.ProductImg;
+                    product.ProductName = allProductDTO.ProductName;
+                    product.Description = allProductDTO.Description;
+                    product.ProductType = (ECommerce.Data.Enums.ProductType)allProductDTO.ProductType;
+                    product.Price = allProductDTO.Price;
+                    product.Quantity = allProductDTO.Quantity;
+                    product.InventoryNumber = allProductDTO.InventoryNumber;
+                    product.Rating = allProductDTO.Rating;
+                    product.createdDate = allProductDTO.createdDate;
+                    product.updatedDate = allProductDTO.updatedDate;
+                    _productRepository.UpdateProduct(product);
+                    await _productRepository.Save();
+                    return Ok("Update sucessfully!");
+                }
+                return BadRequest("Invalid product");
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
+        [HttpDelete]
+        [Route("{id:int}")]
+        [EnableCors("_myAdminSite")]
+        public async Task<ActionResult> DeleteProduct([FromRoute] int id)
+        {
+            try
+            {
+                Product product = await _productRepository.GetProductById(id);
+                if (product != null)
+                {
+                    await _productRepository.DeleteProduct(id);
+                    await _productRepository.Save();
+                    return Ok("Delete sucessfully!");
+                }
+                return BadRequest("Invalid product!");
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 

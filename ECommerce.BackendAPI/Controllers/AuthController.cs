@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ECommerce.BackendAPI.Repository;
 using ECommerce.SharedView.DTO.Account;
+using ECommerce.SharedView.DTO.AdminSiteDTO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -124,6 +125,22 @@ namespace ECommerce.BackendAPI.Controllers
             }
 
             return BadRequest(ModelState.Values.SelectMany(x => x.Errors));
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult<List<AllUserDTO>>> GetAllUser()
+        {
+            try
+            {
+                List<IdentityUser> identityUsers = await userRepository.GetUsers();
+                List<AllUserDTO> allUserDTOs = mapper.Map<List<AllUserDTO>>(identityUsers);
+                return Ok(allUserDTOs);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ECommerce.Data.Model;
 using ECommerce.SharedView.DTO;
+using ECommerce.SharedView.DTO.AdminSiteDTO;
 
 namespace ECommerce.TestBackendAPI.MockData
 {
@@ -29,6 +30,56 @@ namespace ECommerce.TestBackendAPI.MockData
                     description = "Socket: 1200, Intel Core thế hệ thứ 11",
                     productType = 0,
                     price = 6099
+                }
+            };
+        }
+
+
+        public static List<AllProductDTO> CreateAllProductDTO()
+        {
+            return new List<AllProductDTO>
+            {
+                new AllProductDTO
+                {
+                    id = 1,
+                    ProductImg = "https://lh3.googleusercontent.com/Omba4ZoTRs4tR_2u3eD7455PuuwCyoHXLF5rfn0vi9v6H2k_ji_RrYzyVWw9g2P8JmbKDQ16Q17q31IiFgC1=w500-rw",
+                    ProductName = "CPU Intel Core I5-7600",
+                    Description = "Socket: LGA 1151 , Intel Core thế hệ thứ 7",
+                    ProductType = 0,
+                    Price = 4690,
+                    Quantity = 50,
+                    InventoryNumber = 50,
+                    Rating = 1,
+                    createdDate = DateTime.Parse("2022-10-26 14:21:58.1796606"),
+                    updatedDate = DateTime.Parse("2022-10-26 14:21:58.1796638")
+                },
+                new AllProductDTO
+                {
+                    id = 2,
+                    ProductImg = "https://lh3.googleusercontent.com/UwKfc2vSQGNYIHP23DfTWcToEmsIaxjQsdx0DtIEbqCeZ5dnGBPS7d7WCVW9TOiIkfAh2ddgwDvnOR5U_jg=w500-rw",
+                    ProductName = "CPU INTEL Core i5-10400",
+                    Description = "Socket: LGA 1200 , Intel Core thế hệ thứ 10",
+                    ProductType = 0,
+                    Price = 4429,
+                    Quantity = 50,
+                    InventoryNumber = 50,
+                    Rating = 1,
+                    createdDate = DateTime.Parse("2022-10-26 14:22:38.2973197"),
+                    updatedDate = DateTime.Parse("2022-10-26 14:22:38.2973213")
+                },
+                new AllProductDTO
+                {
+                    id = 3,
+                    ProductImg = "https://lh3.googleusercontent.com/3K84fNb4XFMvh7JyJ1-itImN6petr8lxpeLhNCIEpidnZGc0fOIjN5SQiHvWM3InvCFzJjwrpOpK3sY0P95o7ZA4VV-aB1JxiA=w500-rw",
+                    ProductName = "CPU INTEL Core i5-11600K",
+                    Description = "Socket: 1200, Intel Core thế hệ thứ 11",
+                    ProductType = 0,
+                    Price = 6099,
+                    Quantity = 50,
+                    InventoryNumber = 50,
+                    Rating = 1,
+                    createdDate = DateTime.Parse("2022-10-26 14:23:24.8310386"),
+                    updatedDate = DateTime.Parse("2022-10-26 14:23:24.8310397")
                 }
             };
         }

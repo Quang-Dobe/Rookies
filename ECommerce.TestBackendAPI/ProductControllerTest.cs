@@ -4,6 +4,7 @@ using ECommerce.BackendAPI.Profiles;
 using ECommerce.BackendAPI.Repository;
 using ECommerce.Data.Data;
 using ECommerce.SharedView.DTO;
+using ECommerce.SharedView.DTO.AdminSiteDTO;
 using ECommerce.TestBackendAPI.MockData;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -57,7 +58,7 @@ namespace ECommerce.TestBackendAPI
             // Act
             var actionResult = await _productController.GetAllProducts();
             var okActionResult = actionResult.Result as OkObjectResult;
-            List<ProductDTO> data = (List<ProductDTO>)okActionResult.Value;
+            List<AllProductDTO> data = (List<AllProductDTO>)okActionResult.Value;
 
             // Assert
             Assert.NotNull(data);
@@ -117,10 +118,10 @@ namespace ECommerce.TestBackendAPI
         public async void CreateNewProduct_WithParams_Ok_String()
         {
             // Arrange
-            ProductDTO newProductDTO = MockData_Product.CreateProductDTO().ElementAt(0);
+            AllProductDTO allProductDTO = MockData_Product.CreateAllProductDTO().ElementAt(0);
 
             // Act
-            var actionResult = await _productController.CreateNewProduct(newProductDTO);
+            var actionResult = await _productController.CreateNewProduct(allProductDTO);
             var okActionResult = actionResult as OkObjectResult;
             var data = okActionResult.Value;
 
