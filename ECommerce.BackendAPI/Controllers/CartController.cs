@@ -37,11 +37,11 @@ namespace ECommerce.BackendAPI.Controllers
             {
                 await _cartRepository.CreateCart(userId);
                 await _cartRepository.Save();
-                return Json("Create sucessfully");
+                return Ok("Create sucessfully");
             }
             catch (Exception ex)
             {
-                return Json(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -55,11 +55,11 @@ namespace ECommerce.BackendAPI.Controllers
                 Cart cart = await _cartRepository.GetCart(userId);
                 await _cartRepository.Save();
                 CartDTO cartDTO = _mapper.Map<CartDTO>(cart);
-                return Json(cartDTO);
+                return Ok(cartDTO);
             }
             catch(Exception ex)
             {
-                return Json(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -73,11 +73,11 @@ namespace ECommerce.BackendAPI.Controllers
                 Cart cart = await _cartRepository.GetCart(userId);
                 _cartRepository.DeleteCart(cart);
                 await _cartRepository.Save();
-                return Json("Delete sucessfully");
+                return Ok("Delete sucessfully");
             }
             catch (Exception ex)
             {
-                return Json(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
     }

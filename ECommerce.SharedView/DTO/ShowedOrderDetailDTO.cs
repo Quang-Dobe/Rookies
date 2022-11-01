@@ -6,6 +6,8 @@
 
         public ShowedProductDTO showedProductDTO { get; set; }
 
+        public DateTime DatePurchase { get; set; }
+
         public int number { get; set; }
 
         public string comment { get; set; }

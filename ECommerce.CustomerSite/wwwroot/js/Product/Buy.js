@@ -70,7 +70,7 @@ function updateQuantity(quantityInput)
 function updateCartDetail() {
     let number = $('.product-quantity input').value
     let productId = $('.product-details product-id').innerText
-    let userId = "dee6f815-209c-4bfd-8d91-cadbd30d6011"
+    let userId = "05235465-f941-4e00-98bb-5306da1de482"
     fetch("https://localhost:7173/CartDetail/UpdateCartDetail/" + productId + "?userId=" + userId),
     {
         method: 'POST',
@@ -98,7 +98,7 @@ function removeItem(removeButton)
 function deleteCartDetail() {
     let number = $('.product-quantity input').value
     let productId = $('.product-details product-id').innerText
-    let userId = "dee6f815-209c-4bfd-8d91-cadbd30d6011"
+    let userId = "05235465-f941-4e00-98bb-5306da1de482"
     fetch("https://localhost:7173/CartDetail/DeleteCartDetail/" + productId + "?userId=" + userId),
     {
         method: 'POST',

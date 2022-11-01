@@ -59,7 +59,7 @@ const userAction = async () => {
     var number = $('.container .container-fluid ._product-detail-content ._p-price-box ._p-add-cart ._p-qty input').value
     var productId = $('.container #productId').innerText
 
-    fetch("https://localhost:7173/CartDetail/CreateCartDetail/" + productId + "?userId=dee6f815-209c-4bfd-8d91-cadbd30d6011",
+    fetch("https://localhost:7173/CartDetail/CreateCartDetail/" + productId + "?userId=05235465-f941-4e00-98bb-5306da1de482",
         {
             method: 'POST',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },

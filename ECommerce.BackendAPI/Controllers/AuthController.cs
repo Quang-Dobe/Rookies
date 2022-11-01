@@ -93,10 +93,10 @@ namespace ECommerce.BackendAPI.Controllers
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var stringToken = tokenHandler.WriteToken(token);
 
-                return StatusCode(200, stringToken);
+                return Ok(stringToken);
             }
 
-            return StatusCode(401, "");
+            return Unauthorized("Invalid account");
         }
 
         [HttpPost]
@@ -115,7 +115,7 @@ namespace ECommerce.BackendAPI.Controllers
 
                     await cartRepository.Save();
                     await orderRepository.Save();
-                    return StatusCode(200, "");
+                    return Ok("Create sucessfully!");
                 }
                 else
                 {
@@ -123,7 +123,7 @@ namespace ECommerce.BackendAPI.Controllers
                 }
             }
 
-            return StatusCode(400, ModelState.Values.SelectMany(x => x.Errors));
+            return BadRequest(ModelState.Values.SelectMany(x => x.Errors));
         }
     }
 }

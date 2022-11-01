@@ -25,6 +25,10 @@
                                 <i class="fa-sharp fa-solid fa-dollar-sign"></i>
                                 <span class="price">@Model.price</span>
                             </span>
+                            <span>
+                                <p>Number of product in Inventory: </p>
+                                <span id="inventory">@Model.inventoryNumber</span>
+                            </span>
                         </div>
                         <div class="_p-add-cart">
                             <div class="_p-qty">
@@ -92,7 +96,9 @@
         }
         increaseButton.onclick = function (e) {
             var quantity = document.querySelector('.container .container-fluid ._product-detail-content ._p-price-box ._p-add-cart ._p-qty input')
-            quantity.value = (parseInt(quantity.value) + 1).toString()
+            var inventory = document.querySelector('.container .container-fluid ._product-detail-content ._p-price-box .p-list #inventory').innerHTML
+            if ((parseInt(quantity.value) + 1) <= inventory)
+                quantity.value = (parseInt(quantity.value) + 1).toString()
         }
     }
     InDeQuantity()

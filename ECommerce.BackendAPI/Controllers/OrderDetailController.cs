@@ -56,10 +56,12 @@ namespace ECommerce.BackendAPI.Controllers
                         Id = listOrderDetails[i].Id,
                         number = listOrderDetails[i].Number,
                         comment = listOrderDetails[i].Comment,
+                        DatePurchase = listOrderDetails[i].DatePurchase,
                         rating = (int)listOrderDetails[i].Rating,
                         showedProductDTO = _mapper.Map<ShowedProductDTO>(product)
                     });
                 }
+                showedOrderDetailDTOs = showedOrderDetailDTOs.OrderByDescending(x => x.Id).ToList();
                 return Ok(showedOrderDetailDTOs);
             }
             catch (Exception ex)
@@ -84,6 +86,7 @@ namespace ECommerce.BackendAPI.Controllers
                     number = orderDetail.Number,
                     comment = orderDetail.Comment,
                     rating = (int)orderDetail.Rating,
+                    DatePurchase = orderDetail.DatePurchase,
                     showedProductDTO = _mapper.Map<ShowedProductDTO>(product)
                 };
                 return Ok(showedOrderDetailDTO);
@@ -123,6 +126,8 @@ namespace ECommerce.BackendAPI.Controllers
                     CartDetail cartDetail = await _cartDetailRepository.GetCartDetail(cart.Id, item.productId);
                     if (cartDetail != null && cartDetail.Number == item.number)
                     {
+                        product.InventoryNumber = product.InventoryNumber - cartDetail.Number;
+                        await _productRepository.Save();
                         order.Total += (product.Price * item.number);
                         await _orderDetailRepository.CreateOrderDetail(orderDetail);
                         await _orderDetailRepository.Save();

@@ -11,7 +11,7 @@ namespace ECommerce.TestBackendAPI.MockData
                 new Cart
                 {
                     Id = 1,
-                    UserId = "38cd5450-4071-453d-b146-5940453bbe50",
+                    UserId = "05235465-f941-4e00-98bb-5306da1de482",
                     User = new Microsoft.AspNetCore.Identity.IdentityUser
                     {
                         Id = "38cd5450-4071-453d-b146-5940453bbe50",

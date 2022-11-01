@@ -107,7 +107,7 @@
                 var number = e.target.parentElement.querySelector('h5')
                 var productId = e.target.parentElement.parentElement.querySelector('.product-details span')
                 number.innerText = parseInt(number.innerText) - 1;
-                var userId = "38cd5450-4071-453d-b146-5940453bbe50"
+                var userId = "05235465-f941-4e00-98bb-5306da1de482"
                 fetch("https://localhost:7173/CartDetail/UpdateCartDetail/" + productId.innerText + "?userId=" + userId,
                 {
                     method: 'POST',
@@ -130,7 +130,7 @@
                 var number = e.target.parentElement.querySelector('h5')
                 var productId = e.target.parentElement.parentElement.querySelector('.product-details span')
                 number.innerText = parseInt(number.innerText) + 1;
-                var userId = "38cd5450-4071-453d-b146-5940453bbe50"
+                var userId = "05235465-f941-4e00-98bb-5306da1de482"
                 fetch("https://localhost:7173/CartDetail/UpdateCartDetail/" + productId.innerText + "?userId=" + userId,
                 {
                     method: 'POST',
@@ -153,7 +153,7 @@
                 var product = e.target.parentElement.parentElement
                 var number = e.target.parentElement.parentElement.querySelector('h5')
                 var productId = e.target.parentElement.parentElement.querySelector('.product-details span')
-                var userId = "38cd5450-4071-453d-b146-5940453bbe50"
+                var userId = "05235465-f941-4e00-98bb-5306da1de482"
                 fetch("https://localhost:7173/CartDetail/DeleteCartDetail/" + productId.innerText + "?userId=" + userId,
                 {
                     method: 'DELETE',
@@ -180,7 +180,7 @@
                 data.unshift({ productId: item.querySelector(".product-details span").innerText, number: item.querySelector(".qty h5").innerText })
             })
 
-            var userId = "38cd5450-4071-453d-b146-5940453bbe50"
+            var userId = "05235465-f941-4e00-98bb-5306da1de482"
             fetch("https://localhost:7173/OrderDetail/CreateOrderDetail" + "?userId=" + userId,
                 {
                     method: 'POST',

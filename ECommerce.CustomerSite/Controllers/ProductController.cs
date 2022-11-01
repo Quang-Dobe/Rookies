@@ -30,7 +30,7 @@ namespace ECommerce.CustomerSite.Controllers
         [HttpGet]
         public async Task<IActionResult> Buy()
         {
-            string userId = "38cd5450-4071-453d-b146-5940453bbe50";
+            string userId = "05235465-f941-4e00-98bb-5306da1de482";
             List<ShowedCartDetailDTO> showedCartDetailDTOs = await cartService.GetAllCardDetailByCart(userId);
             return View(showedCartDetailDTOs);
         }
@@ -38,7 +38,7 @@ namespace ECommerce.CustomerSite.Controllers
         [HttpGet]
         public async Task<IActionResult> History()
         {
-            string userId = "38cd5450-4071-453d-b146-5940453bbe50";
+            string userId = "05235465-f941-4e00-98bb-5306da1de482";
             List<ShowedOrderDetailDTO> showedOrderDetailDTOs = await orderService.GetAllOrderDetailByOrder(userId);
             return View(showedOrderDetailDTOs);
         }
@@ -46,7 +46,7 @@ namespace ECommerce.CustomerSite.Controllers
         [HttpGet]
         public async Task<IActionResult> Review([FromQuery] int id)
         {
-            string userId = "38cd5450-4071-453d-b146-5940453bbe50";
+            string userId = "05235465-f941-4e00-98bb-5306da1de482";
             ShowedOrderDetailDTO showedOrderDetailDTO = await orderService.GetOrderDetail(userId, id);
             return View(showedOrderDetailDTO);
         }

@@ -58,7 +58,7 @@ function getNotice(divToastElement, type) {
 const userAction = async () => {
     var number = $('.container .container-fluid ._product-detail-content ._p-price-box ._p-add-cart ._p-qty input').value
     var productId = $('.container #productId').innerText
-    var userId = "38cd5450-4071-453d-b146-5940453bbe50";
+    var userId = "05235465-f941-4e00-98bb-5306da1de482";
 
     fetch("https://localhost:7173/CartDetail/CreateCartDetail/" + productId + "?userId=" + userId,
         {

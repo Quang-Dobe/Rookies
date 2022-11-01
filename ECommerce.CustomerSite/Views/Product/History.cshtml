@@ -17,30 +17,42 @@
                     var total = item.showedProductDTO.price * item.number;
                     <div class="d-flex flex-row justify-content-between align-items-center p-2 bg-white mt-4 px-3 rounded">
                         <div class="mr-1"><img class="rounded" src=@item.showedProductDTO.productImg width="70"></div>
-                        <div class="d-flex flex-column align-items-center product-details">
-                            <span style="display: none; opacity: 0">@item.showedProductDTO.id</span>
-                            <span class="font-weight-bold">@item.showedProductDTO.productName</span>
-                        </div>
 
-                        <div class="d-flex flex-row align-items-center qty">
-                            <h5 class="text-grey mt-1 mr-1 ml-1">@item.number</h5>
-                        </div>
 
-                        <div class="sub-total">
-                            <h5 class="text-grey">@total</h5>
-                        </div>
+                        <div class="d-flex flex-column align-items-center">
 
-                        <div class="d-flex align-items-center">
-                            @{
-                            if (item.comment == null || item.comment == "" || item.comment.Length == 0)
-                            {
-                                <a class="btn btn-outline-info" asp-controller="Product" asp-action="Review" asp-route-id="@item.Id">Review</a>
-                            }
-                            else 
-                            {
-                                <a type="button" class="btn btn-outline-secondary disabled">Reviewed</a>
-                            }
-                            }
+                            <div class="d-flex flex-row justify-content-between align-items-center p-2 bg-white mt-4 px-3 rounded">
+                                <div class="d-flex flex-column align-items-center product-details">
+                                    <span style="display: none; opacity: 0">@item.showedProductDTO.id</span>
+                                    <span class="font-weight-bold">@item.showedProductDTO.productName</span>
+                                </div>
+
+                                <div class="d-flex flex-row align-items-center qty">
+                                    <h5 class="text-grey mt-1 mr-1 ml-1">@item.number</h5>
+                                </div>
+
+                                <div class="sub-total">
+                                    <h5 class="text-grey">@total</h5>
+                                </div>
+
+                                <div class="d-flex align-items-center">
+                                    @{
+                                        if (item.comment == null || item.comment == "" || item.comment.Length == 0)
+                                        {
+                                            <a class="btn btn-outline-info" asp-controller="Product" asp-action="Review" asp-route-id="@item.Id">Review</a>
+                                        }
+                                        else
+                                        {
+                                            <a type="button" class="btn btn-outline-secondary disabled">Reviewed</a>
+                                        }
+                                    }
+                                </div>
+                            </div>
+
+                            <div>
+                                <p>Purchase Date: @item.DatePurchase.Day.ToString() / @item.DatePurchase.Month.ToString() / @item.DatePurchase.Year.ToString()</p>
+                            </div>
+
                         </div>
                     </div>
                 }
