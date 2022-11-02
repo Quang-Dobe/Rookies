@@ -30,19 +30,6 @@ namespace ECommerce.CustomerSite.Controllers
         [HttpGet]
         public async Task<IActionResult> Category([FromQuery] string? type)
         {
-            // Using with HttpClientFactory
-            //List<ShowedProductDTO> listProducts = new List<ShowedProductDTO>();
-            //using (var client = clientFactory.CreateClient())
-            //{
-            //    // Waiting for getting response
-            //    var response = await client.GetAsync("Product/GetProductByType/" + (int)(Enum.Parse(typeof(ProductType), type)));
-            //    // Read data from content
-            //    var content = await response.Content.ReadAsStringAsync();
-            //    // Convert to List of ShowedProductDTO
-            //    listProducts = JsonConvert.DeserializeObject<List<ShowedProductDTO>>(content);
-            //}
-            //return View(listProducts);
-
             List<ShowedProductDTO> listProducts = await productService.GetProductByType((int)(Enum.Parse(typeof(ProductType), type)));
             return View(listProducts);
         }

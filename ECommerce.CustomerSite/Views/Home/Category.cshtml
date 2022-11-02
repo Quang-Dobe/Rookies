@@ -7,51 +7,76 @@
 <link href="~/css/product/rating.css" rel="stylesheet" />
 <link href="~/css/product/card.css" rel="stylesheet" />
 
-<div class="row">
-    <div class="col-4">
-        <div id="menu">
-            <i class="fa-solid fa-list"></i>
-            <h3 style="font-size:large; font-weight: 500">Menu</h3>
+<div class="container-fluid mb-5">
+    <div class="row border-top px-xl-5">
+        <div class="col-lg-3 d-none d-lg-block">
+            <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100" data-toggle="collapse" href="#navbar-vertical" style="height: 65px; margin-top: -1px; padding: 0 30px;">
+                <h6 class="m-0">Categories</h6>
+                <i class="fa fa-angle-down text-dark"></i>
+            </a>
+            <nav class="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
+                <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
+                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=0>CPU</a>
+                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=1>Mainboard</a>
+                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=2>RAM</a>
+                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=3>HardDisk</a>
+                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=4>PSU</a>
+                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=5>VGA</a>
+                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=6>Case</a>
+                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=7>Monitor</a>
+                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=8>Other</a>
+                </div>
+            </nav>
         </div>
-        <div id="listMenu">
-            <ul>
-                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=0>CPU</a></li>
-                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=1>Mainboard</a></li>
-                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=2>RAM</a></li>
-                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=3>HardDisk</a></li>
-                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=4>PSU</a></li>
-                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=5>VGA</a></li>
-                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=6>Case</a></li>
-                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=7>Monitor</a></li>
-                <li><i class="fa-solid fa-caret-right"></i><a asp-controller="Home" asp-action="Index" asp-route-type=8>Other</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="col-8">
-        <div class="row">
-            @{
-                if (Model != null) {
-                    foreach (ShowedProductDTO product in Model)
+        <div class="col-lg-9">
+            <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
+                <a href="" class="text-decoration-none d-block d-lg-none">
+                    <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
+                </a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                    <div class="navbar-nav mr-auto py-0">
+                        <a class="nav-item nav-link active" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
+                        <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
+                        <a class="nav-item nav-link" href="#">Contact</a>
+                    </div>
+                    <div class="navbar-nav ml-auto py-0">
+                        <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
+                        <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
+                    </div>
+                </div>
+            </nav>
+            <div class="row">
+                @{
+                    if (Model != null)
                     {
+                        foreach (ShowedProductDTO product in Model)
+                        {
                             <div class="col-4 card">
                                 <div class="card-img" style="height: 60%">
                                     <img src="@product.productImg" class="card-img-top" alt="@product.productName" style="object-fit:scale-down">
                                 </div>
                                 <div class="card-body">
-                                <h5 class="card-title" style="overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; line-clamp:2;">
-                                    @product.productName
-                                </h5>
+                                    <h5 class="card-title" style="overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; line-clamp:2;">
+                                        @product.productName
+                                    </h5>
                                     <h4 style="color: red;">@Convert.ToDecimal(product.price).ToString("C0")</h4>
                                     <i data-star=@product.rating></i>
                                     <a class="btn btn-primary" asp-controller="Product" asp-action="Detail" asp-route-id=@product.id>Buy</a>
                                 </div>
                             </div>
+                        }
                     }
                 }
-            }
+            </div>
+        </div>
     </div>
 </div>
 
-@section scripts {
+
+@*@section scripts {
     <script type="text/javascript" src="../js/Home/Category.js"></script>
-}
+}*@

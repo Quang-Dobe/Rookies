@@ -2,7 +2,7 @@
 const $$ = document.querySelectorAll.bind(document)
 
 const divToastElement = $('.container #toast')
-const AddToCartElement = $('.container .container-fluid ._product-detail-content ._p-price-box ._p-qty-and-cart ._p-add-cart ._AddToCart')
+const AddToCartElement = document.querySelector(".col-lg-7.pb-5 .btn.btn-primary.px-3")
 
 
 function getNotice(divToastElement, type) {
@@ -56,8 +56,8 @@ function getNotice(divToastElement, type) {
 }
 
 const userAction = async () => {
-    var number = $('.container .container-fluid ._product-detail-content ._p-price-box ._p-add-cart ._p-qty input').value
-    var productId = $('.container #productId').innerText
+    var number = $('.input-group.quantity input').value
+    var productId = $('.col-lg-7 pb-5 p#productId').innerText
     var userId = "05235465-f941-4e00-98bb-5306da1de482";
 
     fetch("https://localhost:7173/CartDetail/CreateCartDetail/" + productId + "?userId=" + userId,
