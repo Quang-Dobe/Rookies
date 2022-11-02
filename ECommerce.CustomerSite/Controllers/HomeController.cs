@@ -1,7 +1,7 @@
 ﻿using ECommerce.CustomerSite.Services.Interface;
 using ECommerce.SharedView;
 using ECommerce.SharedView.DTO;
-using ECommerce.SharedView.Enum;
+using ECommerce.SharedView.DTO.AdminSiteDTO;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -13,24 +13,30 @@ namespace ECommerce.CustomerSite.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         //private IHttpClientFactory clientFactory;
-        private IProductService productService;
+        private IProductService _productService;
+        private ICategoryService _categoryService;
 
-        public HomeController(ILogger<HomeController> logger, IProductService productService)
+        public HomeController(ILogger<HomeController> logger, IProductService productService, ICategoryService categoryService)
         {
             _logger = logger;
-            this.productService = productService;
+            this._productService = productService;
+            this._categoryService = categoryService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            List<AllCategoryDTO> allCategoryDTOs = await _categoryService.GetAllCategories();
+            ViewData["AllCategory"] = allCategoryDTOs;
             return View();
         }
 
         [HttpGet]
         public async Task<IActionResult> Category([FromQuery] string? type)
         {
-            List<ShowedProductDTO> listProducts = await productService.GetProductByType((int)(Enum.Parse(typeof(ProductType), type)));
+            List<ShowedProductDTO> listProducts = await _productService.GetProductByType(int.Parse(type));
+            List<AllCategoryDTO> allCategoryDTOs = await _categoryService.GetAllCategories();
+            ViewData["AllCategory"] = allCategoryDTOs;
             return View(listProducts);
         }
 

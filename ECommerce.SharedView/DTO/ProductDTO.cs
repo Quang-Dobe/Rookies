@@ -1,8 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using ECommerce.SharedView.Enum;
-
-namespace ECommerce.SharedView.DTO
+﻿namespace ECommerce.SharedView.DTO
 {
     public class ProductDTO
     {
@@ -12,7 +8,7 @@ namespace ECommerce.SharedView.DTO
 
         public string description { get; set; }
 
-        public ProductType productType { get; set; }
+        public int categoryId { get; set; }
 
         public int price { get; set; }
     }

@@ -1,6 +1,7 @@
 ﻿@model ShowedOrderDetailDTO
 @{
     ViewData["Title"] = "Review" + Model.showedProductDTO.productName;
+    List<AllCategoryDTO> allCategoryDTOs = ViewData["AllCategory"] as List<AllCategoryDTO>;
 }
 
 
@@ -19,15 +20,12 @@
             </a>
             <nav class="collapse navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
                 <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=0>CPU</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=1>Mainboard</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=2>RAM</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=3>HardDisk</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=4>PSU</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=5>VGA</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=6>Case</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=7>Monitor</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=8>Other</a>
+                    @{
+                        foreach (AllCategoryDTO item in allCategoryDTOs)
+                        {
+                            <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id>@item.name</a>
+                        }
+                    }
                 </div>
             </nav>
         </div>
@@ -195,7 +193,7 @@
 
                     function AddReview() {
                         document.querySelector(".btn-primary").onclick = function (e) {
-                            var userId = "05235465-f941-4e00-98bb-5306da1de482";
+                            var userId = "88844ee3-cccb-4552-b513-f4f446e785f2";
                             var orderDetailId = e.target.parentElement.querySelector("span").innerText;
                             var reviewOrderDetailDTO = {
                                 comment: document.querySelector("textarea").value,

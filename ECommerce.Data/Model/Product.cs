@@ -19,7 +19,9 @@ namespace ECommerce.Data.Model
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Please fill in the required information")]
-        public ProductType ProductType { get; set; }
+        public int CategoryId { get; set; }
+        [ForeignKey("CategoryId")]
+        public Category Category { get; set; }
 
         [Required(ErrorMessage = "Please fill in the required information")]
         public int Price { get; set; }

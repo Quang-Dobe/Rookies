@@ -1,6 +1,4 @@
-﻿using ECommerce.SharedView.Enum;
-
-namespace ECommerce.SharedView.DTO.AdminSiteDTO
+﻿namespace ECommerce.SharedView.DTO.AdminSiteDTO
 {
     public class AllProductDTO
     {
@@ -12,7 +10,7 @@ namespace ECommerce.SharedView.DTO.AdminSiteDTO
 
         public string Description { get; set; }
 
-        public int ProductType { get; set; }
+        public int CategoryId { get; set; }
 
         public int Price { get; set; }
 

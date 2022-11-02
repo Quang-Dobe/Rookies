@@ -16,6 +16,7 @@ namespace ECommerce.TestBackendAPI
     {
         private readonly Mock<IProductRepository> _productRepository;
         private readonly ProductController _productController;
+        private readonly Mock<ICategoryRepository> _categoryRepository;
         private readonly IMapper _mapper;
 
 
@@ -28,7 +29,8 @@ namespace ECommerce.TestBackendAPI
             });
             _mapper = mockMapper.CreateMapper();
             _productRepository = new Mock<IProductRepository>();
-            _productController = new ProductController(_productRepository.Object, _mapper);
+            _categoryRepository = new Mock<ICategoryRepository>();
+            _productController = new ProductController(_categoryRepository.Object, _productRepository.Object, _mapper);
         }
 
 

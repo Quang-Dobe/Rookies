@@ -15,11 +15,11 @@ namespace ECommerce.BackendAPI.Profiles
             // CustomerSite
             CreateMap<Product, ShowedProductDTO>();
             CreateMap<Product, ProductDTO>()
-                .ForMember(des => des.productType, act => act.MapFrom(src => src.ProductType));
+                .ForMember(des => des.categoryId, act => act.MapFrom(src => src.CategoryId));
             CreateMap<ProductDTO, Product>()
-                .ForMember(des => des.ProductType, act => act.MapFrom(src => src.productType));
+                .ForMember(des => des.CategoryId, act => act.MapFrom(src => src.categoryId));
             CreateMap<Product, detailProductDTO>()
-                .ForMember(dest => dest.productType, act => act.MapFrom(src => src.ProductType));
+                .ForMember(dest => dest.categoryId, act => act.MapFrom(src => src.CategoryId));
 
             CreateMap<RegisterRequestDTO, IdentityUser>();
 
@@ -51,14 +51,22 @@ namespace ECommerce.BackendAPI.Profiles
             // AdminSite
             CreateMap<Product, AllProductDTO>()
                 .ForMember(des => des.id, act => act.MapFrom(src => src.Id))
-                .ForMember(des => des.ProductType, act => act.MapFrom(src => (int)src.ProductType));
+                .ForMember(des => des.CategoryId, act => act.MapFrom(src => src.CategoryId));
             CreateMap<AllProductDTO, Product>()
                 .ForMember(des => des.Id, act => act.MapFrom(src => src.id))
-                .ForMember(des => des.ProductType, act => act.MapFrom(src => (ProductType)src.ProductType));
+                .ForMember(des => des.CategoryId, act => act.MapFrom(src => src.CategoryId));
             CreateMap<IdentityUser, AllUserDTO>()
                 .ForMember(des => des.id, act => act.MapFrom(src => src.Id))
                 .ForMember(des => des.EmailConfirmed, act => act.MapFrom(src => src.EmailConfirmed ? 1 : 0))
                 .ForMember(des => des.PhoneNumberConfirmedConfirmed, act => act.MapFrom(src => src.PhoneNumberConfirmed ? 1 : 0));
+            CreateMap<Category, AllCategoryDTO>()
+                .ForMember(des => des.id, act => act.MapFrom(src => src.Id))
+                .ForMember(des => des.name, act => act.MapFrom(src => src.Name))
+                .ForMember(des => des.description, act => act.MapFrom(src => src.Description));
+            CreateMap<AllCategoryDTO, Category>()
+                .ForMember(des => des.Id, act => act.MapFrom(src => src.id))
+                .ForMember(des => des.Description, act => act.MapFrom(src => src.description))
+                .ForMember(des => des.Name, act => act.MapFrom(src => src.name));
         }
     }
 }

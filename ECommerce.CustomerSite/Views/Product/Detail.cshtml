@@ -1,11 +1,13 @@
 ﻿@model detailProductDTO
 @{
     ViewData["Title"] = "Product Detail";
+    List<AllCategoryDTO> allCategoryDTOs = ViewData["AllCategory"] as List<AllCategoryDTO>;
     int totalReview = Model.reviewProductDTOs.Count;
 }
 
 <link href="~/css/product/productdetail.css" rel="stylesheet" />
 <link href="~/css/product/addtocart.css" rel="stylesheet" />
+<link href="~/css/product/rating.css" rel="stylesheet" />
 
 <!-- Nav Start -->
 <div class="container-fluid mb-5">
@@ -17,15 +19,12 @@
             </a>
             <nav class="collapse navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
                 <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=0>CPU</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=1>Mainboard</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=2>RAM</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=3>HardDisk</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=4>PSU</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=5>VGA</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=6>Case</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=7>Monitor</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=8>Other</a>
+                    @{
+                        foreach (AllCategoryDTO item in allCategoryDTOs)
+                        {
+                            <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id>@item.name</a>
+                        }
+                    }
                 </div>
             </nav>
         </div>
@@ -86,11 +85,12 @@
             <p id="productId" style="display:none; opacity:0;">@Model.id</p>
             <div class="d-flex mb-3">
                 <div class="text-primary mr-2">
-                    <small class="fas fa-star"></small>
+                    <i data-star=@Model.rating></i>
+                    @*<small class="fas fa-star"></small>
                     <small class="fas fa-star"></small>
                     <small class="fas fa-star"></small>
                     <small class="fas fa-star-half-alt"></small>
-                    <small class="far fa-star"></small>
+                    <small class="far fa-star"></small>*@
                 </div>
                 <small class="pt-1">(@totalReview Reviews)</small>
             </div>
@@ -257,7 +257,7 @@
     const userAction = async () => {
         var number = $('.input-group.quantity input').value
         var productId = $('.col-lg-7.pb-5 p#productId').innerText
-        var userId = "05235465-f941-4e00-98bb-5306da1de482";
+        var userId = "88844ee3-cccb-4552-b513-f4f446e785f2";
 
         fetch("https://localhost:7173/CartDetail/CreateCartDetail/" + productId + "?userId=" + userId,
             {

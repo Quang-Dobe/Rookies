@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
 using ECommerce.BackendAPI.Repository;
-using ECommerce.Data.Data;
-using ECommerce.Data.Enums;
 using ECommerce.Data.Model;
 using ECommerce.SharedView.DTO;
 using ECommerce.SharedView.DTO.AdminSiteDTO;
-using ECommerce.SharedView.Enum;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.BackendAPI.Controllers
 {
@@ -16,13 +12,15 @@ namespace ECommerce.BackendAPI.Controllers
     [ApiController]
     public class ProductController : Controller
     {
-        private IProductRepository _productRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IProductRepository _productRepository;
         private IMapper _mapper;
 
 
         // Initialization
-        public ProductController(IProductRepository productRepository, IMapper mapper)
+        public ProductController(ICategoryRepository categoryRepository, IProductRepository productRepository, IMapper mapper)
         {
+            this._categoryRepository = categoryRepository;
             this._productRepository = productRepository;
             this._mapper = mapper;
         }
@@ -45,6 +43,11 @@ namespace ECommerce.BackendAPI.Controllers
         [Route("{type:int}")]
         public async Task<ActionResult<List<ShowedProductDTO>>> GetProductByType([FromRoute] int type)
         {
+            Category category = await _categoryRepository.GetCategory(type);
+            if (category == null)
+            {
+                return BadRequest("Invalid Category ID");
+            }
             List<Product> listProducts = await _productRepository.GetProductByType(type);
             List<ShowedProductDTO> showedProductDTOs = _mapper.Map<List<ShowedProductDTO>>(listProducts);
             return Ok(showedProductDTOs);
@@ -79,8 +82,25 @@ namespace ECommerce.BackendAPI.Controllers
         [EnableCors("_myAdminSite")]
         public async Task<ActionResult> CreateNewProduct(AllProductDTO allProductDTO)
         {
-            Product product = _mapper.Map<Product>(allProductDTO);
-            await _productRepository.CreateProduct(product);
+            Category category = await _categoryRepository.GetCategory(allProductDTO.CategoryId);
+            if (category == null)
+            {
+                return BadRequest("Invalid Category ID");
+            }
+            await _productRepository.CreateProduct(new Product
+            {
+                ProductImg = allProductDTO.ProductImg,
+                ProductName = allProductDTO.ProductName,
+                Description = allProductDTO.Description,
+                CategoryId = category.Id,
+                Price = allProductDTO.Price,
+                Quantity = allProductDTO.Quantity,
+                InventoryNumber = allProductDTO.InventoryNumber,
+                Rating = allProductDTO.Rating,
+                createdDate = allProductDTO.createdDate,
+                updatedDate = allProductDTO.updatedDate
+
+            });
             await _productRepository.Save();
             return Ok("Success: Create successfully!");
         }
@@ -96,11 +116,10 @@ namespace ECommerce.BackendAPI.Controllers
                 Product product = await _productRepository.GetProductById(id);
                 if (product != null)
                 {
-                    product.Id = allProductDTO.id;
                     product.ProductImg = allProductDTO.ProductImg;
                     product.ProductName = allProductDTO.ProductName;
                     product.Description = allProductDTO.Description;
-                    product.ProductType = (ECommerce.Data.Enums.ProductType)allProductDTO.ProductType;
+                    product.CategoryId = allProductDTO.CategoryId;
                     product.Price = allProductDTO.Price;
                     product.Quantity = allProductDTO.Quantity;
                     product.InventoryNumber = allProductDTO.InventoryNumber;

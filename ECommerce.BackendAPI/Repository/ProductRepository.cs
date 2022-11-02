@@ -60,7 +60,7 @@ namespace ECommerce.BackendAPI.Repository
 
         public async Task<List<Product>> GetProductByType(int type)
         {
-            return await _dbContext.products.Where(product => (int)(product.ProductType) == type).ToListAsync();
+            return await _dbContext.products.Where(product => product.CategoryId == type).ToListAsync();
         }
 
         public async Task CreateProduct(Product product)

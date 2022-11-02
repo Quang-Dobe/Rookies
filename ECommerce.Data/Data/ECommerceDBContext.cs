@@ -14,7 +14,7 @@ namespace ECommerce.Data.Data
         public DbSet<Cart> carts { get; set; }
         public DbSet<CartDetail> cartDetails { get; set; }
 
-
+        public DbSet<Category> categories { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Get connection to local server (Instead of getting connection at Program.cs)

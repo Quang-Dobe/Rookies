@@ -1,7 +1,4 @@
-﻿
-using ECommerce.SharedView.Enum;
-
-namespace ECommerce.SharedView.DTO
+﻿namespace ECommerce.SharedView.DTO
 {
     public class ShowedCartDetailDTO
     {
