@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerce.BackendAPI", "ECo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerce.SharedView", "ECommerce.SharedView\ECommerce.SharedView.csproj", "{F4AC021C-89F5-4AF0-99BF-02453D7756C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.TestBackendAPI", "ECommerce.TestBackendAPI\ECommerce.TestBackendAPI.csproj", "{D7B7B05E-B3DA-4B0A-B4A4-5AEEF669DB78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommerce.TestBackendAPI", "ECommerce.TestBackendAPI\ECommerce.TestBackendAPI.csproj", "{D7B7B05E-B3DA-4B0A-B4A4-5AEEF669DB78}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
