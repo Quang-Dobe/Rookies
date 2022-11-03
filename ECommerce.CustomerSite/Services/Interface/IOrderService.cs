@@ -5,7 +5,7 @@ namespace ECommerce.CustomerSite.Services.Interface
 {
     public interface IOrderService
     {
-        Task<List<ShowedOrderDetailDTO>> GetAllOrderDetailByOrder(string userId);
+        Task<List<ShowedOrderDetailDTO>> GetAllOrderDetailByOrder(string userId, string jwt);
 
         Task<ShowedOrderDetailDTO> GetOrderDetail(string userId, int orderDetailId);
     }

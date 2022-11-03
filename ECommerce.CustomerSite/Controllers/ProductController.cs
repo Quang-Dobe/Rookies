@@ -46,8 +46,8 @@ namespace ECommerce.CustomerSite.Controllers
         [HttpGet]
         public async Task<IActionResult> History()
         {
-            string userId = "88844ee3-cccb-4552-b513-f4f446e785f2";
-            List<ShowedOrderDetailDTO> showedOrderDetailDTOs = await orderService.GetAllOrderDetailByOrder(userId);
+            string userId = GlobalVariable.userId;
+            List<ShowedOrderDetailDTO> showedOrderDetailDTOs = await orderService.GetAllOrderDetailByOrder(userId, GlobalVariable.jwt);
             List<AllCategoryDTO> allCategoryDTOs = await categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
             return View(showedOrderDetailDTOs);

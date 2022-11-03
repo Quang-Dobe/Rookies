@@ -7,7 +7,7 @@ namespace ECommerce.CustomerSite.Client
     public interface IOrder
     {
         [Get("/OrderDetail/GetAllOrderDetailByOrder")]
-        Task<List<ShowedOrderDetailDTO>> GetAllOrderDetailByOrder([Query] string userId);
+        Task<List<ShowedOrderDetailDTO>> GetAllOrderDetailByOrder([Query] string userId, [Header("Authorization")] string jwt );
 
 
         [Get("/OrderDetail/GetOrderDetail/{orderDetailId}")]

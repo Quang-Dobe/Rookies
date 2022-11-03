@@ -35,15 +35,21 @@ namespace ECommerce.CustomerSite.Controllers
             if (ModelState.IsValid)
             {
                 String stringData = await identityUserService.Login(loginRequestDTO);
+
                 //LoginResponseDTO data = JsonConvert.DeserializeObject<LoginResponseDTO>(stringData);
-                var stream = "[encoded jwt]";
-                var handler = new JwtSecurityTokenHandler();
-                var jsonToken = handler.ReadToken(stringData);
-                var tokenS = jsonToken as JwtSecurityToken;
-                var nameid = tokenS.Claims.First(claim => claim.Type == "nameid").Value;
-                Console.WriteLine(nameid);
+                //var stream = "[encoded jwt]";
+                //var handler = new JwtSecurityTokenHandler();
+                //var jsonToken = handler.ReadToken(stringData);
+                //var tokenS = jsonToken as JwtSecurityToken;
+                //var nameid = tokenS.Claims.First(claim => claim.Type == "nameid").Value;
+                //Console.WriteLine(nameid);
                 if (stringData != null)
                 {
+                    var handler = new JwtSecurityTokenHandler();
+                    var jsonToken = handler.ReadToken(stringData);
+                    var tokenS = jsonToken as JwtSecurityToken;
+                    GlobalVariable.userId = tokenS.Claims.First(claim => claim.Type == "nameid").Value;
+                    GlobalVariable.jwt = "Bearer " + stringData;
                     Request.HttpContext.Session.SetString("JWT", stringData);
                     return RedirectToAction("Index", "Home");
                 }

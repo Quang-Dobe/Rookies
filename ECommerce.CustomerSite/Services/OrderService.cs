@@ -18,9 +18,9 @@ namespace ECommerce.CustomerSite.Services
 
 
         // Methods
-        public Task<List<ShowedOrderDetailDTO>> GetAllOrderDetailByOrder(string userId)
+        public Task<List<ShowedOrderDetailDTO>> GetAllOrderDetailByOrder(string userId, string jwt)
         {
-            return _order.GetAllOrderDetailByOrder(userId);
+            return _order.GetAllOrderDetailByOrder(userId, jwt);
         }
 
         public Task<ShowedOrderDetailDTO> GetOrderDetail(string userId, int orderDetailId)

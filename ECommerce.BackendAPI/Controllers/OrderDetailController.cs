@@ -4,6 +4,7 @@ using ECommerce.BackendAPI.Repository;
 using ECommerce.Data.Enums;
 using ECommerce.Data.Model;
 using ECommerce.SharedView.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,6 +42,7 @@ namespace ECommerce.BackendAPI.Controllers
         // Methods
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<ShowedOrderDetailDTO>>> GetAllOrderDetailByOrder([FromQuery] string userId)
         {
             try
@@ -74,6 +76,7 @@ namespace ECommerce.BackendAPI.Controllers
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpGet]
         [Route("{orderDetailId:int}")]
+        
         public async Task<ActionResult<ShowedOrderDetailDTO>> GetOrderDetail([FromQuery] string userId, [FromRoute] int orderDetailId)
         {
             try

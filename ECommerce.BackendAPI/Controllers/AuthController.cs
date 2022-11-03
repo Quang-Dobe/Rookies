@@ -84,12 +84,6 @@ namespace ECommerce.BackendAPI.Controllers
                 {
                     tokenDescriptor.Subject.AddClaim(item);
                 }
-                //foreach (var role in roles)
-                //{
-                //    tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, role));
-                //}
-
-                // generate token with the above information
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var stringToken = tokenHandler.WriteToken(token);
