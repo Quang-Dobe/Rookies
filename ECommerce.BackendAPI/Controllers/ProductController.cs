@@ -96,9 +96,7 @@ namespace ECommerce.BackendAPI.Controllers
                 Price = allProductDTO.Price,
                 Quantity = allProductDTO.Quantity,
                 InventoryNumber = allProductDTO.InventoryNumber,
-                Rating = allProductDTO.Rating,
-                createdDate = allProductDTO.createdDate,
-                updatedDate = allProductDTO.updatedDate
+                Rating = allProductDTO.Rating
 
             });
             await _productRepository.Save();
@@ -124,8 +122,7 @@ namespace ECommerce.BackendAPI.Controllers
                     product.Quantity = allProductDTO.Quantity;
                     product.InventoryNumber = allProductDTO.InventoryNumber;
                     product.Rating = allProductDTO.Rating;
-                    product.createdDate = allProductDTO.createdDate;
-                    product.updatedDate = allProductDTO.updatedDate;
+                    product.updatedDate = DateTime.Today;
                     _productRepository.UpdateProduct(product);
                     await _productRepository.Save();
                     return Ok("Update sucessfully!");
