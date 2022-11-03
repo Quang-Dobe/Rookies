@@ -95,8 +95,7 @@ namespace ECommerce.BackendAPI.Controllers
                 CategoryId = category.Id,
                 Price = allProductDTO.Price,
                 Quantity = allProductDTO.Quantity,
-                InventoryNumber = allProductDTO.InventoryNumber,
-                Rating = allProductDTO.Rating
+                InventoryNumber = allProductDTO.InventoryNumber
 
             });
             await _productRepository.Save();
