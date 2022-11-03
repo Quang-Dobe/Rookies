@@ -73,7 +73,8 @@ namespace ECommerce.BackendAPI.Controllers
                     SecurityAlgorithms.HmacSha512Signature)
                 };
 
-                IdentityUser identityUser = await userRepository.GetUserByEmail(loginRequestModel.UserName);
+                IdentityUser identityUser = await userRepository.GetUserByName(loginRequestModel.UserName);
+                Console.WriteLine("--" + identityUser.UserName);
                 var roles = await userManager.GetRolesAsync(identityUser);
 
                 var claims = new[] {

@@ -12,7 +12,7 @@ namespace ECommerce.CustomerSite.Client
 
 
         [Get("/CartDetail/GetAllCardDetailByCart")]
-        Task<List<ShowedCartDetailDTO>> GetAllCardDetailByCart([Query] string userId);
+        Task<List<ShowedCartDetailDTO>> GetAllCardDetailByCart([Query] string userId, [Header("Authorization")] string jwt);
 
 
         [Get("/CartDetail/CreateCartDetail/{productId}")]
@@ -20,10 +20,10 @@ namespace ECommerce.CustomerSite.Client
 
 
         [Get("/CartDetail/UpdateCartDetail/{productId}")]
-        Task<string> UpdateCartDetail([Query] string userId, int productId, [Body] int number);
+        Task<string> UpdateCartDetail([Query] string userId, int productId, [Body] int number, [Header("Authorization")] string jwt);
 
 
         [Get("/CartDetail/DeleteCartDetail/{productId}")]
-        Task<string> DeleteCartDetail([Query] string userId, int productId, [Body] int number);
+        Task<string> DeleteCartDetail([Query] string userId, int productId, [Body] int number, [Header("Authorization")] string jwt);
     }
 }

@@ -23,14 +23,14 @@ namespace ECommerce.CustomerSite.Services
             return _cartInterface.CreateCartDetail(userId, productId, number);
         }
 
-        public Task<string> DeleteCartDetail(string userId, int productId, int number)
+        public Task<string> DeleteCartDetail(string userId, int productId, int number, string jwt)
         {
-            return _cartInterface.DeleteCartDetail(userId, productId, number);
+            return _cartInterface.DeleteCartDetail(userId, productId, number, jwt);
         }
 
-        public Task<List<ShowedCartDetailDTO>> GetAllCardDetailByCart(string userId)
+        public Task<List<ShowedCartDetailDTO>> GetAllCardDetailByCart(string userId, string jwt)
         {
-            return _cartInterface.GetAllCardDetailByCart(userId);
+            return _cartInterface.GetAllCardDetailByCart(userId, jwt);
         }
 
         public Task<List<ShowedCartDetailDTO>> GetAllCart()
@@ -38,9 +38,9 @@ namespace ECommerce.CustomerSite.Services
             return _cartInterface.GetAllCart();
         }
 
-        public Task<string> UpdateCartDetail(string userId, int productId, int number)
+        public Task<string> UpdateCartDetail(string userId, int productId, int number, string jwt)
         {
-            return _cartInterface.UpdateCartDetail(userId, productId, number);
+            return _cartInterface.UpdateCartDetail(userId, productId, number, jwt);
         }
     }
 }

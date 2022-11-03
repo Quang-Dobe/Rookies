@@ -61,6 +61,15 @@ namespace ECommerce.CustomerSite.Controllers
             return RedirectToAction("Error");
         }
 
+
+        [HttpGet]
+        public IActionResult LogOut()
+        {
+            GlobalVariable.jwt = "";
+            GlobalVariable.userId = "";
+            return RedirectToAction("Index", "Home");
+        }
+
         public IActionResult Register()
         {
             return View();
@@ -72,9 +81,8 @@ namespace ECommerce.CustomerSite.Controllers
             if (ModelState.IsValid)
             {
                 String stringData = await identityUserService.Register(registerRequestDTO);
-                RegisterResponseDTO data = JsonConvert.DeserializeObject<RegisterResponseDTO>(stringData);
 
-                if (data != null && data.StatusCode == System.Net.HttpStatusCode.OK)
+                if (stringData == "Create sucessfully!")
                 {
                     return RedirectToAction("Index", "Home");
                 }

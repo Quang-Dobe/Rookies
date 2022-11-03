@@ -76,7 +76,8 @@ namespace ECommerce.BackendAPI.Controllers
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpGet]
         [Route("{orderDetailId:int}")]
-        
+        [Authorize]
+
         public async Task<ActionResult<ShowedOrderDetailDTO>> GetOrderDetail([FromQuery] string userId, [FromRoute] int orderDetailId)
         {
             try
@@ -105,6 +106,7 @@ namespace ECommerce.BackendAPI.Controllers
 
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult> CreateOrderDetail([FromQuery] string userId, [FromBody] List<OrderDetailDTO> orderDetailDTOs)
         {
             try
@@ -155,6 +157,7 @@ namespace ECommerce.BackendAPI.Controllers
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpPost]
         [Route("{orderDetailId:int}")]
+        [Authorize]
         public async Task<ActionResult> UpdateOrderDetail([FromQuery] string userId, [FromRoute] int orderDetailId, [FromBody] ReviewOrderDetailDTO reviewOrderDetailDTO)
         {
             try

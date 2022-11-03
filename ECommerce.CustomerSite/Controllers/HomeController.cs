@@ -28,6 +28,9 @@ namespace ECommerce.CustomerSite.Controllers
         {
             List<AllCategoryDTO> allCategoryDTOs = await _categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
+            ViewData["userId"] = GlobalVariable.userId;
+            ViewData["jwt"] = GlobalVariable.jwt;
+            Console.WriteLine(GlobalVariable.userId);
             return View();
         }
 
@@ -37,6 +40,8 @@ namespace ECommerce.CustomerSite.Controllers
             List<ShowedProductDTO> listProducts = await _productService.GetProductByType(int.Parse(type));
             List<AllCategoryDTO> allCategoryDTOs = await _categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
+            ViewData["userId"] = GlobalVariable.userId;
+            ViewData["jwt"] = GlobalVariable.jwt;
             return View(listProducts);
         }
 

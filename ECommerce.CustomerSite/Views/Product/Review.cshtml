@@ -2,6 +2,8 @@
 @{
     ViewData["Title"] = "Review" + Model.showedProductDTO.productName;
     List<AllCategoryDTO> allCategoryDTOs = ViewData["AllCategory"] as List<AllCategoryDTO>;
+    string userId = ViewData["userId"] as string;
+    string jwt = ViewData["jwt"] as string;
 }
 
 
@@ -10,6 +12,8 @@
 *@<script src="https://kit.fontawesome.com/3db4948ff0.js" crossorigin="anonymous"></script>
 <link href="~/css/product/rating.css" rel="stylesheet" />
 
+<span id="_userId" style="display:none; opacity:0">@userId</span>
+<span id="_jwt" style="display:none; opacity:0">@jwt</span>
 <!-- Nav Start -->
 <div class="container-fluid mb-5">
     <div class="row border-top px-xl-5">
@@ -40,14 +44,33 @@
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
                         <a class="nav-item nav-link active" asp-controller="Home" asp-action="Index">Home</a>
-                        <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
-                        <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
-                        <a class="nav-item nav-link" href="#">Contact</a>
+                        @{
+                            if (userId == "" && jwt == "")
+                            {
+
+                            }
+                            else
+                            {
+                                <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
+                                <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
+                            }
+                        }
+                        @*<a class="nav-item nav-link" href="#">Contact</a>*@
                     </div>
-                    <div class="navbar-nav ml-auto py-0">
-                        <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
-                        <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
-                    </div>
+                    @{
+                        if (userId == "" && jwt == "")
+                        {
+                            <div class="navbar-nav ml-auto py-0">
+                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
+                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
+                            </div>
+                        }
+                    }
+                    else{
+                        <div class="navbar-nav ml-auto py-0">
+                            <a class="nav-item nav-link" asp-controller="Auth" asp-action="LogOut">Log out</a>
+                        </div>
+                    }
                 </div>
             </nav>
         </div>
@@ -164,6 +187,8 @@
                 </div>
                 <script>
                     var rating = 4;
+                    var userId_ = document.querySelector("span#_userId").innerHTML;
+                    var jwt_ = document.querySelector("span#_jwt").innerHTML;
 
                     function addRating(value) {
                         clearRates();
@@ -193,7 +218,7 @@
 
                     function AddReview() {
                         document.querySelector(".btn-primary").onclick = function (e) {
-                            var userId = "88844ee3-cccb-4552-b513-f4f446e785f2";
+                            var userId = userId_;
                             var orderDetailId = e.target.parentElement.querySelector("span").innerText;
                             var reviewOrderDetailDTO = {
                                 comment: document.querySelector("textarea").value,
@@ -202,7 +227,7 @@
                             fetch("https://localhost:7173/OrderDetail/UpdateOrderDetail/" + orderDetailId + "?userId=" + userId,
                                 {
                                     method: 'POST',
-                                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': jwt_ },
                                     body: JSON.stringify(reviewOrderDetailDTO)
                                 })
                                 .then(response =>

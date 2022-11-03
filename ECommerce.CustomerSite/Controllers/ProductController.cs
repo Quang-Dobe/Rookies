@@ -30,16 +30,20 @@ namespace ECommerce.CustomerSite.Controllers
             detailProductDTO productDTO = await productService.GetProductByID(id);
             List<AllCategoryDTO> allCategoryDTOs = await categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
+            ViewData["userId"] = GlobalVariable.userId;
+            ViewData["jwt"] = GlobalVariable.jwt;
             return View(productDTO);
         }
 
         [HttpGet]
         public async Task<IActionResult> Buy()
         {
-            string userId = "88844ee3-cccb-4552-b513-f4f446e785f2";
-            List<ShowedCartDetailDTO> showedCartDetailDTOs = await cartService.GetAllCardDetailByCart(userId);
+            string userId = GlobalVariable.userId;
+            List<ShowedCartDetailDTO> showedCartDetailDTOs = await cartService.GetAllCardDetailByCart(userId, GlobalVariable.jwt);
             List<AllCategoryDTO> allCategoryDTOs = await categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
+            ViewData["userId"] = GlobalVariable.userId;
+            ViewData["jwt"] = GlobalVariable.jwt;
             return View(showedCartDetailDTOs);
         }
 
@@ -50,16 +54,20 @@ namespace ECommerce.CustomerSite.Controllers
             List<ShowedOrderDetailDTO> showedOrderDetailDTOs = await orderService.GetAllOrderDetailByOrder(userId, GlobalVariable.jwt);
             List<AllCategoryDTO> allCategoryDTOs = await categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
+            ViewData["userId"] = GlobalVariable.userId;
+            ViewData["jwt"] = GlobalVariable.jwt;
             return View(showedOrderDetailDTOs);
         }
 
         [HttpGet]
         public async Task<IActionResult> Review([FromQuery] int id)
         {
-            string userId = "88844ee3-cccb-4552-b513-f4f446e785f2";
-            ShowedOrderDetailDTO showedOrderDetailDTO = await orderService.GetOrderDetail(userId, id);
+            string userId = GlobalVariable.userId;
+            ShowedOrderDetailDTO showedOrderDetailDTO = await orderService.GetOrderDetail(userId, id, GlobalVariable.jwt);
             List<AllCategoryDTO> allCategoryDTOs = await categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
+            ViewData["userId"] = GlobalVariable.userId;
+            ViewData["jwt"] = GlobalVariable.jwt;
             return View(showedOrderDetailDTO);
         }
     }

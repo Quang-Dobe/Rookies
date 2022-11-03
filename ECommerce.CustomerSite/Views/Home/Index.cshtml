@@ -2,8 +2,9 @@
 @{
     ViewData["Title"] = "Home";
     List<AllCategoryDTO> allCategoryDTOs = ViewData["AllCategory"] as List<AllCategoryDTO>;
+    string userId = ViewData["userId"] as string;
+    string jwt = ViewData["jwt"] as string;
 }
-
 
 <div class="container-fluid mb-5">
     <div class="row border-top px-xl-5">
@@ -16,18 +17,9 @@
                 <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
                     @{
                         foreach(AllCategoryDTO item in allCategoryDTOs){
-                            <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id>@item.name</a>
+                                <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id>@item.name</a>
                         }
                     }
-                    @*<a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=0>CPU</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=1>Mainboard</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=2>RAM</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=3>HardDisk</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=4>PSU</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=5>VGA</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=6>Case</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=7>Monitor</a>
-                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=8>Other</a>*@
                 </div>
             </nav>
         </div>
@@ -42,14 +34,31 @@
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
                         <a class="nav-item nav-link active" asp-controller="Home" asp-action="Index">Home</a>
-                        <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
-                        <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
-                        <a class="nav-item nav-link" href="#">Contact</a>
+                        @{
+                            if (userId == "" && jwt == ""){
+                                
+                            }
+                            else{
+                                <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
+                                <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
+                            }
+                        }
+                        @*<a class="nav-item nav-link" href="#">Contact</a>*@
                     </div>
-                    <div class="navbar-nav ml-auto py-0">
-                        <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
-                        <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
-                    </div>
+                    @{
+                        if (userId == "" && jwt == "")
+                        {
+                            <div class="navbar-nav ml-auto py-0">
+                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
+                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
+                            </div>
+                        }
+                        else{
+                            <div class="navbar-nav ml-auto py-0">
+                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="LogOut">Log out</a>
+                            </div>
+                        }
+                    }
                 </div>
             </nav>
             <div id="header-carousel" class="carousel slide" data-ride="carousel">
@@ -62,15 +71,15 @@
                             if (temp)
                             {
                                 temp = false;
-                                <div class="carousel-item active" style="height: 410px;">
-                                    <img class="img-fluid" src=@link alt="Image">
-                                </div>
+                                    <div class="carousel-item active" style="height: 410px;">
+                                        <img class="img-fluid" src=@link alt="Image">
+                                    </div>
                             }
                             else
                             {
-                                <div class="carousel-item" style="height: 410px;">
-                                    <img class="img-fluid" src=@link alt="Image">
-                                </div>
+                                    <div class="carousel-item" style="height: 410px;">
+                                        <img class="img-fluid" src=@link alt="Image">
+                                    </div>
                             }
                         };
                     }

@@ -2,6 +2,7 @@
 using ECommerce.BackendAPI.Repository;
 using ECommerce.Data.Model;
 using ECommerce.SharedView.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -62,6 +63,7 @@ namespace ECommerce.BackendAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<ShowedCartDetailDTO>>> GetAllCardDetailByCart([FromQuery] string userid)
         {
             try
@@ -134,6 +136,7 @@ namespace ECommerce.BackendAPI.Controllers
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpPost]
         [Route("{productId:int}")]
+        [Authorize]
         public async Task<ActionResult> UpdateCartDetail([FromQuery] string userId, [FromRoute] int productId, [FromBody] int number)
         {
             try
@@ -161,6 +164,7 @@ namespace ECommerce.BackendAPI.Controllers
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpDelete]
         [Route("{productId:int}")]
+        [Authorize]
         public async Task<ActionResult> DeleteCartDetail([FromQuery] string userId, [FromRoute] int productId, [FromBody] int number)
         {
             try

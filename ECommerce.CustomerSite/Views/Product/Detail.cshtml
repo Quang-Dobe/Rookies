@@ -3,12 +3,17 @@
     ViewData["Title"] = "Product Detail";
     List<AllCategoryDTO> allCategoryDTOs = ViewData["AllCategory"] as List<AllCategoryDTO>;
     int totalReview = Model.reviewProductDTOs.Count;
+    string userId = ViewData["userId"] as string;
+    string jwt = ViewData["jwt"] as string;
 }
 
 <link href="~/css/product/productdetail.css" rel="stylesheet" />
 <link href="~/css/product/addtocart.css" rel="stylesheet" />
 <link href="~/css/product/rating.css" rel="stylesheet" />
 
+
+<span id="_userId" style="display:none; opacity:0">@userId</span>
+<span id="_jwt" style="display:none; opacity:0">@jwt</span>
 <!-- Nav Start -->
 <div class="container-fluid mb-5">
     <div class="row border-top px-xl-5">
@@ -39,14 +44,34 @@
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
                         <a class="nav-item nav-link active" asp-controller="Home" asp-action="Index">Home</a>
-                        <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
-                        <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
-                        <a class="nav-item nav-link" href="#">Contact</a>
+                        @{
+                            if (userId == "" && jwt == "")
+                            {
+
+                            }
+                            else
+                            {
+                                <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
+                                <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
+                            }
+                        }
+                        @*<a class="nav-item nav-link" href="#">Contact</a>*@
                     </div>
-                    <div class="navbar-nav ml-auto py-0">
-                        <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
-                        <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
-                    </div>
+                    @{
+                        if (userId == "" && jwt == "")
+                        {
+                            <div class="navbar-nav ml-auto py-0">
+                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
+                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="navbar-nav ml-auto py-0">
+                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="LogOut">Log out</a>
+                            </div>
+                        }
+                    }
                 </div>
             </nav>
         </div>
@@ -86,11 +111,6 @@
             <div class="d-flex mb-3">
                 <div class="text-primary mr-2">
                     <i data-star=@Model.rating></i>
-                    @*<small class="fas fa-star"></small>
-                    <small class="fas fa-star"></small>
-                    <small class="fas fa-star"></small>
-                    <small class="fas fa-star-half-alt"></small>
-                    <small class="far fa-star"></small>*@
                 </div>
                 <small class="pt-1">(@totalReview Reviews)</small>
             </div>
@@ -202,6 +222,8 @@
 
     const divToastElement = $('.container-fluid #toast')
     const AddToCartElement = document.querySelector(".col-lg-7.pb-5 .btn.btn-primary.px-3")
+    var userId_ = document.querySelector("span#_userId").innerHTML;
+    var jwt_ = document.querySelector("span#_jwt").innerHTML;
 
 
     function getNotice(divToastElement, type) {
@@ -257,12 +279,12 @@
     const userAction = async () => {
         var number = $('.input-group.quantity input').value
         var productId = $('.col-lg-7.pb-5 p#productId').innerText
-        var userId = "88844ee3-cccb-4552-b513-f4f446e785f2";
+        var userId = userId_;
 
         fetch("https://localhost:7173/CartDetail/CreateCartDetail/" + productId + "?userId=" + userId,
             {
                 method: 'POST',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': jwt_ },
                 body: JSON.stringify(number)
             })
             .then(response => response.json())
