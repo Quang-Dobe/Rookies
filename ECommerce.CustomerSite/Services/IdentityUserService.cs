@@ -27,5 +27,11 @@ namespace ECommerce.CustomerSite.Services
         {
             return await identityUser.Login(loginRequestDTO);
         }
+
+
+        public async Task<String> LogOut(string jwt)
+        {
+            return await identityUser.LogOut(jwt);
+        }
     }
 }

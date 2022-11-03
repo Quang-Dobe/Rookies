@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using ECommerce.BackendAPI.Repository;
+using ECommerce.BackendAPI.Service;
 using ECommerce.SharedView.DTO.Account;
 using ECommerce.SharedView.DTO.AdminSiteDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -21,6 +23,7 @@ namespace ECommerce.BackendAPI.Controllers
         private readonly IUserRepository userRepository;
         private readonly ICartRepository cartRepository;
         private readonly IOrderRepository orderRepository;
+        private readonly ITokenManager tokenManager;
         private readonly IMapper mapper;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly UserManager<IdentityUser> userManager;
@@ -29,6 +32,7 @@ namespace ECommerce.BackendAPI.Controllers
             IUserRepository userRepository, 
             ICartRepository cartRepository,
             IOrderRepository orderRepository,
+            ITokenManager tokenManager,
             IMapper mapper, 
             SignInManager<IdentityUser> signInManager, 
             UserManager<IdentityUser> userManager)
@@ -37,6 +41,7 @@ namespace ECommerce.BackendAPI.Controllers
             this.userRepository = userRepository;
             this.cartRepository = cartRepository;
             this.orderRepository = orderRepository;
+            this.tokenManager = tokenManager;
             this.mapper = mapper;
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -54,6 +59,7 @@ namespace ECommerce.BackendAPI.Controllers
                 var audience = config["Jwt:Audience"];
                 var key = Encoding.ASCII.GetBytes
                 (config["Jwt:Key"]);
+                Console.WriteLine(config["Jwt:Key"]);
                 // Create new token-hash-tool to hash issuer, audience, key
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
@@ -74,7 +80,6 @@ namespace ECommerce.BackendAPI.Controllers
                 };
 
                 IdentityUser identityUser = await userRepository.GetUserByName(loginRequestModel.UserName);
-                Console.WriteLine("--" + identityUser.UserName);
                 var roles = await userManager.GetRolesAsync(identityUser);
 
                 var claims = new[] {
@@ -122,6 +127,14 @@ namespace ECommerce.BackendAPI.Controllers
             return BadRequest(ModelState.Values.SelectMany(x => x.Errors));
         }
 
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult> LogOut()
+        {
+            await tokenManager.DeactivateCurrentAsync();
+
+            return Ok("Deactivate Token");
+        }
 
         [HttpGet]
         public async Task<ActionResult<List<AllUserDTO>>> GetAllUser()

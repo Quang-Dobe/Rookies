@@ -1,4 +1,5 @@
 using ECommerce.BackendAPI.Repository;
+using ECommerce.BackendAPI.Service;
 using ECommerce.Data.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -104,6 +105,9 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICartDetailRepository, CartDetailRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddTransient<ITokenManager, TokenManager>();
+
+builder.Services.AddTransient<TokenManagerMiddleWare>();
 
 var app = builder.Build();
 
@@ -113,6 +117,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<TokenManagerMiddleWare>();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

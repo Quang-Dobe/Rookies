@@ -65,12 +65,14 @@
                                 <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
                             </div>
                         }
+                        else
+                        {
+                            <div class="navbar-nav ml-auto py-0">
+                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="LogOut">Log out</a>
+                            </div>
+                        }
                     }
-                    else{
-                        <div class="navbar-nav ml-auto py-0">
-                            <a class="nav-item nav-link" asp-controller="Auth" asp-action="LogOut">Log out</a>
-                        </div>
-                    }
+                    
                 </div>
             </nav>
         </div>

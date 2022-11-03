@@ -10,5 +10,8 @@ namespace ECommerce.CustomerSite.Client
 
         [Post("/Auth/Login")]
         Task<String> Login([Body] LoginRequestDTO loginRequestDTO);
+
+        [Post("/Auth/LogOut")]
+        Task<String> LogOut([Header("Authorization")] string jwt);
     }
 }

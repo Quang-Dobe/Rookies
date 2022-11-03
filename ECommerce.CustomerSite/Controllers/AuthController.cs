@@ -63,10 +63,15 @@ namespace ECommerce.CustomerSite.Controllers
 
 
         [HttpGet]
-        public IActionResult LogOut()
+        public async Task<IActionResult> LogOut()
         {
-            GlobalVariable.jwt = "";
-            GlobalVariable.userId = "";
+            String deactivateTokenResult = await identityUserService.LogOut(GlobalVariable.jwt);
+            if (deactivateTokenResult == "Deactivate Token")
+            {
+                GlobalVariable.jwt = "";
+                GlobalVariable.userId = "";
+                
+            }
             return RedirectToAction("Index", "Home");
         }
 
