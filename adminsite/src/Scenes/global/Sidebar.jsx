@@ -1,6 +1,7 @@
 import { useState } from "react"
-import { ProSidebarProvider , Menu, MenuItem } from "react-pro-sidebar"
-// import 'react-pro-sidebar/dist/css/styles.css'
+import { ProSidebar , Menu, MenuItem } from "react-pro-sidebar"
+
+import 'react-pro-sidebar/dist/css/styles.css'
 import { Box, IconButton, Typography, useTheme } from "@mui/material"
 import { Link } from "react-router-dom"
 import { tokens } from "../../theme"
@@ -21,11 +22,12 @@ const Item = ({ title, to, icon, selected, setSelected, isCollapsed }) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode)
     return (
-        <Link to={to}>
-            <MenuItem active={selected === title} style={{ color:colors.grey[100] }} onClick={() => setSelected(title)} icon={icon}>
+        
+        <MenuItem active={selected === title} style={{ color:colors.grey[100] }} onClick={() => setSelected(title)} icon={icon}>
+            <Link to={to}>
                 <Typography>{title}</Typography>
-            </MenuItem>
-        </Link>
+            </Link>
+        </MenuItem>
     )
 }
 
@@ -53,8 +55,10 @@ function Sidebar() {
                 color: "#6870fa !important",
             }
         }}>
-            <ProSidebarProvider collapsed={isCollapsed}>
-                <Menu>
+            <ProSidebar collapsed={isCollapsed}>
+                <Menu style={{
+                    backgroundColor: colors.blueAccent[800],
+                }}>
                     {/* Menu and Logo */}
                     <MenuItem 
                     onClick={() => setIsCollapsed(!isCollapsed)} 
@@ -117,10 +121,9 @@ function Sidebar() {
                             selected={selected}
                             setSelected={setSelected}
                         />) : (<Box><IconButton><PersonOutlinedIcon /></IconButton></Box>)}
-                        
                     </Box>
                 </Menu>
-            </ProSidebarProvider>
+            </ProSidebar>
         </Box>
     )
 }

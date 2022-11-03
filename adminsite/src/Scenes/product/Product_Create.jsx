@@ -2,13 +2,14 @@ import { Box, Button, TextField } from "@mui/material"
 import MenuItem from '@mui/material/MenuItem';
 import { Formik } from "formik"
 import { useState, useEffect } from "react"
-import * as yup from "yup"
+import { useNavigate } from "react-router";
+import * as Yup from 'yup';
 import useMediaQuery from "@mui/material/useMediaQuery"
 import Header from "../../components/Header"
 import axios from 'axios'
 
 const initialValues = {
-    productImg : "dsfaasf",
+    productImg : "",
     productName : "",
     description : "",
     categoryId : "",
@@ -16,19 +17,26 @@ const initialValues = {
     quantity: "",
     inventoryNumber: ""
 }
-const productSchema = yup.object({
-    productImg : yup.string().required("required"),
-    productName : yup.string().required("required"),
-    description : yup.string().required("required"),
-    categoryId : yup.string().required("required"),
-    price : yup.string().required("required"),
-    quantity: yup.string().required("required"),
-    inventoryNumber: yup.string().required("required")
+const productSchema = Yup.object().shape({
+    productImg : Yup.string().required("required"),
+    productName : Yup.string().required("required"),
+    description : Yup.string().required("required"),
+    categoryId : Yup.string().required("required"),
+    price : Yup.string().required("required"),
+    quantity: Yup.string().required("required"),
+    inventoryNumber: Yup.string().required("required")
 })
 
+var today = new Date();
+var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+var dateTime = date+'T'+time;
 
 function ProductCreateForm() {
     const [category, setCategory] = useState([])
+    const isNoneMobile = useMediaQuery("(min-width:600px)");
+    const navigate = useNavigate()
+
     useEffect(() => {
         axios.get(`https://localhost:7173/api/Category`)
         .then(res => {
@@ -36,19 +44,22 @@ function ProductCreateForm() {
         }).catch(error => console.log(error))
     }, [])
     const categorySelection = category.reduce((init, curValue) => [...init, {value:curValue.id, label:curValue.name}], [])
-    
-    const isNoneMobile = useMediaQuery("(min-width:600px)");
+
     const handleFormSubmit = (values) => {
-        console.log(values);
+        axios.post(`https://localhost:7173/Product/CreateNewProduct`, {...values, "id":0, "rating": 0, "createdDate": "2022-11-03T15:02:27.5314911", "updatedDate": "2022-11-03T15:02:27.5314911" })
+        .then(res => {
+            setCategory(res.data)
+        }).catch(error => console.log(error))
+        navigate("/product");
     }
 
     return(
         <Box m="20px">
             <Header title="CREATE PRODUCT" subTitle="Create new product" />
             <Formik
-                onSubmit={handleFormSubmit}
-                initialValues={initialValues}
                 validationSchema={productSchema}
+                initialValues={initialValues}
+                onSubmit={handleFormSubmit}
             >
                 {({ values, errors, touched, handleBlur, handleChange, handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
@@ -68,10 +79,10 @@ function ProductCreateForm() {
                                 label="Product Image"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                defaultValue={values.productImg}
-                                name="Product Img"
-                                error={!!touched.productImg && errors.productImg }
-                                helperText={touched.productImg && errors.productImg }
+                                defaultValue={values.productName}
+                                name="productImg"
+                                error={!!touched.productImg && !!errors.productImg}
+                                helperText={touched.productImg && errors.productImg}
                                 sx={{ gridColumn: "span 2" }}
                             />
 
@@ -84,8 +95,8 @@ function ProductCreateForm() {
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 defaultValue={values.productName}
-                                name="Product Name"
-                                error={!!touched.productName && errors.productName }
+                                name="productName"
+                                error={!!touched.productName && !!errors.productName }
                                 helperText={touched.productName && errors.productName }
                                 sx={{ gridColumn: "span 2" }}
                             />
@@ -99,10 +110,10 @@ function ProductCreateForm() {
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 defaultValue={values.description}
-                                name="Product Description"
+                                name="description"
                                 error={!!touched.description && errors.description }
                                 helperText={touched.description && errors.description }
-                                sx={{ gridColumn: "span 4" }}
+                                sx={{ gridColumn: "span 3" }}
                             />
 
                             {/* Category ID */}
@@ -114,10 +125,10 @@ function ProductCreateForm() {
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 defaultValue={values.categoryId}
-                                name="Category ID"
+                                name="categoryId"
                                 error={!!touched.categoryId && errors.categoryId }
                                 helperText={touched.categoryId && errors.categoryId }
-                                sx={{ gridColumn: "span 4" }}
+                                sx={{ gridColumn: "span 1" }}
                             >
                                 {categorySelection.map((option) => (
                                     <MenuItem key={option.value} value={option.value}>
@@ -135,10 +146,10 @@ function ProductCreateForm() {
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 defaultValue={values.price}
-                                name="Product Price"
+                                name="price"
                                 error={!!touched.price && errors.price }
                                 helperText={touched.price && errors.price }
-                                sx={{ gridColumn: "span 4" }}
+                                sx={{ gridColumn: "span 1" }}
                             />
 
                             {/* Product Quantity */}
@@ -150,10 +161,10 @@ function ProductCreateForm() {
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 defaultValue={values.quantity}
-                                name="Product Quantity"
+                                name="quantity"
                                 error={!!touched.quantity && errors.quantity }
                                 helperText={touched.quantity && errors.quantity }
-                                sx={{ gridColumn: "span 4" }}
+                                sx={{ gridColumn: "span 1" }}
                             />
 
                             {/* Product Inventory number */}
@@ -165,11 +176,16 @@ function ProductCreateForm() {
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 defaultValue={values.inventoryNumber}
-                                name="Product Inventory number"
+                                name="inventoryNumber"
                                 error={!!touched.inventoryNumber && errors.inventoryNumber }
                                 helperText={touched.inventoryNumber && errors.inventoryNumber }
-                                sx={{ gridColumn: "span 4" }}
+                                sx={{ gridColumn: "span 1" }}
                             />
+                        </Box>
+                        <Box display="flex" justifyContent="end" mt="20px">
+                            <Button type="submit" color="secondary" variant="contained">
+                                Create New User
+                            </Button>
                         </Box>
                     </form>
                 )}

@@ -1,11 +1,12 @@
-import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGrid } from '@mui/x-data-grid';
 import { Box, Typography, useTheme, Stack, Button } from '@mui/material'
 import { tokens } from '../../theme'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router';
 import * as React from 'react';
 import Header from '../../components/Header'
 import axios from 'axios'
-import { product } from "../../mockData/ProductData"
+import ProductUpdateForm from './Product_Update';
 
 const columns = [
     { field: "id", flex: 1, headerName: "ID", type: "number" },
@@ -23,28 +24,32 @@ const columns = [
 
 
 function Product(){
-    const theme = useTheme()
-    const colors = tokens(theme.palette.mode)
     const [productData, setProductData] = useState([])
-    console.log("Re-rendered")
-
-    const apiRef = useGridApiRef();
+    const [update, setUpdate] = useState(false)
+    const theme = useTheme()
+    const navigate = useNavigate()
+    const colors = tokens(theme.palette.mode)
     var idRow = undefined;
     
+    
+    console.log("Re-rendered")
+    
     const handleUpdateRow = () => {
-        const rowIds = apiRef.current.getAllRowIds();
-        console.log(rowIds)
+        setUpdate(!update);
     };
     
-    const handleDeleteRow = () => {
-        const rowIds = apiRef.current.getAllRowIds();
-        // const rowId = randomArrayItem(rowIds);
-        // apiRef.current.updateRows([{ id: rowId, _action: 'delete' }]);
-        console.log(rowIds)
+    const handleDeleteRow = async () => {
+        await axios.delete(`https://localhost:7173/Product/DeleteProduct/${idRow.id}`)
+
+        await axios.get(`https://localhost:7173/Product/GetAllProducts`)
+        .then(res => {
+            console.log(res.data)
+            setProductData(res.data)
+        }).catch(error => console.log(error))
     };
     
     const handleAddRow = () => {
-        // apiRef.current.updateRows([createRandomRow()]);
+        navigate("/product/create")
     };
 
     useEffect(() => {
@@ -56,6 +61,7 @@ function Product(){
 
     return (
         <Box m="20px">
+            <ProductUpdateForm data={idRow} show={update} setShow={setUpdate} />
             <Header title="Product" subTitle="Manage Product" />
             <Stack direction="row" spacing={1}>
                 <Button size="small" onClick={handleUpdateRow}>
@@ -87,9 +93,8 @@ function Product(){
                     backgroundColor: colors.blueAccent[700],
                 }
             }}>
-                <DataGridPro 
-                    apiRef={apiRef} 
-                    rows={productData} 
+                <DataGrid
+                    rows={productData==null ? [] : productData} 
                     columns={columns} 
                     onSelectionModelChange={(ids) => {
                         idRow = productData.find(item => item.id == ids);
