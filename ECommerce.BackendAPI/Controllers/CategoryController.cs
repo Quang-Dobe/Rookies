@@ -58,6 +58,7 @@ namespace ECommerce.BackendAPI.Controllers
 
 
         [HttpPost("Update")]
+        [EnableCors("_myAdminSite")]
         public async Task<ActionResult> UpdateCategory_([FromBody] AllCategoryDTO allCategoryDTO)
         {
 

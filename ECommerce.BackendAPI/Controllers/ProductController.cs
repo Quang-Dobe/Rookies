@@ -135,6 +135,43 @@ namespace ECommerce.BackendAPI.Controllers
         }
 
 
+        [HttpPost]
+        [EnableCors("_myAdminSite")]
+        public async Task<ActionResult> UpdateMultiProduct([FromBody] List<AllProductDTO> allProductDTOs)
+        {
+            try
+            {
+                foreach (AllProductDTO allProductDTO in allProductDTOs)
+                {
+                    Product product = await _productRepository.GetProductById(allProductDTO.id);
+                    if (product != null)
+                    {
+                        product.ProductImg = allProductDTO.ProductImg;
+                        product.ProductName = allProductDTO.ProductName;
+                        product.Description = allProductDTO.Description;
+                        product.CategoryId = allProductDTO.CategoryId;
+                        product.Price = allProductDTO.Price;
+                        product.Quantity = allProductDTO.Quantity;
+                        product.InventoryNumber = allProductDTO.InventoryNumber;
+                        product.Rating = allProductDTO.Rating;
+                        product.updatedDate = DateTime.Today;
+                        _productRepository.UpdateProduct(product);
+                        await _productRepository.Save();
+                    }
+                    else
+                    {
+                        return BadRequest("Invalid product");
+                    }
+                }
+                return Ok("Update sucessfully!");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
         [HttpDelete]
         [Route("{id:int}")]
         [EnableCors("_myAdminSite")]
@@ -152,6 +189,33 @@ namespace ECommerce.BackendAPI.Controllers
                 return BadRequest("Invalid product!");
             }
             catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        [EnableCors("_myAdminSite")]
+        public async Task<ActionResult> DeleteMultiProduct([FromBody] List<int> ids)
+        {
+            try
+            {
+                foreach(int id in ids)
+                {
+                    Product product = await _productRepository.GetProductById(id);
+                    if (product != null)
+                    {
+                        await _productRepository.DeleteProduct(id);
+                        await _productRepository.Save();
+                    }
+                    else
+                    {
+                        return BadRequest("Invalid product!");
+                    }
+                }
+                return Ok("Delete sucessfully!");
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }

@@ -4,6 +4,7 @@ using ECommerce.BackendAPI.Service;
 using ECommerce.SharedView.DTO.Account;
 using ECommerce.SharedView.DTO.AdminSiteDTO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -128,7 +129,6 @@ namespace ECommerce.BackendAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<ActionResult> LogOut()
         {
             await tokenManager.DeactivateCurrentAsync();
@@ -137,6 +137,7 @@ namespace ECommerce.BackendAPI.Controllers
         }
 
         [HttpGet]
+        [EnableCors("_myAdminSite")]
         public async Task<ActionResult<List<AllUserDTO>>> GetAllUser()
         {
             try
