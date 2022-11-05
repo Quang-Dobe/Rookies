@@ -1,8 +1,7 @@
-import { Box, Button, TextField } from "@mui/material"
-import MenuItem from '@mui/material/MenuItem';
-import { Formik } from "formik"
+import { Box, Button, TextField, MenuItem } from "@mui/material"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router";
+import { Formik } from "formik"
 import * as Yup from 'yup';
 import useMediaQuery from "@mui/material/useMediaQuery"
 import Header from "../../components/Header"
@@ -37,12 +36,14 @@ function ProductCreateForm() {
     const isNoneMobile = useMediaQuery("(min-width:600px)");
     const navigate = useNavigate()
 
+    // Call API to get All Product Information
     useEffect(() => {
         axios.get(`https://localhost:7173/api/Category`)
         .then(res => {
             setCategory(res.data)
         }).catch(error => console.log(error))
     }, [])
+
     const categorySelection = category.reduce((init, curValue) => [...init, {value:curValue.id, label:curValue.name}], [])
 
     const handleFormSubmit = (values) => {
@@ -111,7 +112,7 @@ function ProductCreateForm() {
                                 onChange={handleChange}
                                 defaultValue={values.description}
                                 name="description"
-                                error={!!touched.description && errors.description }
+                                error={!!touched.description && !!errors.description }
                                 helperText={touched.description && errors.description }
                                 sx={{ gridColumn: "span 3" }}
                             />
@@ -126,7 +127,7 @@ function ProductCreateForm() {
                                 onChange={handleChange}
                                 defaultValue={values.categoryId}
                                 name="categoryId"
-                                error={!!touched.categoryId && errors.categoryId }
+                                error={!!touched.categoryId && !!errors.categoryId }
                                 helperText={touched.categoryId && errors.categoryId }
                                 sx={{ gridColumn: "span 1" }}
                             >
@@ -147,7 +148,7 @@ function ProductCreateForm() {
                                 onChange={handleChange}
                                 defaultValue={values.price}
                                 name="price"
-                                error={!!touched.price && errors.price }
+                                error={!!touched.price && !!errors.price }
                                 helperText={touched.price && errors.price }
                                 sx={{ gridColumn: "span 1" }}
                             />
@@ -162,7 +163,7 @@ function ProductCreateForm() {
                                 onChange={handleChange}
                                 defaultValue={values.quantity}
                                 name="quantity"
-                                error={!!touched.quantity && errors.quantity }
+                                error={!!touched.quantity && !!errors.quantity }
                                 helperText={touched.quantity && errors.quantity }
                                 sx={{ gridColumn: "span 1" }}
                             />
@@ -177,7 +178,7 @@ function ProductCreateForm() {
                                 onChange={handleChange}
                                 defaultValue={values.inventoryNumber}
                                 name="inventoryNumber"
-                                error={!!touched.inventoryNumber && errors.inventoryNumber }
+                                error={!!touched.inventoryNumber && !!errors.inventoryNumber }
                                 helperText={touched.inventoryNumber && errors.inventoryNumber }
                                 sx={{ gridColumn: "span 1" }}
                             />
