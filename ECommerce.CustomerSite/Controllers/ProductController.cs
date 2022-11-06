@@ -1,9 +1,8 @@
-﻿using ECommerce.CustomerSite.Services;
-using ECommerce.CustomerSite.Services.Interface;
+﻿using ECommerce.CustomerSite.Services.Interface;
 using ECommerce.SharedView.DTO;
 using ECommerce.SharedView.DTO.AdminSiteDTO;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using System.Reflection.Metadata;
 
 namespace ECommerce.CustomerSite.Controllers
 {
@@ -15,7 +14,12 @@ namespace ECommerce.CustomerSite.Controllers
         private readonly IOrderService orderService;
         private readonly ICategoryService categoryService;
 
-        public ProductController(ILogger<HomeController> logger, IProductService productService, ICartService cartService, IOrderService orderService, ICategoryService categoryService)
+        public ProductController(
+            ILogger<HomeController> logger, 
+            IProductService productService, 
+            ICartService cartService, 
+            IOrderService orderService, 
+            ICategoryService categoryService)
         {
             this._logger = logger;
             this.productService = productService;
@@ -27,47 +31,68 @@ namespace ECommerce.CustomerSite.Controllers
         [HttpGet]
         public async Task<IActionResult> Detail([FromQuery] int id)
         {
+            string userId = Request.Cookies["userId"];
+            string jwt = Request.Cookies["jwt"];
             detailProductDTO productDTO = await productService.GetProductByID(id);
             List<AllCategoryDTO> allCategoryDTOs = await categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
-            ViewData["userId"] = GlobalVariable.userId;
-            ViewData["jwt"] = GlobalVariable.jwt;
+            ViewData["userId"] = userId;
+            ViewData["jwt"] = jwt;
+            if (!string.IsNullOrEmpty(userId))
+            {
+                ViewData["isAuthorized"] = "true";
+            }
             return View(productDTO);
         }
 
         [HttpGet]
         public async Task<IActionResult> Buy()
         {
-            string userId = GlobalVariable.userId;
-            List<ShowedCartDetailDTO> showedCartDetailDTOs = await cartService.GetAllCardDetailByCart(userId, GlobalVariable.jwt);
+            string userId = Request.Cookies["userId"];
+            string jwt = Request.Cookies["jwt"];
+            List<ShowedCartDetailDTO> showedCartDetailDTOs = await cartService.GetAllCardDetailByCart(userId);
             List<AllCategoryDTO> allCategoryDTOs = await categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
-            ViewData["userId"] = GlobalVariable.userId;
-            ViewData["jwt"] = GlobalVariable.jwt;
+            ViewData["userId"] = userId;
+            ViewData["jwt"] = jwt;
+            if (!string.IsNullOrEmpty(userId))
+            {
+                ViewData["isAuthorized"] = "true";
+            }
             return View(showedCartDetailDTOs);
         }
 
         [HttpGet]
         public async Task<IActionResult> History()
         {
-            string userId = GlobalVariable.userId;
-            List<ShowedOrderDetailDTO> showedOrderDetailDTOs = await orderService.GetAllOrderDetailByOrder(userId, GlobalVariable.jwt);
+            string userId = Request.Cookies["userId"];
+            string jwt = Request.Cookies["jwt"];
+            List<ShowedOrderDetailDTO> showedOrderDetailDTOs = await orderService.GetAllOrderDetailByOrder(userId);
             List<AllCategoryDTO> allCategoryDTOs = await categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
-            ViewData["userId"] = GlobalVariable.userId;
-            ViewData["jwt"] = GlobalVariable.jwt;
+            ViewData["userId"] = userId;
+            ViewData["jwt"] = jwt;
+            if (!string.IsNullOrEmpty(userId))
+            {
+                ViewData["isAuthorized"] = "true";
+            }
             return View(showedOrderDetailDTOs);
         }
 
         [HttpGet]
         public async Task<IActionResult> Review([FromQuery] int id)
         {
-            string userId = GlobalVariable.userId;
-            ShowedOrderDetailDTO showedOrderDetailDTO = await orderService.GetOrderDetail(userId, id, GlobalVariable.jwt);
+            string userId = Request.Cookies["userId"];
+            string jwt = Request.Cookies["jwt"];
+            ShowedOrderDetailDTO showedOrderDetailDTO = await orderService.GetOrderDetail(userId, id);
             List<AllCategoryDTO> allCategoryDTOs = await categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
-            ViewData["userId"] = GlobalVariable.userId;
-            ViewData["jwt"] = GlobalVariable.jwt;
+            ViewData["userId"] = userId;
+            ViewData["jwt"] = jwt;
+            if (!string.IsNullOrEmpty(userId))
+            {
+                ViewData["isAuthorized"] = "true";
+            }
             return View(showedOrderDetailDTO);
         }
     }

@@ -3,17 +3,13 @@
     ViewData["Title"] = "Product Detail";
     List<AllCategoryDTO> allCategoryDTOs = ViewData["AllCategory"] as List<AllCategoryDTO>;
     int totalReview = Model.reviewProductDTOs.Count;
-    string userId = ViewData["userId"] as string;
-    string jwt = ViewData["jwt"] as string;
+    string isAuthorized = ViewData["isAuthorized"] as string;
 }
 
 <link href="~/css/product/productdetail.css" rel="stylesheet" />
 <link href="~/css/product/addtocart.css" rel="stylesheet" />
 <link href="~/css/product/rating.css" rel="stylesheet" />
 
-
-<span id="_userId" style="display:none; opacity:0">@userId</span>
-<span id="_jwt" style="display:none; opacity:0">@jwt</span>
 <!-- Nav Start -->
 <div class="container-fluid mb-5">
     <div class="row border-top px-xl-5">
@@ -27,7 +23,7 @@
                     @{
                         foreach (AllCategoryDTO item in allCategoryDTOs)
                         {
-                            <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id>@item.name</a>
+                                <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id>@item.name</a>
                         }
                     }
                 </div>
@@ -45,31 +41,30 @@
                     <div class="navbar-nav mr-auto py-0">
                         <a class="nav-item nav-link active" asp-controller="Home" asp-action="Index">Home</a>
                         @{
-                            if (userId == "" && jwt == "")
+                            if (isAuthorized != "true")
                             {
 
                             }
                             else
                             {
-                                <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
-                                <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
+                                    <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
+                                    <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
                             }
                         }
-                        @*<a class="nav-item nav-link" href="#">Contact</a>*@
                     </div>
                     @{
-                        if (userId == "" && jwt == "")
+                        if (isAuthorized != "true")
                         {
-                            <div class="navbar-nav ml-auto py-0">
-                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
-                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
-                            </div>
+                                <div class="navbar-nav ml-auto py-0">
+                                    <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
+                                    <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
+                                </div>
                         }
                         else
                         {
-                            <div class="navbar-nav ml-auto py-0">
-                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="LogOut">Log out</a>
-                            </div>
+                                <div class="navbar-nav ml-auto py-0">
+                                    <a class="nav-item nav-link" asp-controller="Auth" asp-action="LogOut">Log out</a>
+                                </div>
                         }
                     }
                 </div>
@@ -167,25 +162,25 @@
                             @{
                                 foreach (ReviewDTO item in Model.reviewProductDTOs)
                                 {
-                                        <div class="media mb-4">
-                                            <img src="https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
-                                            <div class="media-body">
-                                                <h6>@item.userName</h6>
-                                                <div class="text-primary mb-2">
-                                                    @{
+                                            <div class="media mb-4">
+                                                <img src="https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                                <div class="media-body">
+                                                    <h6>@item.userName</h6>
+                                                    <div class="text-primary mb-2">
+                                                        @{
                                                     for (int i = 1; i <= item.rating; i++)
                                                     {
-                                                                <i class="fa-solid fa-star" style="color:#FF9529"></i>
+                                                                        <i class="fa-solid fa-star" style="color:#FF9529"></i>
                                                     };
                                                     for (int i = 5; i > item.rating; i--)
                                                     {
-                                                                <i class="fa-regular fa-star" style="color:#FF9529"></i>
+                                                                        <i class="fa-regular fa-star" style="color:#FF9529"></i>
                                                     }
-                                                    }
+                                                        }
+                                                    </div>
+                                                    <p>@item.comment</p>
                                                 </div>
-                                                <p>@item.comment</p>
                                             </div>
-                                        </div>
                                 }
                             }
                         </div>
@@ -197,6 +192,20 @@
 </div>
 
 <script>
+    const $ = document.querySelector.bind(document)
+    const $$ = document.querySelectorAll.bind(document)
+
+    const divToastElement = $('.container-fluid #toast')
+    const AddToCartElement = document.querySelector(".col-lg-7.pb-5 .btn.btn-primary.px-3")
+    var userId_ = `@ViewData["userId"]`;
+    var jwt_ = "@ViewData["jwt"]";
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
     function InDeQuantity() {
         var decreaseButton = document.querySelector(".input-group-btn .btn-minus")
         var increaseButton = document.querySelector(".input-group-btn .btn-plus")
@@ -214,17 +223,6 @@
         }
     }
     InDeQuantity()
-
-
-
-    const $ = document.querySelector.bind(document)
-    const $$ = document.querySelectorAll.bind(document)
-
-    const divToastElement = $('.container-fluid #toast')
-    const AddToCartElement = document.querySelector(".col-lg-7.pb-5 .btn.btn-primary.px-3")
-    var userId_ = document.querySelector("span#_userId").innerHTML;
-    var jwt_ = document.querySelector("span#_jwt").innerHTML;
-
 
     function getNotice(divToastElement, type) {
         // Create toast-div

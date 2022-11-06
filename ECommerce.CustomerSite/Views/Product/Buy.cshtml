@@ -1,14 +1,11 @@
 ﻿F@model List<ShowedCartDetailDTO>
-@{
+    @{
     ViewData["Title"] = "Shopping cart";
     List<AllCategoryDTO> allCategoryDTOs = ViewData["AllCategory"] as List<AllCategoryDTO>;
-    string userId = ViewData["userId"] as string;
-    string jwt = ViewData["jwt"] as string;
+    string isAuthorized = ViewData["isAuthorized"] as string;
 }
 
 <link href="~/css/product/buy.css" rel="stylesheet" />
-<span id="_userId" style="display:none; opacity:0">@userId</span>
-<span id="_jwt" style="display:none; opacity:0">@jwt</span>
 <!-- Nav Start -->
 <div class="container-fluid mb-5">
     <div class="row border-top px-xl-5">
@@ -22,7 +19,7 @@
                     @{
                         foreach (AllCategoryDTO item in allCategoryDTOs)
                         {
-                                <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id>@item.name</a>
+                                        <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id>@item.name</a>
                         }
                     }
                 </div>
@@ -40,31 +37,30 @@
                     <div class="navbar-nav mr-auto py-0">
                         <a class="nav-item nav-link" asp-controller="Home" asp-action="Index">Home</a>
                             @{
-                                if (userId == "" && jwt == "")
+                                if (isAuthorized != "true")
                                 {
 
                                 }
                                 else
                                 {
-                                    <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
-                                    <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
+                                            <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
+                                            <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
                                 }
                             }
-                        @*<a class="nav-item nav-link" href="#">Contact</a>*@
                     </div>
                     @{
-                        if (userId == "" && jwt == "")
+                            if (isAuthorized != "true")
                         {
-                            <div class="navbar-nav ml-auto py-0">
-                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
-                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
-                            </div>
+                                    <div class="navbar-nav ml-auto py-0">
+                                        <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
+                                        <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
+                                    </div>
                         }
                             else
                             {
-                                <div class="navbar-nav ml-auto py-0">
-                                    <a class="nav-item nav-link" asp-controller="Auth" asp-action="LogOut">Log out</a>
-                                </div>
+                                        <div class="navbar-nav ml-auto py-0">
+                                            <a class="nav-item nav-link" asp-controller="Auth" asp-action="LogOut">Log out</a>
+                                        </div>
                             }
                     }
                 </div>
@@ -106,27 +102,27 @@
                         foreach (ShowedCartDetailDTO item in Model)
                         {
                             var total = item.showedProductDTO.price * item.number;
-                                <tr>
-                                    <td class="align-middle">
-                                        <img src=@item.showedProductDTO.productImg style="width: 50px;">
-                                        <span class="productId" style="display: none; opacity: 0">@item.showedProductDTO.id</span>
-                                        <span class="font-weight-bold">@item.showedProductDTO.productName</span>
-                                    </td>
-                                    <td class="align-middle">@item.showedProductDTO.price</td>
-                                    <td class="align-middle">
-                                        <div class="input-group quantity mx-auto" style="width: 100px;">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-primary btn-minus">-</button>
-                                            </div>
-                                            <input type="text" class="form-control form-control-sm bg-secondary text-center" value=@item.number>
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-primary btn-plus">+</button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="align-middle">@total</td>
-                                    <td class="align-middle"><button class="btn btn-sm btn-primary">x</button></td>
-                                </tr>
+                                        <tr>
+                                            <td class="align-middle">
+                                                <img src=@item.showedProductDTO.productImg style="width: 50px;">
+                                                <span class="productId" style="display: none; opacity: 0">@item.showedProductDTO.id</span>
+                                                <span class="font-weight-bold">@item.showedProductDTO.productName</span>
+                                            </td>
+                                            <td class="align-middle">@item.showedProductDTO.price</td>
+                                            <td class="align-middle">
+                                                <div class="input-group quantity mx-auto" style="width: 100px;">
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-sm btn-primary btn-minus">-</button>
+                                                    </div>
+                                                    <input type="text" class="form-control form-control-sm bg-secondary text-center" value=@item.number>
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-sm btn-primary btn-plus">+</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle">@total</td>
+                                            <td class="align-middle"><button class="btn btn-sm btn-primary">x</button></td>
+                                        </tr>
                         }
                     }
                     
@@ -168,8 +164,14 @@
     var shippingRate = 150;
     const $ = document.querySelector.bind(document)
     const $$ = document.querySelectorAll.bind(document)
-    var userId_ = document.querySelector("span#_userId").innerHTML;
-    var jwt_ = document.querySelector("span#_jwt").innerHTML;
+    var userId_ = `@ViewData["userId"]`;
+    var jwt_ = "@ViewData["jwt"]";
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
 
     function recalculateCart() {
         var subtotal = 0;

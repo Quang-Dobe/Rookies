@@ -3,8 +3,7 @@
 @{
     ViewData["Title"] = "Home";
     List<AllCategoryDTO> allCategoryDTOs = ViewData["AllCategory"] as List<AllCategoryDTO>;
-    string userId = ViewData["userId"] as string;
-    string jwt = ViewData["jwt"] as string;
+    string isAuthorized = ViewData["isAuthorized"] as string;
 }
 <link href="../css/Home/Menu.css" rel="stylesheet" />
 <link href="~/css/product/rating.css" rel="stylesheet" />
@@ -40,7 +39,7 @@
                     <div class="navbar-nav mr-auto py-0">
                         <a class="nav-item nav-link active" asp-controller="Home" asp-action="Index">Home</a>
                         @{
-                            if (userId == "" && jwt == "")
+                            if (isAuthorized != "true")
                             {
 
                             }
@@ -50,10 +49,9 @@
                                 <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
                             }
                         }
-                        @*<a class="nav-item nav-link" href="#">Contact</a>*@
                     </div>
                     @{
-                        if (userId == "" && jwt == "")
+                        if (isAuthorized != "true")
                         {
                             <div class="navbar-nav ml-auto py-0">
                                 <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>

@@ -13,11 +13,10 @@ namespace ECommerce.CustomerSite.Controllers
     [Route("/[controller]/[action]")]
     public class AuthController : Controller
     {
-        private readonly IHttpClientFactory clientFactory;
         private readonly IIdentityUserService identityUserService;
 
         // Intialize
-        public AuthController(IIdentityUserService identityUserService)
+        public AuthController(IHttpClientFactory clientFactory, IIdentityUserService identityUserService)
         {
             this.identityUserService = identityUserService;
         }
@@ -36,21 +35,19 @@ namespace ECommerce.CustomerSite.Controllers
             {
                 String stringData = await identityUserService.Login(loginRequestDTO);
 
-                //LoginResponseDTO data = JsonConvert.DeserializeObject<LoginResponseDTO>(stringData);
-                //var stream = "[encoded jwt]";
-                //var handler = new JwtSecurityTokenHandler();
-                //var jsonToken = handler.ReadToken(stringData);
-                //var tokenS = jsonToken as JwtSecurityToken;
-                //var nameid = tokenS.Claims.First(claim => claim.Type == "nameid").Value;
-                //Console.WriteLine(nameid);
                 if (stringData != null)
                 {
                     var handler = new JwtSecurityTokenHandler();
                     var jsonToken = handler.ReadToken(stringData);
                     var tokenS = jsonToken as JwtSecurityToken;
-                    GlobalVariable.userId = tokenS.Claims.First(claim => claim.Type == "nameid").Value;
-                    GlobalVariable.jwt = "Bearer " + stringData;
-                    Request.HttpContext.Session.SetString("JWT", stringData);
+                    var cookieOption = new CookieOptions()
+                    {
+                        HttpOnly = true,
+                        Expires = DateTime.UtcNow.AddMinutes(10),
+                        IsEssential = true
+                    };
+                    Response.Cookies.Append("jwt", "Bearer " + stringData, cookieOption);
+                    Response.Cookies.Append("userId", tokenS.Claims.First(claim => claim.Type == "nameid").Value, cookieOption);
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -65,12 +62,11 @@ namespace ECommerce.CustomerSite.Controllers
         [HttpGet]
         public async Task<IActionResult> LogOut()
         {
-            String deactivateTokenResult = await identityUserService.LogOut(GlobalVariable.jwt);
+            String deactivateTokenResult = await identityUserService.LogOut();
             if (deactivateTokenResult == "Deactivate Token")
             {
-                GlobalVariable.jwt = "";
-                GlobalVariable.userId = "";
-                
+                Response.Cookies.Delete("jwt");
+                Response.Cookies.Delete("userId");
             }
             return RedirectToAction("Index", "Home");
         }

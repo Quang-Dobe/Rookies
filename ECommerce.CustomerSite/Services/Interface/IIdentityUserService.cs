@@ -6,6 +6,6 @@ namespace ECommerce.CustomerSite.Services.Interface
     {
         Task<String> Register(RegisterRequestDTO registerRequestDTO);
         Task<String> Login(LoginRequestDTO loginRequestDTO);
-        Task<String> LogOut(string jwt);
+        Task<String> LogOut();
     }
 }

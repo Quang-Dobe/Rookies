@@ -2,14 +2,10 @@
 @{
     ViewData["Title"] = "Trading history";
     List<AllCategoryDTO> allCategoryDTOs = ViewData["AllCategory"] as List<AllCategoryDTO>;
-    string userId = ViewData["userId"] as string;
-    string jwt = ViewData["jwt"] as string;
+    string isAuthorized = ViewData["isAuthorized"] as string;
 }
 <link href="~/css/product/buy.css" rel="stylesheet" />
 
-
-<span id="_userId" style="display:none; opacity:0">@userId</span>
-<span id="_jwt" style="display:none; opacity:0">@jwt</span>
 <!-- Nav Start -->
 <div class="container-fluid mb-5">
     <div class="row border-top px-xl-5">
@@ -41,7 +37,7 @@
                     <div class="navbar-nav mr-auto py-0">
                         <a class="nav-item nav-link" asp-controller="Home" asp-action="Index">Home</a>
                         @{
-                            if (userId == "" && jwt == "")
+                            if (isAuthorized != "true")
                             {
 
                             }
@@ -51,10 +47,9 @@
                                 <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
                             }
                         }
-                        @*<a class="nav-item nav-link" href="#">Contact</a>*@
                     </div>
                     @{
-                        if (userId == "" && jwt == "")
+                        if (isAuthorized != "true")
                         {
                             <div class="navbar-nav ml-auto py-0">
                                 <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>

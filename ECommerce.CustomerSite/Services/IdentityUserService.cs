@@ -7,31 +7,34 @@ namespace ECommerce.CustomerSite.Services
 {
     public class IdentityUserService : IIdentityUserService
     {
-        private readonly IIdentityUser identityUser;
+        private readonly IIdentityUser _identityUser;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         // Initialize
-        public IdentityUserService()
+        public IdentityUserService(IHttpContextAccessor httpContextAccessor)
         {
-            identityUser = RestService.For<IIdentityUser>("https://localhost:7173");
+            _identityUser = RestService.For<IIdentityUser>("https://localhost:7173");
+            _httpContextAccessor = httpContextAccessor;
         }
 
 
         // Methods
         public async Task<String> Register(RegisterRequestDTO registerRequestDTO)
         {
-           return await identityUser.Register(registerRequestDTO);
+            return await _identityUser.Register(registerRequestDTO);
         }
 
 
         public async Task<String> Login(LoginRequestDTO loginRequestDTO)
         {
-            return await identityUser.Login(loginRequestDTO);
+            return await _identityUser.Login(loginRequestDTO);
         }
 
 
-        public async Task<String> LogOut(string jwt)
+        public async Task<String> LogOut()
         {
-            return await identityUser.LogOut(jwt);
+            string jwt = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
+            return await _identityUser.LogOut(jwt);
         }
     }
 }

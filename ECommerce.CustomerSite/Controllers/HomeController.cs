@@ -26,22 +26,27 @@ namespace ECommerce.CustomerSite.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            string userId = Request.Cookies["userId"];
             List<AllCategoryDTO> allCategoryDTOs = await _categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
-            ViewData["userId"] = GlobalVariable.userId;
-            ViewData["jwt"] = GlobalVariable.jwt;
-            Console.WriteLine(GlobalVariable.userId);
+            if (!string.IsNullOrEmpty(userId))
+            {
+                ViewData["isAuthorized"] = "true";
+            }
             return View();
         }
 
         [HttpGet]
         public async Task<IActionResult> Category([FromQuery] string? type)
         {
+            string userId = Request.Cookies["userId"];
             List<ShowedProductDTO> listProducts = await _productService.GetProductByType(int.Parse(type));
             List<AllCategoryDTO> allCategoryDTOs = await _categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
-            ViewData["userId"] = GlobalVariable.userId;
-            ViewData["jwt"] = GlobalVariable.jwt;
+            if (!string.IsNullOrEmpty(userId))
+            {
+                ViewData["isAuthorized"] = "true";
+            }
             return View(listProducts);
         }
 

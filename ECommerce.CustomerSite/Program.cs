@@ -1,7 +1,5 @@
 using ECommerce.CustomerSite.Services;
 using ECommerce.CustomerSite.Services.Interface;
-using Microsoft.Extensions.FileProviders;
-using Refit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +9,7 @@ builder.Services.AddControllersWithViews();
 // Add session storage
 builder.Services.AddSession(option =>
 {
-    option.IdleTimeout = TimeSpan.FromMinutes(10);
+    option.IdleTimeout = TimeSpan.FromMinutes(1);
 });
 
 // Add IHttpClientFactory and put it in Dependency injection then use it to call api as a client
@@ -24,6 +22,7 @@ builder.Services.AddHttpClient("", opt =>
 //builder.Services.AddRefitClient<IProduct>().ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration["ApiUrl"] ?? ""));
 
 // Add Services to DI Container
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IIdentityUserService, IdentityUserService>();
 builder.Services.AddScoped<ICartService, CartService>();

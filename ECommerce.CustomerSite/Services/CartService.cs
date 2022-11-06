@@ -8,11 +8,13 @@ namespace ECommerce.CustomerSite.Services
     public class CartService : ICartService
     {
         private readonly ICart _cartInterface;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
 
         // Initialize
-        public CartService()
+        public CartService(IHttpContextAccessor httpContextAccessor)
         {
+            this._httpContextAccessor = httpContextAccessor;
             _cartInterface = RestService.For<ICart>("https://localhost:7173");
         }
 
@@ -23,13 +25,15 @@ namespace ECommerce.CustomerSite.Services
             return _cartInterface.CreateCartDetail(userId, productId, number);
         }
 
-        public Task<string> DeleteCartDetail(string userId, int productId, int number, string jwt)
+        public Task<string> DeleteCartDetail(string userId, int productId, int number)
         {
+            string jwt = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
             return _cartInterface.DeleteCartDetail(userId, productId, number, jwt);
         }
 
-        public Task<List<ShowedCartDetailDTO>> GetAllCardDetailByCart(string userId, string jwt)
+        public Task<List<ShowedCartDetailDTO>> GetAllCardDetailByCart(string userId)
         {
+            string jwt = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
             return _cartInterface.GetAllCardDetailByCart(userId, jwt);
         }
 
@@ -38,8 +42,9 @@ namespace ECommerce.CustomerSite.Services
             return _cartInterface.GetAllCart();
         }
 
-        public Task<string> UpdateCartDetail(string userId, int productId, int number, string jwt)
+        public Task<string> UpdateCartDetail(string userId, int productId, int number)
         {
+            string jwt = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
             return _cartInterface.UpdateCartDetail(userId, productId, number, jwt);
         }
     }
