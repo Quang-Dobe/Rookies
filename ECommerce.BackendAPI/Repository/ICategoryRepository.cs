@@ -11,7 +11,7 @@ namespace ECommerce.BackendAPI.Repository
 
         void UpdateCategory(Category category);
 
-        void DeleteCategory(Category category);
+        Task DeleteCategory(Category category);
 
         Task Save();
 

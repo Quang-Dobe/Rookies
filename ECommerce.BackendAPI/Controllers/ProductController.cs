@@ -3,6 +3,7 @@ using ECommerce.BackendAPI.Repository;
 using ECommerce.Data.Model;
 using ECommerce.SharedView.DTO;
 using ECommerce.SharedView.DTO.AdminSiteDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -56,6 +57,7 @@ namespace ECommerce.BackendAPI.Controllers
 
         [HttpGet]
         [EnableCors("_myAdminSite")]
+        [Authorize]
         public async Task<ActionResult<List<AllProductDTO>>> GetAllProducts()
         {
             List<Product> allProduct = await _productRepository.GetProducts();
@@ -80,6 +82,7 @@ namespace ECommerce.BackendAPI.Controllers
         
         [HttpPost]
         [EnableCors("_myAdminSite")]
+        [Authorize]
         public async Task<ActionResult> CreateNewProduct(AllProductDTO allProductDTO)
         {
             Category category = await _categoryRepository.GetCategory(allProductDTO.CategoryId);
@@ -106,6 +109,7 @@ namespace ECommerce.BackendAPI.Controllers
         [HttpPost]
         [Route("{id:int}")]
         [EnableCors("_myAdminSite")]
+        [Authorize]
         public async Task<ActionResult> UpdateProduct([FromRoute] int id, [FromBody] AllProductDTO allProductDTO)
         {
             try
@@ -137,6 +141,7 @@ namespace ECommerce.BackendAPI.Controllers
 
         [HttpPost]
         [EnableCors("_myAdminSite")]
+        [Authorize]
         public async Task<ActionResult> UpdateMultiProduct([FromBody] List<AllProductDTO> allProductDTOs)
         {
             try
@@ -175,6 +180,7 @@ namespace ECommerce.BackendAPI.Controllers
         [HttpDelete]
         [Route("{id:int}")]
         [EnableCors("_myAdminSite")]
+        [Authorize]
         public async Task<ActionResult> DeleteProduct([FromRoute] int id)
         {
             try
@@ -196,6 +202,7 @@ namespace ECommerce.BackendAPI.Controllers
 
         [HttpDelete]
         [EnableCors("_myAdminSite")]
+        [Authorize]
         public async Task<ActionResult> DeleteMultiProduct([FromBody] List<int> ids)
         {
             try

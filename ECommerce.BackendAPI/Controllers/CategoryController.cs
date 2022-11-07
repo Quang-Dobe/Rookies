@@ -2,6 +2,7 @@
 using ECommerce.BackendAPI.Repository;
 using ECommerce.Data.Model;
 using ECommerce.SharedView.DTO.AdminSiteDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,9 +47,19 @@ namespace ECommerce.BackendAPI.Controllers
             return Ok(allCategoryDTOs);
         }
 
+        [HttpGet("Admin")]
+        [EnableCors("_myAdminSite")]
+        [Authorize]
+        public async Task<ActionResult<List<AllCategoryDTO>>> GetAllCategoryAdmin()
+        {
+            List<Category> categories = await _categoryRepository.GetCategories();
+            List<AllCategoryDTO> allCategoryDTOs = _mapper.Map<List<AllCategoryDTO>>(categories);
+            return Ok(allCategoryDTOs);
+        }
 
         [HttpPost("Create")]
         [EnableCors("_myAdminSite")]
+        [Authorize]
         public async Task<ActionResult> CreateCategory([FromBody] AllCategoryDTO allCategoryDTO)
         {
             await _categoryRepository.CreateCategory(allCategoryDTO.name, allCategoryDTO.description);
@@ -59,6 +70,7 @@ namespace ECommerce.BackendAPI.Controllers
 
         [HttpPost("Update")]
         [EnableCors("_myAdminSite")]
+        [Authorize]
         public async Task<ActionResult> UpdateCategory_([FromBody] AllCategoryDTO allCategoryDTO)
         {
 
@@ -78,6 +90,7 @@ namespace ECommerce.BackendAPI.Controllers
         [HttpDelete]
         [Route("{id:int}")]
         [EnableCors("_myAdminSite")]
+        [Authorize]
         public async Task<ActionResult> DeleteCategory([FromRoute] int id)
         {
             Category category = await _categoryRepository.GetCategory(id);
@@ -85,7 +98,7 @@ namespace ECommerce.BackendAPI.Controllers
             {
                 return BadRequest("Invalid Category ID");
             }
-            _categoryRepository.DeleteCategory(category);
+            await _categoryRepository.DeleteCategory(category);
             await _categoryRepository.Save();
             return Ok("Deleted Catedgory ID");
         }

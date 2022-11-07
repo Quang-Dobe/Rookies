@@ -49,6 +49,7 @@ namespace ECommerce.BackendAPI.Controllers
         }
 
         [HttpPost]
+        [EnableCors("_myAdminSite")]
         public async Task<ActionResult> Login([FromBody] LoginRequestDTO loginRequestModel)
         {
             // Get request successfully
@@ -66,12 +67,10 @@ namespace ECommerce.BackendAPI.Controllers
                 {
                     Subject = new ClaimsIdentity(new[]
                     {
-                new Claim("Id", Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, loginRequestModel.UserName),
-                new Claim(JwtRegisteredClaimNames.Email, loginRequestModel.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti,
-                Guid.NewGuid().ToString())
-             }),
+                        new Claim("Id", Guid.NewGuid().ToString()),
+                        new Claim(JwtRegisteredClaimNames.Sub, loginRequestModel.UserName),
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                     }),
                     Expires = DateTime.UtcNow.AddMinutes(5),
                     Issuer = issuer,
                     Audience = audience,
@@ -129,6 +128,7 @@ namespace ECommerce.BackendAPI.Controllers
         }
 
         [HttpPost]
+        [EnableCors("_myAdminSite")]
         public async Task<ActionResult> LogOut()
         {
             await tokenManager.DeactivateCurrentAsync();
@@ -138,6 +138,7 @@ namespace ECommerce.BackendAPI.Controllers
 
         [HttpGet]
         [EnableCors("_myAdminSite")]
+        [Authorize]
         public async Task<ActionResult<List<AllUserDTO>>> GetAllUser()
         {
             try

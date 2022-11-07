@@ -27,8 +27,16 @@ namespace ECommerce.BackendAPI.Repository
             await _dbContext.categories.AddAsync(new Category { Name = name, Description=description }) ;
         }
 
-        public void DeleteCategory(Category category)
+        public async Task DeleteCategory(Category category)
         {
+            // Get all products with given CategoryID
+            List<Product> products = await _dbContext.products.Where(product => product.CategoryId == category.Id).ToListAsync();
+            // Delete all products which has categoryID is same as given CategoryID
+            foreach(Product product in products)
+            {
+                _dbContext.products.Remove(product);
+            }
+            // After that, delete that Category
             _dbContext.categories.Remove(category);
         }
 
