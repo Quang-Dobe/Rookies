@@ -1,11 +1,15 @@
 ﻿using ECommerce.CustomerSite.Services.Interface;
 using ECommerce.SharedView;
 using ECommerce.SharedView.DTO.Account;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SharedView.DTO.Account;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace ECommerce.CustomerSite.Controllers
@@ -25,6 +29,9 @@ namespace ECommerce.CustomerSite.Controllers
         // Methods
         public IActionResult Login()
         {
+            ClaimsPrincipal claimUser = HttpContext.User;
+            if (claimUser.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
             return View();
         }
 
@@ -48,6 +55,22 @@ namespace ECommerce.CustomerSite.Controllers
                     };
                     Response.Cookies.Append("jwt", "Bearer " + stringData, cookieOption);
                     Response.Cookies.Append("userId", tokenS.Claims.First(claim => claim.Type == "nameid").Value, cookieOption);
+                    List<Claim> claims = new List<Claim>()
+                    {
+                        new Claim(ClaimTypes.NameIdentifier, tokenS.Claims.First(claim => claim.Type == "nameid").Value),
+                        new Claim("jwt", "Bearer " + stringData),
+                        new Claim("userId", tokenS.Claims.First(claim => claim.Type == "nameid").Value),
+                    };
+                    ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    AuthenticationProperties properties = new AuthenticationProperties()
+                    {
+                        AllowRefresh = true,
+                        //IsPersistent = loginRequestDTO.KeepLoggedin,
+                    };
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity), properties);
+
+
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -60,14 +83,18 @@ namespace ECommerce.CustomerSite.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> LogOut()
         {
+            // Deactive token in API
             String deactivateTokenResult = await identityUserService.LogOut();
             if (deactivateTokenResult == "Deactivate Token")
             {
                 Response.Cookies.Delete("jwt");
                 Response.Cookies.Delete("userId");
             }
+            // Remove ASPNetCookies
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
 

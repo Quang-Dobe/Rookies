@@ -1,6 +1,7 @@
 ﻿using ECommerce.CustomerSite.Services.Interface;
 using ECommerce.SharedView.DTO;
 using ECommerce.SharedView.DTO.AdminSiteDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata;
 
@@ -46,6 +47,7 @@ namespace ECommerce.CustomerSite.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Buy()
         {
             string userId = Request.Cookies["userId"];
@@ -63,6 +65,7 @@ namespace ECommerce.CustomerSite.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> History()
         {
             string userId = Request.Cookies["userId"];
@@ -80,6 +83,7 @@ namespace ECommerce.CustomerSite.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Review([FromQuery] int id)
         {
             string userId = Request.Cookies["userId"];

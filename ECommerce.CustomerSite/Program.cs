@@ -1,5 +1,6 @@
 using ECommerce.CustomerSite.Services;
 using ECommerce.CustomerSite.Services.Interface;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,14 @@ builder.Services.AddHttpClient("", opt =>
 
 // Add RefitClient (Instead of using normal HttpClientFactory, we use Refit to call API (Follow Restful API)
 //builder.Services.AddRefitClient<IProduct>().ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration["ApiUrl"] ?? ""));
+
+builder.Services.AddAuthentication(
+    CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(option =>
+    {
+        option.LoginPath = "/Auth/Login";
+        option.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+    });
 
 // Add Services to DI Container
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
