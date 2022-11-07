@@ -23,6 +23,11 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
 
 function Category(){
     const [categoryData, setCategoryData] = useState([])
@@ -70,10 +75,16 @@ function Category(){
         idSelectedRow.current = data.id
         handleOpenUpdateModal()
     }
-    // ................ Need to re-code Delete Category in Backend API .........................
     const handleDeleteRow = async (data) => {
         // Call API for deleting Category
-        await axios.delete(`https://localhost:7173/api/Category/${data.id}`)
+        await axios.delete(`https://localhost:7173/api/Category/${data.id}`,
+        { 
+            headers: {
+                'authorization': getCookie('jwt'),
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
         .then(res => {
             isDeleteSuccess.current=true;
         }).catch(error => isDeleteSuccess.current=false)
@@ -81,7 +92,14 @@ function Category(){
         // Open Modal to inform whether Delete action is sucessful or not
         handleOpenDeleteModal()
         
-        await axios.get(`https://localhost:7173/api/Category`)
+        await axios.get(`https://localhost:7173/api/Category`,
+        { 
+            headers: {
+                'authorization': getCookie('jwt'),
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
         .then(res => {
             setCategoryData(res.data)
         }).catch(error => console.log(error))
@@ -112,7 +130,14 @@ function Category(){
 
     // Get All category Information when Component is mounted
     useEffect(() => {
-        axios.get(`https://localhost:7173/api/Category`)
+        axios.get(`https://localhost:7173/api/Category/Admin`,
+        { 
+            headers: {
+                'authorization': getCookie('jwt'),
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
         .then(res => {
             setCategoryData(res.data)
         }).catch(error => console.log(error))

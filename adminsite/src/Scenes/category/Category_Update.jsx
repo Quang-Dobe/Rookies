@@ -22,6 +22,12 @@ const style = {
 };
 
 
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
 function CategoryUpdateModal(props) {
     const [open, setOpen] = useState(false);
     const theme = useTheme()
@@ -50,13 +56,27 @@ function CategoryUpdateModal(props) {
 
     // HandleSubmit Formik form
     const handleFormSubmit = async (values) => {
-        await axios.post(`https://localhost:7173/api/Category/Update`, values)
+        await axios.post(`https://localhost:7173/api/Category/Update`, values,
+        { 
+            headers: {
+                'authorization': getCookie('jwt'),
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
         .then(res => {
             status.current=true;
         }).catch(error => status.current=false)
         handleOpen()
         
-        await axios.get(`https://localhost:7173/api/Category`)
+        await axios.get(`https://localhost:7173/api/Category/Admin`,
+        { 
+            headers: {
+                'authorization': getCookie('jwt'),
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
         .then(res => {
             props.setCategoryData(res.data)
         }).catch(error => console.log(error))

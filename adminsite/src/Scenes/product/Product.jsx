@@ -21,10 +21,15 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
 
 function Product(){
     const [productData, setProductData] = useState([])
+    const [categoryData, setCategoryData] = useState([])
     const [pageSize, SetPageSize] = useState(5)
     const navigate = useNavigate()
     const theme = useTheme()
@@ -33,8 +38,15 @@ function Product(){
     var afterUpdatedList = []
 
     const handleUpdateMultiRow = async () => {
-        if (afterUpdatedList.length!=0){
-            await axios.post(`https://localhost:7173/Product/UpdateMultiProduct/`, afterUpdatedList)
+        if (afterUpdatedList.length !== 0){
+            await axios.post(`https://localhost:7173/Product/UpdateMultiProduct/`, afterUpdatedList, 
+            { 
+                headers: {
+                    'authorization': getCookie('jwt'),
+                    'Accept' : 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
             .then(res => console.log(res.data)).catch(error => console.log(error))
 
             document.querySelectorAll(`div.MuiDataGrid-cell[data-field="Action"] button:first-child`).forEach(item => {
@@ -42,7 +54,14 @@ function Product(){
                 item.disabled = true;
             })
 
-            await axios.get(`https://localhost:7173/Product/GetAllProducts`)
+            await axios.get(`https://localhost:7173/Product/GetAllProducts`, 
+            { 
+                headers: {
+                    'authorization': getCookie('jwt'),
+                    'Accept' : 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
             .then(res => {
                 setProductData(res.data)
             }).catch(error => console.log(error))
@@ -51,17 +70,37 @@ function Product(){
 
     const handleDeleteMultiRow = async () => {
         var listId = afterUpdatedList.reduce((init, current) => [...init, current], [])
-        if (listId.length!=0){
-            await axios.delete(`https://localhost:7173/Product/DeleteMultiProduct`, listId)
+        if (listId.length !== 0){
+            await axios.delete(`https://localhost:7173/Product/DeleteMultiProduct`, listId,
+            { 
+                headers: {
+                    'authorization': getCookie('jwt'),
+                    'Accept' : 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
             .then(res => console.log(res.data)).catch(error => console.log(error))
 
-            await axios.get(`https://localhost:7173/Product/GetAllProducts`)
+            await axios.get(`https://localhost:7173/Product/GetAllProducts`, { 
+                headers: {
+                    'authorization': getCookie('jwt'),
+                    'Accept' : 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
             .then(res => setProductData(res.data)).catch(error => console.log(error))
         }
     }
 
     const handleUpdateRow = async () => {
-        await axios.post(`https://localhost:7173/Product/UpdateProduct/${afterUpdated.id}`, afterUpdated)
+        await axios.post(`https://localhost:7173/Product/UpdateProduct/${afterUpdated.id}`, afterUpdated, 
+        { 
+            headers: {
+                'authorization': getCookie('jwt'),
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
         .then(res => {
             console.log(res.data)
         }).catch(error => console.log(error))
@@ -71,16 +110,37 @@ function Product(){
             item.disabled = true;
         })
 
-        await axios.get(`https://localhost:7173/Product/GetAllProducts`)
+        await axios.get(`https://localhost:7173/Product/GetAllProducts`, 
+        { 
+            headers: {
+                'authorization': getCookie('jwt'),
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
         .then(res => {
             setProductData(res.data)
         }).catch(error => console.log(error))
     };
 
     const handleDeleteRow = async (data) => {
-        await axios.delete(`https://localhost:7173/Product/DeleteProduct/${data.id}`)
+        await axios.delete(`https://localhost:7173/Product/DeleteProduct/${data.id}`, 
+        { 
+            headers: {
+                'authorization': getCookie('jwt'),
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
 
-        await axios.get(`https://localhost:7173/Product/GetAllProducts`)
+        await axios.get(`https://localhost:7173/Product/GetAllProducts`, 
+        { 
+            headers: {
+                'authorization': getCookie('jwt'),
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
         .then(res => setProductData(res.data)).catch(error => console.log(error))
     };
 
@@ -103,7 +163,7 @@ function Product(){
                 return __assign(__assign({}, params.props), { error: hasError });
             } 
         },
-        { field: "categoryId", flex: 0.5, editable:true, headerName: "Category ID", type: "number" },
+        { field: "categoryId", flex: 0.5, editable:true, headerName: "Category", type: "singleSelect", valueOptions: categoryData.reduce((init, curValue) => [...init, {value:curValue.id, label:curValue.name}], []) },
         { field: "price", flex: 0.5, editable:true, headerName: "Price", type: "number",
             preProcessEditCellProps: function (params) {
                 var hasError = params.props.value <= 0;
@@ -125,7 +185,7 @@ function Product(){
         { field: "rating", flex: 0.5, headerName: "Rating", type: "number" },
         { field: "createdDate", flex: 1, hide:true, headerName: "Created Date"},
         { field: "updatedDate", flex: 1, hide:true, headerName: "Updated Date"},
-        { field: "Action", flex: 1, headerName: "Action", headerAlign: "center", align: "center",
+        { field: "Action", type: 'actions', flex: 1,headerAlign: "center", align: "center",
             renderCell: ({ row: data }) => {
                 return (
                     <Box>
@@ -144,9 +204,28 @@ function Product(){
     ]
 
     useEffect(() => {
-        axios.get(`https://localhost:7173/Product/GetAllProducts`)
+        axios.get(`https://localhost:7173/Product/GetAllProducts`,
+        { 
+            headers: {
+                'authorization': getCookie('jwt'),
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
         .then(res => {
             setProductData(res.data)
+        }).catch(error => console.log(error))
+
+        axios.get(`https://localhost:7173/api/Category`,
+        { 
+            headers: {
+                'authorization': getCookie('jwt'),
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => {
+            setCategoryData(res.data)
         }).catch(error => console.log(error))
     }, [])
 

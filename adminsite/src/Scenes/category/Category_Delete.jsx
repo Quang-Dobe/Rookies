@@ -16,6 +16,12 @@ const style = {
     pb: 3,
 };
 
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
 function CategoryDeleteModal(props) {
     const theme = useTheme()
     const colors = tokens(theme.palette.mode)

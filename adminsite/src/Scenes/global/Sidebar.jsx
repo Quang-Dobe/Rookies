@@ -91,7 +91,7 @@ function Sidebar() {
                     <Box paddingLeft={isCollapsed ? undefined : "10%"}>
                         {!isCollapsed ? (<Item 
                             title="Dashboard"
-                            to="/"
+                            to="/dashboard"
                             icon={<HomeOutlinedIcon />}
                             selected={selected}
                             setSelected={setSelected}

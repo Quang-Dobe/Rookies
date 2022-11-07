@@ -21,6 +21,12 @@ const style = {
     pb: 3,
 };
 
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
 
 function CategoryCreateModal(props) {
     const [open, setOpen] = useState(false);
@@ -50,13 +56,27 @@ function CategoryCreateModal(props) {
 
     // HandleSubmit Formik form
     const handleFormSubmit = async (values) => {
-        await axios.post(`https://localhost:7173/api/Category/Create`, { id:0, ...values})
+        await axios.post(`https://localhost:7173/api/Category/Create`, { id:0, ...values}, 
+        { 
+            headers: {
+                'authorization': getCookie('jwt'),
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
         .then(res => {
             status.current=true;
         }).catch(error => status.current=false)
         handleOpen()
         
-        await axios.get(`https://localhost:7173/api/Category`)
+        await axios.get(`https://localhost:7173/api/Category/Admin`,
+        { 
+            headers: {
+                'authorization': getCookie('jwt'),
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
         .then(res => {
             props.setCategoryData(res.data)
         }).catch(error => console.log(error))

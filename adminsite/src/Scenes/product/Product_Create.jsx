@@ -25,6 +25,11 @@ const productSchema = Yup.object().shape({
     quantity: Yup.string().required("required"),
     inventoryNumber: Yup.string().required("required")
 })
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
 
 var today = new Date();
 var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
@@ -47,7 +52,14 @@ function ProductCreateForm() {
     const categorySelection = category.reduce((init, curValue) => [...init, {value:curValue.id, label:curValue.name}], [])
 
     const handleFormSubmit = (values) => {
-        axios.post(`https://localhost:7173/Product/CreateNewProduct`, {...values, "id":0, "rating": 0, "createdDate": "2022-11-03T15:02:27.5314911", "updatedDate": "2022-11-03T15:02:27.5314911" })
+        axios.post(`https://localhost:7173/Product/CreateNewProduct`, {...values, "id":0, "rating": 0, "createdDate": "2022-11-03T15:02:27.5314911", "updatedDate": "2022-11-03T15:02:27.5314911" }, 
+        { 
+            headers: {
+                'authorization': getCookie('jwt'),
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
         .then(res => {
             setCategory(res.data)
         }).catch(error => console.log(error))
@@ -185,7 +197,7 @@ function ProductCreateForm() {
                         </Box>
                         <Box display="flex" justifyContent="end" mt="20px">
                             <Button type="submit" color="secondary" variant="contained">
-                                Create New User
+                                Create New Product
                             </Button>
                         </Box>
                     </form>

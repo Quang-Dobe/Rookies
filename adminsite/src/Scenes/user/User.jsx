@@ -6,6 +6,12 @@ import axios from 'axios'
 import Header from '../../components/Header'
 
 
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
 function User() {
     const [userData, setUserData] = useState([])
     const [pageSize, SetPageSize] = useState(5)
@@ -13,7 +19,14 @@ function User() {
     const colors = tokens(theme.palette.mode)
 
     useEffect(()=>{
-        axios.get(`https://localhost:7173/Auth/GetAllUser`)
+        axios.get(`https://localhost:7173/Auth/GetAllUser`,
+        { 
+            headers: {
+                'authorization': getCookie('jwt'),
+                'Accept' : 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
         .then(res => {
             setUserData(res.data)
         }).catch(error => console.log(error))
