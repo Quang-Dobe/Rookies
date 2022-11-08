@@ -13,5 +13,7 @@
         public string comment { get; set; }
 
         public int rating { get; set; }
+
+        public bool isReviewed { get; set; }
     }
 }

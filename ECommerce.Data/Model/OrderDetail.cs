@@ -25,5 +25,7 @@ namespace ECommerce.Data.Model
         public string Comment { get; set; }
 
         public ProductRating Rating { get; set; }
+
+        public bool IsReviewed { get; set; } = false;
     }
 }

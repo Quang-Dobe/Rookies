@@ -31,7 +31,7 @@ namespace ECommerce.Data.Model
 
         public int InventoryNumber { get; set; } = 50;
 
-        public double Rating { get; set; } = 4;
+        public double Rating { get; set; } = 0;
 
 
         public DateTime createdDate { get; set; } = DateTime.Now;
