@@ -49,7 +49,7 @@ namespace ECommerce.BackendAPI.Controllers
 
         [HttpGet("Admin")]
         [EnableCors("_myAdminSite")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<AllCategoryDTO>>> GetAllCategoryAdmin()
         {
             List<Category> categories = await _categoryRepository.GetCategories();
@@ -59,7 +59,7 @@ namespace ECommerce.BackendAPI.Controllers
 
         [HttpPost("Create")]
         [EnableCors("_myAdminSite")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> CreateCategory([FromBody] AllCategoryDTO allCategoryDTO)
         {
             await _categoryRepository.CreateCategory(allCategoryDTO.name, allCategoryDTO.description);
@@ -70,7 +70,7 @@ namespace ECommerce.BackendAPI.Controllers
 
         [HttpPost("Update")]
         [EnableCors("_myAdminSite")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdateCategory_([FromBody] AllCategoryDTO allCategoryDTO)
         {
 
@@ -90,7 +90,7 @@ namespace ECommerce.BackendAPI.Controllers
         [HttpDelete]
         [Route("{id:int}")]
         [EnableCors("_myAdminSite")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteCategory([FromRoute] int id)
         {
             Category category = await _categoryRepository.GetCategory(id);

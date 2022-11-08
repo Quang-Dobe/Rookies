@@ -62,8 +62,8 @@ function ProductCreateForm() {
         })
         .then(res => {
             setCategory(res.data)
+            navigate("/product");
         }).catch(error => console.log(error))
-        navigate("/product");
     }
 
     return(

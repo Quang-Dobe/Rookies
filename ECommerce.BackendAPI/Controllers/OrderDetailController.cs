@@ -60,7 +60,8 @@ namespace ECommerce.BackendAPI.Controllers
                         comment = listOrderDetails[i].Comment,
                         DatePurchase = listOrderDetails[i].DatePurchase,
                         rating = (int)listOrderDetails[i].Rating,
-                        showedProductDTO = _mapper.Map<ShowedProductDTO>(product)
+                        showedProductDTO = _mapper.Map<ShowedProductDTO>(product),
+                        isReviewed = listOrderDetails[i].IsReviewed,
                     });
                 }
                 showedOrderDetailDTOs = showedOrderDetailDTOs.OrderByDescending(x => x.Id).ToList();
@@ -126,7 +127,7 @@ namespace ECommerce.BackendAPI.Controllers
                         Number = item.number,
                         DatePurchase = DateTime.Today,
                         Comment = "",
-                        Rating = (ProductRating)4
+                        Rating = (ProductRating)0
                     };
                     CartDetail cartDetail = await _cartDetailRepository.GetCartDetail(cart.Id, item.productId);
                     if (cartDetail != null && cartDetail.Number == item.number)
@@ -169,7 +170,10 @@ namespace ECommerce.BackendAPI.Controllers
                 }
                 orderDetail.Rating = (ProductRating)reviewOrderDetailDTO.rating;
                 orderDetail.Comment = reviewOrderDetailDTO.comment;
+                orderDetail.IsReviewed = true;
                 _orderDetailRepository.UpdateOrderDetail(orderDetail);
+                // Update Product Rating
+                await _productRepository.UpdateProductRating(orderDetail.ProductId);
                 await _orderDetailRepository.Save();
 
                 return Ok("Update OrderDetail sucessfully");

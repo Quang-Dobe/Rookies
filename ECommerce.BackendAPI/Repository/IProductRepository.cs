@@ -11,6 +11,7 @@ namespace ECommerce.BackendAPI.Repository
         Task<Product> GetProductByName(string name);
         Task<List<Product>> GetProductByType(int type);
         Task CreateProduct(Product product);
+        Task UpdateProductRating(int productId);
         void UpdateProduct(Product product);
         Task DeleteProduct(int id);
         Task Save();

@@ -82,7 +82,7 @@ namespace ECommerce.BackendAPI.Controllers
         
         [HttpPost]
         [EnableCors("_myAdminSite")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> CreateNewProduct(AllProductDTO allProductDTO)
         {
             Category category = await _categoryRepository.GetCategory(allProductDTO.CategoryId);
@@ -109,7 +109,7 @@ namespace ECommerce.BackendAPI.Controllers
         [HttpPost]
         [Route("{id:int}")]
         [EnableCors("_myAdminSite")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdateProduct([FromRoute] int id, [FromBody] AllProductDTO allProductDTO)
         {
             try
@@ -141,7 +141,7 @@ namespace ECommerce.BackendAPI.Controllers
 
         [HttpPost]
         [EnableCors("_myAdminSite")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdateMultiProduct([FromBody] List<AllProductDTO> allProductDTOs)
         {
             try
@@ -180,7 +180,7 @@ namespace ECommerce.BackendAPI.Controllers
         [HttpDelete]
         [Route("{id:int}")]
         [EnableCors("_myAdminSite")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteProduct([FromRoute] int id)
         {
             try
@@ -202,7 +202,7 @@ namespace ECommerce.BackendAPI.Controllers
 
         [HttpDelete]
         [EnableCors("_myAdminSite")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteMultiProduct([FromBody] List<int> ids)
         {
             try

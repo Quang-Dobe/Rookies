@@ -43,9 +43,10 @@ namespace ECommerce.BackendAPI.Profiles
                     productImg = src.Product.ProductImg,
                     productName = src.Product.ProductName,
                     price = src.Product.Price,
-                    rating = src.Product.Rating,
+                    rating = src.Product.Rating
                 }))
-                .ForMember(des => des.rating, act => act.MapFrom(src => (int)src.Rating));
+                .ForMember(des => des.rating, act => act.MapFrom(src => (int)src.Rating))
+                .ForMember(des => des.isReviewed, act => act.MapFrom(src => src.IsReviewed));
 
 
             // AdminSite

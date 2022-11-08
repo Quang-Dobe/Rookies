@@ -117,7 +117,7 @@
                                 <td class="align-middle">@item.DatePurchase.Day.ToString() / @item.DatePurchase.Month.ToString() / @item.DatePurchase.Year.ToString()</td>
                                 <td class="align-middle">
                                     @{
-                                        if (item.comment == null || item.comment == "" || item.comment.Length == 0)
+                                        if (item.isReviewed==false)
                                         {
                                             <a class="btn btn-outline-info" asp-controller="Product" asp-action="Review" asp-route-id="@item.Id">Review</a>
                                         }

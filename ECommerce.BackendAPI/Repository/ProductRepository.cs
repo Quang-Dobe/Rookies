@@ -48,7 +48,8 @@ namespace ECommerce.BackendAPI.Repository
                                             {
                                                 userName = o.User.UserName,
                                                 comment = oD.Comment,
-                                                rating = (int)(oD.Rating)
+                                                rating = (int)(oD.Rating),
+                                                isReviewed = oD.IsReviewed,
                                             }).ToListAsync();
             return data;
         }
@@ -66,6 +67,30 @@ namespace ECommerce.BackendAPI.Repository
         public async Task CreateProduct(Product product)
         {
             await _dbContext.products.AddAsync(product);
+        }
+
+        public async Task UpdateProductRating(int productId)
+        {
+            Product product = await _dbContext.products.FindAsync(productId);
+            List<OrderDetail> orderDetails = await _dbContext.orderDetails.Where(oD => oD.ProductId == productId).ToListAsync();
+            if (product != null)
+            {
+                double totalRating = 0;
+                int totalCount = 0;
+                if (orderDetails.Count > 0)
+                {
+                    foreach(OrderDetail orderDetail in orderDetails)
+                    {
+                        if (orderDetail.IsReviewed)
+                        {
+                            totalRating += (int)orderDetail.Rating;
+                            totalCount++;
+                        }
+                    }
+                    if (totalCount!=0)
+                        product.Rating = totalRating/totalCount;
+                }
+            }
         }
 
         public void UpdateProduct(Product product)

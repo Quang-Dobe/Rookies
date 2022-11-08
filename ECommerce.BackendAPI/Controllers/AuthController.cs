@@ -28,6 +28,7 @@ namespace ECommerce.BackendAPI.Controllers
         private readonly IMapper mapper;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly UserManager<IdentityUser> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
 
         public AuthController(IConfiguration config, 
             IUserRepository userRepository, 
@@ -36,7 +37,8 @@ namespace ECommerce.BackendAPI.Controllers
             ITokenManager tokenManager,
             IMapper mapper, 
             SignInManager<IdentityUser> signInManager, 
-            UserManager<IdentityUser> userManager)
+            UserManager<IdentityUser> userManager, 
+            RoleManager<IdentityRole> roleManager)
         {
             this.config = config;
             this.userRepository = userRepository;
@@ -46,6 +48,7 @@ namespace ECommerce.BackendAPI.Controllers
             this.mapper = mapper;
             this.signInManager = signInManager;
             this.userManager = userManager;
+            this.roleManager = roleManager;
         }
 
         [HttpPost]
@@ -90,6 +93,10 @@ namespace ECommerce.BackendAPI.Controllers
                 {
                     tokenDescriptor.Subject.AddClaim(item);
                 }
+                foreach (var role in roles)
+                {
+                    tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, role));
+                }
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var stringToken = tokenHandler.WriteToken(token);
@@ -99,6 +106,7 @@ namespace ECommerce.BackendAPI.Controllers
 
             return Unauthorized("Invalid account");
         }
+
 
         [HttpPost]
         public async Task<ActionResult> Register([FromBody] RegisterRequestDTO registerRequestModel)
@@ -110,6 +118,19 @@ namespace ECommerce.BackendAPI.Controllers
 
                 if (createUserResult.Succeeded)
                 {
+
+                    // Create Role in ASPNetRole Table in Database (This code just run only one-time (Create Roles in DB))
+                    //await roleManager.CreateAsync(new IdentityRole("User"));
+                    //await roleManager.CreateAsync(new IdentityRole("Admin"));
+
+                    // Get IdentityRole from RoleName in Table ASPNetRole
+                    var adminRole = roleManager.FindByNameAsync("Admin").Result;
+                    // Create Role-User for user when registering
+                    if (adminRole != null)
+                    {
+                        IdentityResult roleresult = await userManager.AddToRoleAsync(user, adminRole.Name);
+                    }
+
                     // If user register sucessfully, create for him/her an empty cart to store what they like to buy
                     await cartRepository.CreateCart(user.Id);
                     await orderRepository.CreateOrder(user.Id);
@@ -127,6 +148,7 @@ namespace ECommerce.BackendAPI.Controllers
             return BadRequest(ModelState.Values.SelectMany(x => x.Errors));
         }
 
+
         [HttpPost]
         [EnableCors("_myAdminSite")]
         public async Task<ActionResult> LogOut()
@@ -136,9 +158,10 @@ namespace ECommerce.BackendAPI.Controllers
             return Ok("Deactivate Token");
         }
 
+
         [HttpGet]
         [EnableCors("_myAdminSite")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<AllUserDTO>>> GetAllUser()
         {
             try
