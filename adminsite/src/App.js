@@ -10,8 +10,18 @@ import { Product, ProductCreateForm } from './Scenes/product'
 import { Category } from './Scenes/category'
 import { Login } from './Scenes/login';
 
+// Get Token from Cookie
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
 function AdminRoute({ CustomComponent }) {
   return (
+    getCookie("jwt")==null ?
+    <Navigate to="/login" />
+    :
     <div className="app">
       <Sidebar />
       <main className="content">

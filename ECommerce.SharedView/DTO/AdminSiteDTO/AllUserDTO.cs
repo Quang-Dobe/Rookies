@@ -8,5 +8,6 @@
         public int EmailConfirmed { get; set; }
         public string PhoneNumber { get; set; }
         public int PhoneNumberConfirmedConfirmed { get; set; }
+        public string Role { get; set; }
     }
 }

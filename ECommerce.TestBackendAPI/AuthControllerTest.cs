@@ -37,7 +37,7 @@ namespace ECommerce.TestBackendAPI
             _userRepository = new Mock<IUserRepository>();
             _cartRepository = new Mock<ICartRepository>();
             _orderRepository = new Mock<IOrderRepository>();
-            _authController = new AuthController(_config.Object, _userRepository.Object, _cartRepository.Object, _orderRepository.Object, _mapper, _signInManager, _userManager);
+            //_authController = new AuthController(_config.Object, _userRepository.Object, _cartRepository.Object, _orderRepository.Object, _mapper, _signInManager, _userManager);
         }
 
 
