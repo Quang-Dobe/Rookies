@@ -10,6 +10,8 @@ namespace ECommerce.BackendAPI.Repository
         Task<detailProductDTO> GetProductDetailById(int id);
         Task<Product> GetProductByName(string name);
         Task<List<Product>> GetProductByType(int type);
+        Task<List<Product>> GetProductByTypeWithPageIndex(int type, int pageIndex);
+        Task<int> GetTotalProductByType(int type);
         Task CreateProduct(Product product);
         Task UpdateProductRating(int productId);
         void UpdateProduct(Product product);

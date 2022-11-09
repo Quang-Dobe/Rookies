@@ -53,7 +53,27 @@ namespace ECommerce.BackendAPI.Controllers
             List<ShowedProductDTO> showedProductDTOs = _mapper.Map<List<ShowedProductDTO>>(listProducts);
             return Ok(showedProductDTOs);
         }
-        
+
+
+        [HttpGet]
+        [EnableCors("_myAdminSite")]
+        [Route("{type:int}")]
+        public async Task<ActionResult<ShowedListProductDTO>> GetProductByTypeWithPageIndex([FromRoute] int type, [FromQuery] int pageIndex)
+        {
+            Category category = await _categoryRepository.GetCategory(type);
+            if (category == null)
+            {
+                return BadRequest("Invalid Category ID");
+            }
+            List<Product> listProducts = await _productRepository.GetProductByTypeWithPageIndex(type, pageIndex);
+            ShowedListProductDTO showedListProductDTO = new ShowedListProductDTO()
+            {
+                showedProductDTOs = _mapper.Map<List<ShowedProductDTO>>(listProducts),
+                totalProductDTO = await _productRepository.GetTotalProductByType(type)
+            };
+            return Ok(showedListProductDTO);
+        }
+
 
         [HttpGet]
         [EnableCors("_myAdminSite")]

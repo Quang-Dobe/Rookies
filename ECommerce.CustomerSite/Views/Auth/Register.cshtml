@@ -2,51 +2,90 @@
 @{
     ViewData["Title"] = "Register";
 }
-<link href="~/css/account/base.css" rel="stylesheet" />
 
+<section class="vh-70">
+    <div class="container-fluid" style="padding:0px; display:flex; background: linear-gradient(#fff, #edf1ff, #fff)">
+        <form method="post" asp-controller="Auth" asp-action="Register" style="width:30vw; display:flex; flex-direction:column; margin:15px auto; padding:0px 40px; border-style: outset; background-color:#fff">
+            <div class="row g-3 mb-3" style="display:flex; flex-direction:column; margin-top:1px">
+                <h2>Register</h2>
+            </div>
 
-<h1>Register</h1>
-<form method="post" asp-controller="Auth" asp-action="Register">
-    @*Email*@
-    <div class="input-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" type="text" placeholder="Your email ...">
-        <span asp-validation-for="Email" class="text-danger"></span>
+            @*Email*@
+            <div class="row" style="display:flex; flex-direction:column;">
+                <div class="col-auto">
+                    <label asp-for="Email" class="form-label" style="padding-left:0px; padding-right:0px; margin-left:0px; margin-right:0px">Email</label>
+                </div>
+                <div class="col-auto">
+                    <input class="form-control" asp-for="Email" type="text" aria-describedby="emailHelp" style="padding-left:0px; padding-right:0px; margin-left:0px; margin-right:0px; border: 1px solid #ccc">
+                </div>
+                <div class="col-auto">
+                    <span asp-validation-for="Email" class="text-danger" style="padding-left:0px; padding-right:0px; margin-left:0px; margin-right:0px"></span>
+                </div>
+            </div>
+
+            @*User Name*@
+            <div class="row" style="display:flex; flex-direction:column">
+                <div class="col-auto">
+                    <label asp-for="UserName" class="form-label" style="padding-left:0px; padding-right:0px; margin-left:0px; margin-right:0px">User name</label>
+                </div>
+                <div class="col-auto">
+                    <input class="form-control" asp-for="UserName" type="text" aria-describedby="emailHelp" style="padding-left:0px; padding-right:0px; margin-left:0px; margin-right:0px; border: 1px solid #ccc">
+                </div>
+                <div class="col-auto">
+                    <span asp-validation-for="UserName" class="text-danger" style="padding-left:0px; padding-right:0px; margin-left:0px; margin-right:0px"></span>
+                </div>
+            </div>
+
+            @*Password*@
+            <div class="row" style="display:flex; flex-direction:column">
+                <div class="col-auto">
+                    <label asp-for="Password" class="form-label" style="padding-left:0px; padding-right:0px; margin-left:0px; margin-right:0px">Password</label>
+                </div>
+                <div class="col-auto">
+                    <input asp-for="Password" class="form-control" style="padding-left:0px; padding-right:0px; margin-left:0px; margin-right:0px; border: 1px solid #ccc">
+                </div>
+                <div class="col-auto">
+                    <span asp-validation-for="Password" class="text-danger" style="padding-left:0px; padding-right:0px; margin-left:0px; margin-right:0px"></span>
+                </div>
+            </div>
+
+            @*Confirm Password*@
+            <div class="row" style="display:flex; flex-direction:column">
+                <div class="col-auto">
+                    <label asp-for="ConfirmPassword" class="form-label" style="padding-left:0px; padding-right:0px; margin-left:0px; margin-right:0px">ConfirmPassword</label>
+                </div>
+                <div class="col-auto">
+                    <input asp-for="ConfirmPassword" class="form-control" style="padding-left:0px; padding-right:0px; margin-left:0px; margin-right:0px; border: 1px solid #ccc">
+                </div>
+                <div class="col-auto">
+                    <span asp-validation-for="ConfirmPassword" class="text-danger" style="padding-left:0px; padding-right:0px; margin-left:0px; margin-right:0px"></span>
+                </div>
+            </div>
+
+            @*Phone Number*@
+            <div class="row" style="display:flex; flex-direction:column">
+                <div class="col-auto">
+                    <label asp-for="PhoneNumber" class="form-label" style="padding-left:0px; padding-right:0px; margin-left:0px; margin-right:0px">Phone Number</label>
+                </div>
+                <div class="col-auto">
+                    <input asp-for="PhoneNumber" class="form-control" style="padding-left:0px; padding-right:0px; margin-left:0px; margin-right:0px; border: 1px solid #ccc">
+                </div>
+                <div class="col-auto">
+                    <span asp-validation-for="PhoneNumber" class="text-danger" style="padding-left:0px; padding-right:0px; margin-left:0px; margin-right:0px"></span>
+                </div>
+            </div>
+
+            <div class="row" style="display:flex; flex-direction:column">
+                @Html.ValidationSummary()
+            </div>
+            <button type="submit" class="row g-3 mb-3 btn btn-primary" style="align-self:end; margin: 10px 0px">Submit</button>
+        </form>
     </div>
+</section>
 
-    @*Username*@
-    <div class="input-group">
-        <label asp-for="UserName"></label>
-        <input asp-for="UserName" type="text" placeholder="Your username ...">
-        <span asp-validation-for="UserName" class="text-danger"></span>
-    </div>
-
-    @*Password*@
-    <div class="input-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" placeholder="Your password ...">
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-
-    @*Confirm Password*@
-    <div class="input-group">
-        <label asp-for="ConfirmPassword"></label>
-        <input asp-for="ConfirmPassword" placeholder="Confirm your password...">
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
-
-    @*Phone number*@
-    <div class="input-group">
-        <label asp-for="PhoneNumber"></label>
-        <input asp-for="PhoneNumber" type="text" placeholder="Your phone number...">
-        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-    </div>
-    <input class="btn btn--primary" type="submit" title="Register" />
-    @Html.ValidationSummary()
-</form>
 
 @section Scripts {
     @{
-        <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
     }
 }

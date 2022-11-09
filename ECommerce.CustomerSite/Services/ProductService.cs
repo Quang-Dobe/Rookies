@@ -46,6 +46,10 @@ namespace ECommerce.CustomerSite.Services
             return await this._productInterface.GetProductByType(type);
         }
 
+        public async Task<ShowedListProductDTO> GetProductByTypeWithPageIndex(int type, int pageIndex)
+        {
+            return await this._productInterface.GetProductByTypeWithPageIndex(type, pageIndex);
+        }
 
         // Service with DetailProductDTO
         public async Task<detailProductDTO> GetProductByID(int id)

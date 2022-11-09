@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace ECommerce.CustomerSite.Controllers
 {
@@ -28,6 +29,8 @@ namespace ECommerce.CustomerSite.Controllers
         public async Task<IActionResult> Index()
         {
             string userId = Request.Cookies["userId"];
+            //ClaimsIdentity claimsIdentity = User.Identity as ClaimsIdentity;
+            //string userId = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             List<AllCategoryDTO> allCategoryDTOs = await _categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
             if (!string.IsNullOrEmpty(userId))
@@ -38,17 +41,24 @@ namespace ECommerce.CustomerSite.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Category([FromQuery] string? type)
+        public async Task<IActionResult> Category([FromQuery] string? type, [FromQuery] string? pageIndex)
         {
             string userId = Request.Cookies["userId"];
-            List<ShowedProductDTO> listProducts = await _productService.GetProductByType(int.Parse(type));
+            //ClaimsIdentity claimsIdentity = User.Identity as ClaimsIdentity;
+            //string userId = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            // Call API
             List<AllCategoryDTO> allCategoryDTOs = await _categoryService.GetAllCategories();
+            ShowedListProductDTO showedListProductDTO = await _productService.GetProductByTypeWithPageIndex(int.Parse(type), int.Parse(pageIndex));
+
             ViewData["AllCategory"] = allCategoryDTOs;
+            ViewData["TotalPage"] = showedListProductDTO.totalProductDTO.ToString();
+            ViewData["PageIndex"] = pageIndex;
+            ViewData["CategoryType"] = type;
             if (!string.IsNullOrEmpty(userId))
             {
                 ViewData["isAuthorized"] = "true";
             }
-            return View(listProducts);
+            return View(showedListProductDTO.showedProductDTOs);
         }
 
 

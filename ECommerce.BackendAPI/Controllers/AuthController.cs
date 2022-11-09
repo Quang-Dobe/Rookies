@@ -64,7 +64,6 @@ namespace ECommerce.BackendAPI.Controllers
                 var audience = config["Jwt:Audience"];
                 var key = Encoding.ASCII.GetBytes
                 (config["Jwt:Key"]);
-                Console.WriteLine(config["Jwt:Key"]);
                 // Create new token-hash-tool to hash issuer, audience, key
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
@@ -107,6 +106,67 @@ namespace ECommerce.BackendAPI.Controllers
             return Unauthorized("Invalid account");
         }
 
+
+        [HttpPost]
+        [EnableCors("_myAdminSite")]
+        public async Task<ActionResult> Login_([FromBody] LoginRequestDTO loginRequestModel)
+        {
+            // Get request successfully
+            var result = await signInManager.PasswordSignInAsync(loginRequestModel.UserName, loginRequestModel.Password, false, lockoutOnFailure: true);
+
+            if (result.Succeeded)
+            {
+                IdentityUser identityUser = await userRepository.GetUserByName(loginRequestModel.UserName);
+                IList<string> isAdmin = await userManager.GetRolesAsync(identityUser);
+                if (isAdmin.Contains("Admin")==false)
+                {
+                    return StatusCode(403, "Not allowed to access");
+                }
+
+                var issuer = config["Jwt:Issuer"];
+                var audience = config["Jwt:Audience"];
+                var key = Encoding.ASCII.GetBytes
+                (config["Jwt:Key"]);
+                // Create new token-hash-tool to hash issuer, audience, key
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new[]
+                    {
+                        new Claim("Id", Guid.NewGuid().ToString()),
+                        new Claim(JwtRegisteredClaimNames.Sub, loginRequestModel.UserName),
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                     }),
+                    Expires = DateTime.UtcNow.AddMinutes(5),
+                    Issuer = issuer,
+                    Audience = audience,
+                    SigningCredentials = new SigningCredentials
+                    (new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha512Signature)
+                };
+
+                var roles = await userManager.GetRolesAsync(identityUser);
+
+                var claims = new[] {
+                    new Claim(ClaimTypes.Name, identityUser.UserName),
+                    new Claim(ClaimTypes.NameIdentifier, identityUser.Id)
+                };
+                foreach (var item in claims)
+                {
+                    tokenDescriptor.Subject.AddClaim(item);
+                }
+                foreach (var role in roles)
+                {
+                    tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, role));
+                }
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var stringToken = tokenHandler.WriteToken(token);
+
+                return Ok(stringToken);
+            }
+
+            return Unauthorized("Invalid account");
+        }
 
         [HttpPost]
         public async Task<ActionResult> Register([FromBody] RegisterRequestDTO registerRequestModel)

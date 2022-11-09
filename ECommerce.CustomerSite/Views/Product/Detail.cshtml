@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Product Detail";
     List<AllCategoryDTO> allCategoryDTOs = ViewData["AllCategory"] as List<AllCategoryDTO>;
-    int totalReview = Model.reviewProductDTOs.Count;
+    int totalReview = Model.reviewProductDTOs.Where(item => item.isReviewed).Count();
     string isAuthorized = ViewData["isAuthorized"] as string;
 }
 
@@ -23,7 +23,7 @@
                     @{
                         foreach (AllCategoryDTO item in allCategoryDTOs)
                         {
-                                <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id>@item.name</a>
+                            <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id asp-route-pageIndex=1>@item.name</a>
                         }
                     }
                 </div>
@@ -122,7 +122,11 @@
                         <button class="btn btn-primary btn-plus">+</button>
                     </div>
                 </div>
-                <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
+                @{
+                    if (isAuthorized != null){
+                        <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
+                    }
+                }
             </div>
             <div class="d-flex pt-2">
                 <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
@@ -162,25 +166,27 @@
                             @{
                                 foreach (ReviewDTO item in Model.reviewProductDTOs)
                                 {
-                                            <div class="media mb-4">
-                                                <img src="https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
-                                                <div class="media-body">
-                                                    <h6>@item.userName</h6>
-                                                    <div class="text-primary mb-2">
-                                                        @{
-                                                    for (int i = 1; i <= item.rating; i++)
-                                                    {
-                                                                        <i class="fa-solid fa-star" style="color:#FF9529"></i>
-                                                    };
-                                                    for (int i = 5; i > item.rating; i--)
-                                                    {
-                                                                        <i class="fa-regular fa-star" style="color:#FF9529"></i>
-                                                    }
+                                    if (item.isReviewed){
+                                        <div class="media mb-4">
+                                            <img src="https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                            <div class="media-body">
+                                                <h6>@item.userName</h6>
+                                                <div class="text-primary mb-2">
+                                                    @{
+                                                        for (int i = 1; i <= item.rating; i++)
+                                                        {
+                                                            <i class="fa-solid fa-star" style="color:#FF9529"></i>
+                                                        };
+                                                        for (int i = 5; i > item.rating; i--)
+                                                        {
+                                                            <i class="fa-regular fa-star" style="color:#FF9529"></i>
                                                         }
-                                                    </div>
-                                                    <p>@item.comment</p>
+                                                    }
                                                 </div>
+                                                <p>@item.comment</p>
                                             </div>
+                                        </div>
+                                    }
                                 }
                             }
                         </div>

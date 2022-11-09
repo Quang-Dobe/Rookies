@@ -10,6 +10,7 @@ namespace ECommerce.CustomerSite.Services.Interface
         Task DeleteProduct(int id);
         Task UpdateProduct(ProductDTO productDTO, int id);
         Task<List<ShowedProductDTO>> GetProductByType(int type);
+        Task<ShowedListProductDTO> GetProductByTypeWithPageIndex(int type, int pageIndex);
         Task<detailProductDTO> GetProductByID(int id);
     }
 }

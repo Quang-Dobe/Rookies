@@ -64,6 +64,16 @@ namespace ECommerce.BackendAPI.Repository
             return await _dbContext.products.Where(product => product.CategoryId == type).ToListAsync();
         }
 
+        public async Task<List<Product>> GetProductByTypeWithPageIndex(int type, int pageIndex)
+        {
+            return await _dbContext.products.Where(product => product.CategoryId == type).Skip((pageIndex-1) * 3).Take(3).ToListAsync();
+        }
+
+        public async Task<int> GetTotalProductByType(int type)
+        {
+            return await _dbContext.products.Where(product => product.CategoryId == type).CountAsync();
+        }
+
         public async Task CreateProduct(Product product)
         {
             await _dbContext.products.AddAsync(product);

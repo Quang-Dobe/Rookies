@@ -28,6 +28,11 @@ namespace ECommerce.CustomerSite.Client
         Task<List<ShowedProductDTO>> GetProductByType(int type);
 
 
+        // ShowedProductDTO
+        [Get("/Product/GetProductByTypeWithPageIndex/{type}")]
+        Task<ShowedListProductDTO> GetProductByTypeWithPageIndex(int type, [Query] int pageIndex);
+
+
         // DetailProductDTO
         [Get("/Product/GetProductByID/{id}")]
         Task<detailProductDTO> GetProductByID(int id);

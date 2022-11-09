@@ -19,7 +19,7 @@
                     @{
                         foreach (AllCategoryDTO item in allCategoryDTOs)
                         {
-                            <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id>@item.name</a>
+                            <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id asp-route-pageIndex=1>@item.name</a>
                         }
                     }
                 </div>
