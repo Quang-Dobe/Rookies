@@ -112,7 +112,6 @@ namespace ECommerce.TestBackendAPI.MockData
             };
         }
 
-
         public static List<Product> GetProducts()
         {
             return new List<Product>

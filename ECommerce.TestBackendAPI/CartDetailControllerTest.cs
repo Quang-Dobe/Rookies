@@ -53,6 +53,7 @@ namespace ECommerce.TestBackendAPI
             // Assert
             Assert.NotNull(data);
             Assert.Equal(data.Id, id);
+            Assert.Equal(data.showedProductDTO.productName, MockData_CartDetail.GetListCartDetail(cart).ElementAt(0).Product.ProductName);
         }
 
 
@@ -61,7 +62,8 @@ namespace ECommerce.TestBackendAPI
         {
             // Arrange
             Cart cart = MockData_CartDetail.GetListCart().ElementAt(0);
-            _cartDetailRepository.Setup(_ => _.GetCartDetail()).ReturnsAsync(MockData_CartDetail.GetListCartDetail(cart));
+            List<CartDetail> cartDetails = MockData_CartDetail.GetListCartDetail(cart);
+            _cartDetailRepository.Setup(_ => _.GetCartDetail()).ReturnsAsync(cartDetails);
 
             // Act
             var actionResult = await _cartDetailController.GetAllCartDetail();
@@ -71,6 +73,10 @@ namespace ECommerce.TestBackendAPI
             // Assert
             Assert.NotNull(data);
             Assert.Equal(data.Count, MockData_CartDetail.GetListCartDetail(cart).Count);
+            for (int i=0; i<data.Count; i++)
+            {
+                Assert.Equal(data.ElementAt(i).showedProductDTO.id, cartDetails.ElementAt(i).Product.Id);
+            }
         }
 
 
@@ -78,7 +84,7 @@ namespace ECommerce.TestBackendAPI
         public async void GetAllCardDetailByCart_WithParams_Ok_ListShowedCartDetailDTO()
         {
             // Arrange
-            string userId = "38cd5450-4071-453d-b146-5940453bbe50";
+            string userId = "05235465-f941-4e00-98bb-5306da1de482";
             // Setup for CartRepository
             Cart cart = MockData_CartDetail.GetListCart().ElementAt(0);
             _cartRepository.Setup(_ => _.GetCart(userId)).ReturnsAsync(cart);
@@ -110,7 +116,7 @@ namespace ECommerce.TestBackendAPI
         public async void CreateCartDetail_WithParams_Ok_String()
         {
             // Arrange
-            string userId = "38cd5450-4071-453d-b146-5940453bbe50";
+            string userId = "05235465-f941-4e00-98bb-5306da1de482";
             int productId = 1;
             int number = 1;
             // Setup for CartRepository
@@ -135,6 +141,7 @@ namespace ECommerce.TestBackendAPI
 
             // Assert
             Assert.NotNull(data);
+            Assert.True(data=="Update your cart instead of adding new one" || data=="Create CartDetail sucessfully");
         }
 
 
@@ -142,7 +149,7 @@ namespace ECommerce.TestBackendAPI
         public async void UpdateCartDetail_WithParams_Ok_String()
         {
             // Arrange
-            string userId = "38cd5450-4071-453d-b146-5940453bbe50";
+            string userId = "05235465-f941-4e00-98bb-5306da1de482";
             int productId = 1;
             int number = 1;
             // Setup for CartRepository
@@ -167,11 +174,12 @@ namespace ECommerce.TestBackendAPI
             Assert.Null(badrequestData);
         }
 
+
         [Fact]
         public async void DeleteCartDetail_WithParams_Ok_String()
         {
             // Arrange
-            string userId = "38cd5450-4071-453d-b146-5940453bbe50";
+            string userId = "05235465-f941-4e00-98bb-5306da1de482";
             int productId = 1;
             int number = 1;
             // Setup for CartRepository

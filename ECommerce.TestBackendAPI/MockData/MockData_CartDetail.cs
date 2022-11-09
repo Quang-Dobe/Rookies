@@ -83,6 +83,28 @@ namespace ECommerce.TestBackendAPI.MockData
                     CartId = cart.Id,
                     Cart = cart,
                     Number = 2
+                },
+                new CartDetail
+                {
+                    Id = 3,
+                    ProductId = 1,
+                    Product = new Product
+                    {
+                        Id = 1,
+                        ProductImg = "https://lh3.googleusercontent.com/UwKfc2vSQGNYIHP23DfTWcToEmsIaxjQsdx0DtIEbqCeZ5dnGBPS7d7WCVW9TOiIkfAh2ddgwDvnOR5U_jg=w500-rw",
+                        ProductName = "CPU Intel Core I5-7600",
+                        Description = "Socket: LGA 1151 , Intel Core thế hệ thứ 7",
+                        CategoryId = 0,
+                        Price = 4690,
+                        Quantity = 50,
+                        InventoryNumber = 50,
+                        Rating = 1,
+                        createdDate = DateTime.Parse("2022-10-26 14:21:58.1796606"),
+                        updatedDate = DateTime.Parse("2022-10-26 14:21:58.1796638")
+                    },
+                    CartId = cart.Id,
+                    Cart = cart,
+                    Number = 2
                 }
             };
         }

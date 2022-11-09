@@ -29,11 +29,11 @@ namespace ECommerce.BackendAPI.Controllers
         public async Task<ActionResult<AllCategoryDTO>> GetCategory([FromRoute] int Id)
         {
             Category category = await _categoryRepository.GetCategory(Id);
-            AllCategoryDTO allCategoryDTO = _mapper.Map<AllCategoryDTO>(category);
             if (category == null)
             {
                 return BadRequest("Invalid Category ID");
             }
+            AllCategoryDTO allCategoryDTO = _mapper.Map<AllCategoryDTO>(category);
             return Ok(allCategoryDTO);
         }
 
