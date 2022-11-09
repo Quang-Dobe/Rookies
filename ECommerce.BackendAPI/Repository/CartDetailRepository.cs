@@ -47,6 +47,11 @@ namespace ECommerce.BackendAPI.Repository
             return await _dbContext.cartDetails.Where(CartDetail => CartDetail.CartId == cart.Id).ToListAsync();
         }
 
+        public async Task<int> GetTotalCartDetailByCategory(int type)
+        {
+            return await _dbContext.cartDetails.Where(item => item.Product.CategoryId == type).CountAsync();
+        }
+
         public async Task<List<CartDetail>> GetListCartDetailByProduct(List<int> listProductId)
         {
             List<CartDetail> data = await (from cD in _dbContext.cartDetails

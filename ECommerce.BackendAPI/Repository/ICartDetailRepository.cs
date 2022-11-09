@@ -9,6 +9,7 @@ namespace ECommerce.BackendAPI.Repository
         Task<CartDetail> GetCartDetail(int cartId, int productId);
         Task<List<CartDetail>> GetCartDetail(Product product);
         Task<List<CartDetail>> GetCartDetail(Cart cart);
+        Task<int> GetTotalCartDetailByCategory(int type);
         Task<List<CartDetail>> GetListCartDetailByProduct(List<int> listProductId);
         Task CreateCartDetail(CartDetail cartDetail);
         void UpdateCartDetail(CartDetail cartDetail);
