@@ -15,15 +15,15 @@ namespace ECommerce.CustomerSite.Client
         Task<List<ShowedCartDetailDTO>> GetAllCardDetailByCart([Query] string userId, [Header("Authorization")] string jwt);
 
 
-        [Get("/CartDetail/CreateCartDetail/{productId}")]
-        Task<string> CreateCartDetail([Query] string userId, int productId, [Body] int number, [Header("Authorization")] string jwt);
+        [Post("/CartDetail/CreateCartDetail/{productId}")]
+        Task CreateCartDetail([Query] string userId, int productId, [Body] int number, [Header("Authorization")] string jwt);
 
 
-        [Get("/CartDetail/UpdateCartDetail/{productId}")]
-        Task<string> UpdateCartDetail([Query] string userId, int productId, [Body] int number, [Header("Authorization")] string jwt);
+        [Post("/CartDetail/UpdateCartDetail/{productId}")]
+        Task UpdateCartDetail([Query] string userId, int productId, [Body] int number, [Header("Authorization")] string jwt);
 
 
-        [Get("/CartDetail/DeleteCartDetail/{productId}")]
-        Task<string> DeleteCartDetail([Query] string userId, int productId, [Body] int number, [Header("Authorization")] string jwt);
+        [Delete("/CartDetail/DeleteCartDetail/{productId}")]
+        Task DeleteCartDetail([Query] string userId, int productId, [Body] int number, [Header("Authorization")] string jwt);
     }
 }

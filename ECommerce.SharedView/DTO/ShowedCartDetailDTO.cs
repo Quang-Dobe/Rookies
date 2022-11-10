@@ -7,5 +7,7 @@
         public ShowedProductDTO showedProductDTO { get; set; }
 
         public int number { get; set; }
+
+        public int inventoryNumber { get; set; }
     }
 }

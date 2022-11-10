@@ -29,8 +29,10 @@ namespace ECommerce.CustomerSite.Controllers
         public async Task<IActionResult> Index()
         {
             string userId = User.Claims.FirstOrDefault(u => u.Type == "userId")?.Value;
+            string userName = User.Claims.FirstOrDefault(u => u.Type == "userName")?.Value;
 
             List<AllCategoryDTO> allCategoryDTOs = await _categoryService.GetAllCategories();
+            ViewData["userName"] = userName;
             ViewData["AllCategory"] = allCategoryDTOs;
             if (!string.IsNullOrEmpty(userId))
             {
@@ -43,11 +45,13 @@ namespace ECommerce.CustomerSite.Controllers
         public async Task<IActionResult> Category([FromQuery] string? type, [FromQuery] string? pageIndex)
         {
             string userId = User.Claims.FirstOrDefault(u => u.Type == "userId")?.Value;
+            string userName = User.Claims.FirstOrDefault(u => u.Type == "userName")?.Value;
 
             // Call API
             List<AllCategoryDTO> allCategoryDTOs = await _categoryService.GetAllCategories();
             ShowedListProductDTO showedListProductDTO = await _productService.GetProductByTypeWithPageIndex(int.Parse(type), int.Parse(pageIndex));
 
+            ViewData["userName"] = userName;
             ViewData["AllCategory"] = allCategoryDTOs;
             ViewData["TotalPage"] = showedListProductDTO.totalProductDTO.ToString();
             ViewData["PageIndex"] = pageIndex;

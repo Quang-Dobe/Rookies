@@ -1,4 +1,4 @@
-﻿F@model List<ShowedCartDetailDTO>
+﻿@model List<ShowedCartDetailDTO>
     @{
     ViewData["Title"] = "Shopping cart";
     List<AllCategoryDTO> allCategoryDTOs = ViewData["AllCategory"] as List<AllCategoryDTO>;
@@ -19,7 +19,7 @@
                     @{
                         foreach (AllCategoryDTO item in allCategoryDTOs)
                         {
-                            <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id asp-route-pageIndex=1>@item.name</a>
+                                <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id asp-route-pageIndex=1>@item.name</a>
                         }
                     }
                 </div>
@@ -43,25 +43,25 @@
                                 }
                                 else
                                 {
-                                            <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
-                                            <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
+                                        <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
+                                        <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
                                 }
                             }
                     </div>
                     @{
-                            if (isAuthorized != "true")
+                        if (isAuthorized != "true")
                         {
-                                    <div class="navbar-nav ml-auto py-0">
-                                        <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
-                                        <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
-                                    </div>
+                                <div class="navbar-nav ml-auto py-0">
+                                    <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
+                                    <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
+                                </div>
                         }
-                            else
-                            {
-                                        <div class="navbar-nav ml-auto py-0">
-                                            <a class="nav-item nav-link" asp-controller="Auth" asp-action="LogOut">Log out</a>
-                                        </div>
-                            }
+                        else
+                        {
+                                <div class="navbar-nav ml-auto py-0">
+                                    <a class="nav-item nav-link" asp-controller="Auth" asp-action="LogOut">Log out</a>
+                                </div>
+                        }
                     }
                 </div>
             </nav>
@@ -102,27 +102,33 @@
                         foreach (ShowedCartDetailDTO item in Model)
                         {
                             var total = item.showedProductDTO.price * item.number;
-                                        <tr>
-                                            <td class="align-middle">
-                                                <img src=@item.showedProductDTO.productImg style="width: 50px;">
-                                                <span class="productId" style="display: none; opacity: 0">@item.showedProductDTO.id</span>
-                                                <span class="font-weight-bold">@item.showedProductDTO.productName</span>
-                                            </td>
-                                            <td class="align-middle">@item.showedProductDTO.price</td>
-                                            <td class="align-middle">
-                                                <div class="input-group quantity mx-auto" style="width: 100px;">
-                                                    <div class="input-group-btn">
-                                                        <button class="btn btn-sm btn-primary btn-minus">-</button>
-                                                    </div>
-                                                    <input type="text" class="form-control form-control-sm bg-secondary text-center" value=@item.number>
-                                                    <div class="input-group-btn">
-                                                        <button class="btn btn-sm btn-primary btn-plus">+</button>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle">@total</td>
-                                            <td class="align-middle"><button class="btn btn-sm btn-primary">x</button></td>
-                                        </tr>
+                                <tr>
+                                    <td class="align-middle">
+                                        <img src=@item.showedProductDTO.productImg style="width: 50px;">
+                                        <span class="font-weight-bold">@item.showedProductDTO.productName</span>
+                                    </td>
+                                    <td class="align-middle">@item.showedProductDTO.price</td>
+                                    <td class="align-middle">
+                                        <div class="input-group quantity mx-auto" style="width: 100px;">
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm btn-primary btn-minus">-</button>
+                                            </div>
+                                            <input type="text" class="form-control form-control-sm bg-secondary text-center" value=@item.number>
+                                            <span class="inventoryNumber" style="display: none; opacity: 0">@item.inventoryNumber</span>
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm btn-primary btn-plus">+</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">@total</td>
+                                    <td class="align-middle">
+                                        <form method="post" asp-controller="Product" asp-action="DeleteBuy">
+                                            <input type="text" id="productId" name="productId" readonly hidden value=@item.showedProductDTO.id />
+                                            <input type="text" id="number" name="number" hidden value=@item.number />
+                                            <button type="submit" class="btn btn-sm btn-primary">x</button>
+                                        </form>
+                                    </td>
+                                </tr>
                         }
                     }
                     
@@ -151,7 +157,15 @@
                         <h5 class="font-weight-bold">Total</h5>
                         <h5 class="font-weight-bold totalValue">0</h5>
                     </div>
-                    <button class="btn btn-block btn-primary my-3 py-3">Buy</button>
+                    <form method="post" asp-controller="Product" asp-action="AddToOrder">
+                        @{
+                            foreach (ShowedCartDetailDTO item in Model){
+                                    <input type="text" id="productId" name="productId" readonly hidden value=@item.showedProductDTO.id />
+                                    <input type="text" id="number" name="number" hidden value=@item.number />
+                            }
+                        }
+                        <button type="submit" class="btn btn-block btn-primary my-3 py-3">Buy</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -164,14 +178,6 @@
     var shippingRate = 150;
     const $ = document.querySelector.bind(document)
     const $$ = document.querySelectorAll.bind(document)
-    var userId_ = `@ViewData["userId"]`;
-    var jwt_ = "@ViewData["jwt"]";
-
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
 
     function recalculateCart() {
         var subtotal = 0;
@@ -192,21 +198,14 @@
         var allDecreaseButton = document.querySelectorAll(".container-fluid.pt-5.content table tbody td.align-middle:nth-child(3) .btn-minus")
         allDecreaseButton.forEach(item => {
             item.onclick = function(e) {
+                var price = e.target.parentElement.parentElement.parentElement.parentElement.querySelector("td.align-middle:nth-child(2)")
                 var number = e.target.parentElement.parentElement.parentElement.parentElement.querySelector("td.align-middle:nth-child(3) input")
-                var productId = e.target.parentElement.parentElement.parentElement.parentElement.querySelector("td.align-middle span.productId")
-                number.value = parseInt(number.value) - 1;
-                var userId = userId_
-                fetch("https://localhost:7173/CartDetail/UpdateCartDetail/" + productId.innerHTML + "?userId=" + userId,
-                {
-                    method: 'POST',
-                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': jwt_ },
-                    body: JSON.stringify(parseInt(number.value))
-                })
-                .then(response =>
-                    response.json())
-                .then(data => console.log(data))
-                .catch(error => console.error('Unable to add item.', error));
-                recalculateCart()
+                var subTotal = e.target.parentElement.parentElement.parentElement.parentElement.querySelector("td.align-middle:nth-child(4)")
+                if (parseInt(number.value) > 1){
+                    number.value = parseInt(number.value) - 1;
+                    subTotal.innerHTML = parseInt(price.innerHTML) * parseInt(number.value)
+                    recalculateCart()
+                }
             }
         })
     }
@@ -215,80 +214,21 @@
         var allDecreaseButton = document.querySelectorAll(".container-fluid.pt-5.content table tbody td.align-middle:nth-child(3) .btn-plus")
         allDecreaseButton.forEach(item => {
             item.onclick = function (e) {
+                var price = e.target.parentElement.parentElement.parentElement.parentElement.querySelector("td.align-middle:nth-child(2)")
                 var number = e.target.parentElement.parentElement.parentElement.parentElement.querySelector("td.align-middle:nth-child(3) input")
-                var productId = e.target.parentElement.parentElement.parentElement.parentElement.querySelector("td.align-middle span.productId")
-                number.value = parseInt(number.value) + 1;
-                var userId = userId_
-                fetch("https://localhost:7173/CartDetail/UpdateCartDetail/" + productId.innerHTML + "?userId=" + userId,
-                {
-                    method: 'POST',
-                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': jwt_ },
-                    body: JSON.stringify(parseInt(number.value))
-                })
-                .then(response =>
-                    response.json())
-                .then(data => console.log(data))
-                .catch(error => console.error('Unable to add item.', error));
-                recalculateCart()
+                var subTotal = e.target.parentElement.parentElement.parentElement.parentElement.querySelector("td.align-middle:nth-child(4)")
+                var inventoryNumber = e.target.parentElement.parentElement.parentElement.parentElement.querySelector("td.align-middle:nth-child(3) span").innerHTML
+
+                if (parseInt(number.value) < parseInt(inventoryNumber)) {
+                    number.value = parseInt(number.value) + 1;
+                    subTotal.innerHTML = parseInt(price.innerHTML) * parseInt(number.value)
+                    recalculateCart()
+                }
             }
         })
-    }
-
-    function remove() {
-        var removeBtn = document.querySelectorAll(".container-fluid.pt-5.content table tbody td.align-middle:nth-child(5) button")
-        removeBtn.forEach(item => {
-            item.onclick = function(e) {
-                var product = e.target.parentElement.parentElement
-                var number = e.target.parentElement.parentElement.querySelector("td.align-middle:nth-child(3) input")
-                var productId = e.target.parentElement.parentElement.querySelector("td.align-middle span.productId")
-                var userId = userId_
-                fetch("https://localhost:7173/CartDetail/DeleteCartDetail/" + productId.innerText + "?userId=" + userId,
-                {
-                    method: 'DELETE',
-                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': jwt_ },
-                    body: JSON.stringify(parseInt(number.value))
-                })
-                .then(response =>
-                    response.json())
-                .then(data => console.log(data))
-                .catch(error => console.error('Unable to add item.', error));
-                product.remove()
-                recalculateCart()
-            }
-        })
-    }
-
-    function buy() {
-        var buyButton = document.querySelector(".container-fluid.pt-5.content .card-footer button")
-        buyButton.onclick = function (e) {
-            var eachProduct = e.target.parentElement.parentElement.parentElement.parentElement.querySelectorAll("table tbody tr")
-            var data = []
-            eachProduct.forEach(item => {
-                var productId = item.querySelector("td.align-middle span.productId")
-                var number = item.querySelector("td.align-middle:nth-child(3) input")
-                data.unshift({ productId: productId.innerHTML, number: number.value })
-            })
-
-            var userId = userId_
-            fetch("https://localhost:7173/OrderDetail/CreateOrderDetail" + "?userId=" + userId,
-                {
-                    method: 'POST',
-                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': jwt_ },
-                    body: JSON.stringify(data)
-                })
-                .then(response =>
-                    response.json())
-                .then(data => {
-                    console.log(data)
-                    location.replace("https://localhost:7076/")
-                })
-                .catch(error => console.error('Unable to add item.', error));
-        }
     }
 
     decrease()
     increase()
-    remove()
-    buy()
     recalculateCart()
 </script>

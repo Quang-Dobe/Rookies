@@ -78,7 +78,8 @@ namespace ECommerce.BackendAPI.Controllers
                     {
                         Id = listCartDetail[i].Id,
                         number = listCartDetail[i].Number,
-                        showedProductDTO = _mapper.Map<ShowedProductDTO>(product)
+                        showedProductDTO = _mapper.Map<ShowedProductDTO>(product),
+                        inventoryNumber = listCartDetail[i].Product.InventoryNumber
                     });
                 }
                 return Ok(showedCartDetailDTOs);

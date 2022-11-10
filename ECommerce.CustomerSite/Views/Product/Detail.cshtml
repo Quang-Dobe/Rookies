@@ -47,24 +47,24 @@
                             }
                             else
                             {
-                                    <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
-                                    <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
+                                <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
+                                <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
                             }
                         }
                     </div>
                     @{
                         if (isAuthorized != "true")
                         {
-                                <div class="navbar-nav ml-auto py-0">
-                                    <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
-                                    <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
-                                </div>
+                            <div class="navbar-nav ml-auto py-0">
+                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
+                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
+                            </div>
                         }
                         else
                         {
-                                <div class="navbar-nav ml-auto py-0">
-                                    <a class="nav-item nav-link" asp-controller="Auth" asp-action="LogOut">Log out</a>
-                                </div>
+                            <div class="navbar-nav ml-auto py-0">
+                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="LogOut">Log out</a>
+                            </div>
                         }
                     }
                 </div>
@@ -102,7 +102,6 @@
 
         <div class="col-lg-7 pb-5">
             <h3 class="font-weight-semi-bold">@Model.productName</h3>
-            <p id="productId" style="display:none; opacity:0;">@Model.id</p>
             <div class="d-flex mb-3">
                 <div class="text-primary mr-2">
                     <i data-star=@Model.rating></i>
@@ -124,7 +123,11 @@
                 </div>
                 @{
                     if (isAuthorized != null){
-                        <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
+                        <form method="post" asp-controller="Product" asp-action="AddToCart">
+                            <input type="text" id="productId" name="productId" readonly hidden value=@Model.id />
+                            <input type="text" id="number" name="number" hidden value="1" />
+                            <button type="submit" class="btn btn-primary">Add to cart</button>
+                        </form>
                     }
                 }
             </div>
@@ -167,25 +170,25 @@
                                 foreach (ReviewDTO item in Model.reviewProductDTOs)
                                 {
                                     if (item.isReviewed){
-                                        <div class="media mb-4">
-                                            <img src="https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
-                                            <div class="media-body">
-                                                <h6>@item.userName</h6>
-                                                <div class="text-primary mb-2">
-                                                    @{
+                                                    <div class="media mb-4">
+                                                        <img src="https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                                        <div class="media-body">
+                                                            <h6>@item.userName</h6>
+                                                            <div class="text-primary mb-2">
+                                                                @{
                                                         for (int i = 1; i <= item.rating; i++)
                                                         {
-                                                            <i class="fa-solid fa-star" style="color:#FF9529"></i>
+                                                                            <i class="fa-solid fa-star" style="color:#FF9529"></i>
                                                         };
                                                         for (int i = 5; i > item.rating; i--)
                                                         {
-                                                            <i class="fa-regular fa-star" style="color:#FF9529"></i>
+                                                                            <i class="fa-regular fa-star" style="color:#FF9529"></i>
                                                         }
-                                                    }
-                                                </div>
-                                                <p>@item.comment</p>
-                                            </div>
-                                        </div>
+                                                                }
+                                                            </div>
+                                                            <p>@item.comment</p>
+                                                        </div>
+                                                    </div>
                                     }
                                 }
                             }
@@ -200,17 +203,7 @@
 <script>
     const $ = document.querySelector.bind(document)
     const $$ = document.querySelectorAll.bind(document)
-
-    const divToastElement = $('.container-fluid #toast')
-    const AddToCartElement = document.querySelector(".col-lg-7.pb-5 .btn.btn-primary.px-3")
-    var userId_ = `@ViewData["userId"]`;
-    var jwt_ = "@ViewData["jwt"]";
-
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
+    var numberProduct = 1;
 
     function InDeQuantity() {
         var decreaseButton = document.querySelector(".input-group-btn .btn-minus")
@@ -218,86 +211,22 @@
         decreaseButton.onclick = function (e) {
             var quantity = document.querySelector(".input-group.quantity input")
             var newQuantity = parseInt(quantity.value)
-            if (newQuantity > 1)
+            if (newQuantity > 1){
                 quantity.value = (parseInt(quantity.value) - 1).toString()
+                numberProduct = parseInt(quantity.value)
+            }
+            document.querySelector(".container-fluid #number").value = numberProduct
         }
         increaseButton.onclick = function (e) {
             var quantity = document.querySelector(".input-group.quantity input")
             var inventory = document.querySelector(".col-lg-7.pb-5 p span").innerText
-            if ((parseInt(quantity.value) + 1) <= inventory)
+            if ((parseInt(quantity.value) + 1) <= inventory){
                 quantity.value = (parseInt(quantity.value) + 1).toString()
+                numberProduct = parseInt(quantity.value)
+            }
+            document.querySelector(".container-fluid #number").value = numberProduct
         }
     }
+
     InDeQuantity()
-
-    function getNotice(divToastElement, type) {
-        // Create toast-div
-        let toastElement = document.createElement('div')
-        toastElement.classList.add('toast')
-        toastElement.classList.add((type === 'success') ? 'toast--success' : 'toast--error')
-
-
-        // Create and Add child element for toast__icon
-        let toast__icon_element = document.createElement('div')
-        let icon_toast__icon = document.createElement('i')
-        icon_toast__icon.classList.add('fa-regular')
-        icon_toast__icon.classList.add('fa-circle-check')
-        toast__icon_element.appendChild(icon_toast__icon)
-
-
-        // Create and Add child elements for toast__body
-        let toast__body_element = document.createElement('div')
-        let h3_toast__body = document.createElement('h3')
-        h3_toast__body.classList.add('toast__content')
-        h3_toast__body.innerText = (type === 'success') ? "Success" : "Error"
-        toast__body_element.appendChild(h3_toast__body)
-        let p_toast__body = document.createElement('p')
-        p_toast__body.classList.add('toast__msg')
-        p_toast__body.innerText = (type === 'success') ? "Buy successfully" : "Sorry. There is something went wrong!"
-        toast__body_element.appendChild(p_toast__body)
-
-
-        // Create and Add child element for toast__exit
-        let toast__exit_element = document.createElement('div')
-        let icon_toast__exit = document.createElement('i')
-        icon_toast__exit.classList.add('fa-regular')
-        icon_toast__exit.classList.add('fa-circle-xmark')
-        toast__exit_element.appendChild(icon_toast__exit)
-
-        toast__exit_element.onclick = function (e) {
-            divToastElement.removeChild(toastElement)
-        }
-
-
-        toastElement.appendChild(toast__icon_element)
-        toastElement.appendChild(toast__body_element)
-        toastElement.appendChild(toast__exit_element)
-
-        divToastElement.appendChild(toastElement)
-
-        setTimeout(function () {
-            divToastElement.removeChild(toastElement)
-        }, 4010)
-    }
-
-    const userAction = async () => {
-        var number = $('.input-group.quantity input').value
-        var productId = $('.col-lg-7.pb-5 p#productId').innerText
-        var userId = userId_;
-
-        fetch("https://localhost:7173/CartDetail/CreateCartDetail/" + productId + "?userId=" + userId,
-            {
-                method: 'POST',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': jwt_ },
-                body: JSON.stringify(number)
-            })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(error => console.error('Unable to add item.', error));
-    }
-
-    AddToCartElement.onclick = async function (e) {
-        await userAction();
-        getNotice(divToastElement, 'success')
-    }
 </script>

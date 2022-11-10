@@ -6,8 +6,8 @@ namespace ECommerce.CustomerSite.Services.Interface
     {
         Task<List<ShowedCartDetailDTO>> GetAllCart();
         Task<List<ShowedCartDetailDTO>> GetAllCardDetailByCart(string userId, string jwt);
-        Task<string> CreateCartDetail(string userId, int productId, int number, string jwt);
-        Task<string> UpdateCartDetail(string userId, int productId, int number, string jwt);
-        Task<string> DeleteCartDetail(string userId, int productId, int number, string jwt);
+        Task CreateCartDetail(string userId, int productId, int number, string jwt);
+        Task UpdateCartDetail(string userId, int productId, int number, string jwt);
+        Task DeleteCartDetail(string userId, int productId, int number, string jwt);
     }
 }

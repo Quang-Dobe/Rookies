@@ -53,6 +53,7 @@ namespace ECommerce.CustomerSite.Controllers
                     List<Claim> claims = new List<Claim>()
                     {
                         new Claim(ClaimTypes.NameIdentifier, tokenS.Claims.First(claim => claim.Type == "nameid").Value),
+                        new Claim("userName", tokenS.Claims.First(claim => claim.Type == "name").Value),
                         new Claim("jwt", "Bearer " + stringData),
                         new Claim("userId", tokenS.Claims.First(claim => claim.Type == "nameid").Value),
                     };

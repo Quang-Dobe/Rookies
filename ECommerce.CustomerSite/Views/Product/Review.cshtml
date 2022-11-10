@@ -24,7 +24,7 @@
                     @{
                         foreach (AllCategoryDTO item in allCategoryDTOs)
                         {
-                                <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id asp-route-pageIndex=1>@item.name</a>
+                            <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id asp-route-pageIndex=1>@item.name</a>
                         }
                     }
                 </div>
@@ -48,24 +48,24 @@
                             }
                             else
                             {
-                                    <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
-                                    <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
+                                <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
+                                <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
                             }
                         }
                     </div>
                     @{
                         if (isAuthorized != "true")
                         {
-                                <div class="navbar-nav ml-auto py-0">
-                                    <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
-                                    <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
-                                </div>
+                            <div class="navbar-nav ml-auto py-0">
+                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
+                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
+                            </div>
                         }
                         else
                         {
-                                <div class="navbar-nav ml-auto py-0">
-                                    <a class="nav-item nav-link" asp-controller="Auth" asp-action="LogOut">Log out</a>
-                                </div>
+                            <div class="navbar-nav ml-auto py-0">
+                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="LogOut">Log out</a>
+                            </div>
                         }
                     }
                     
@@ -164,11 +164,11 @@
                 <div>
                     <div class="center col-12 col-md-12" style="height:fit-content">
                         <div id="rate" class="rate">
-                            <label class="ratingStar" id="star5" onclick="(e) => @Model.rating=5"></label>
-                            <label class="ratingStar" id="star4" onclick="(e) => @Model.rating=4"></label>
-                            <label class="ratingStar" id="star3" onclick="(e) => @Model.rating=3"></label>
-                            <label class="ratingStar" id="star2" onclick="(e) => @Model.rating=2"></label>
-                            <label class="ratingStar" id="star1" onclick="(e) => @Model.rating=1"></label>
+                            <label class="ratingStar" id="star5" ></label>
+                            <label class="ratingStar" id="star4" ></label>
+                            <label class="ratingStar" id="star3" ></label>
+                            <label class="ratingStar" id="star2" ></label>
+                            <label class="ratingStar" id="star1" ></label>
                         </div>
                     </div>
                 </div>
@@ -176,23 +176,28 @@
                 <h5>Add your comment</h5>
                 <div class="row justify-content-start align-items-start" style="padding: 0px 5px">
                     <div>
-                        <textarea rows="3" cols="80" onchange="(e) => @Model.comment = e.target.value"></textarea>
+                        <textarea rows="3" cols="80" ></textarea>
                     </div>
                 </div>
                 <div style="padding: 0px 5px">
                     <span style="display:none; opacity:0">@Model.Id</span>
-                    <a class="btn btn-primary">Add review</a>
+                    <form method="post" asp-controller="Product" asp-action="AddReview" asp-route-id=@Model.Id>
+                        <label asp-for="comment" hidden>A</label>
+                        <input asp-for="comment" hidden type="text" value=@Model.comment />
+
+                        <label asp-for="rating" hidden>A</label>
+                        <input asp-for="rating" hidden type="number" value=@Model.rating />
+                        <button type="submit" class="btn btn-primary">Add review</button>
+                    </form>
                 </div>
                 <script>
                     var rating = 4;
-                    //var userId_ = `@ViewData["userId"]`;
-                    //var jwt_ = "@ViewData["jwt"]";
 
                     function addRating(value) {
                         clearRates();
                         addRates(value);
                         rating = value;
-                        @Model.rating = value;
+                        document.querySelector('.container-fluid #rating').value = value
                     }
 
                     function clearRates() {
@@ -215,33 +220,14 @@
                         })
                     }
 
-                    //function AddReview() {
-                    //    document.querySelector(".btn-primary").onclick = function (e) {
-                    //        var userId = userId_;
-                    //        var orderDetailId = e.target.parentElement.querySelector("span").innerText;
-                    //        var reviewOrderDetailDTO = {
-                    //            comment: document.querySelector("textarea").value,
-                    //            rating: rating
-                    //        }
-                    //        fetch("https://localhost:7173/OrderDetail/UpdateOrderDetail/" + orderDetailId + "?userId=" + userId,
-                    //            {
-                    //                method: 'POST',
-                    //                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': jwt_ },
-                    //                body: JSON.stringify(reviewOrderDetailDTO)
-                    //            })
-                    //            .then(response =>
-                    //                response.json())
-                    //            .then(data => {
-                    //                console.log(data)
-                    //                location.replace("https://localhost:7076/")
-                    //            })
-                    //            .catch(error => console.error('Unable to add item.', error));
-
-                    //    }
-                    //}
+                    function AddEventComment(){
+                        document.querySelector(".container-fluid textarea").addEventListener("change", function(e) {
+                            document.querySelector('.container-fluid #comment').value = e.target.value
+                        })
+                    }
 
                     AddEventRating();
-                    //AddReview();
+                    AddEventComment();
                 </script>
             </div>
             <div class="d-flex pt-2">

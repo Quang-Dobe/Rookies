@@ -211,7 +211,6 @@ namespace ECommerce.BackendAPI.Controllers
 
         [HttpPost]
         [EnableCors("_myAdminSite")]
-        [Authorize]
         public async Task<ActionResult> LogOut()
         {
             await tokenManager.DeactivateCurrentAsync();

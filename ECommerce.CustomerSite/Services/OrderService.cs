@@ -18,14 +18,24 @@ namespace ECommerce.CustomerSite.Services
 
 
         // Methods
-        public Task<List<ShowedOrderDetailDTO>> GetAllOrderDetailByOrder(string userId, string jwt)
+        public async Task<List<ShowedOrderDetailDTO>> GetAllOrderDetailByOrder(string userId, string jwt)
         {
-            return _order.GetAllOrderDetailByOrder(userId, jwt);
+            return await _order.GetAllOrderDetailByOrder(userId, jwt);
         }
 
-        public Task<ShowedOrderDetailDTO> GetOrderDetail(string userId, int orderDetailId, string jwt)
+        public async Task<ShowedOrderDetailDTO> GetOrderDetail(string userId, int orderDetailId, string jwt)
         {
-            return _order.GetOrderDetail(userId, orderDetailId, jwt);
+            return await _order.GetOrderDetail(userId, orderDetailId, jwt);
+        }
+
+        public async Task CreateOrderDetail(string userId, List<OrderDetailDTO> orderDetailDTOs, string jwt)
+        {
+            await _order.CreateOrderDetail(userId, orderDetailDTOs, jwt);
+        }
+
+        public async Task UpdateOrderDetail(string userId, int orderDetailId, ReviewOrderDetailDTO reviewOrderDetailDTO, string jwt)
+        {
+            await _order.UpdateOrderDetail(userId, orderDetailId, reviewOrderDetailDTO, jwt);
         }
     }
 }

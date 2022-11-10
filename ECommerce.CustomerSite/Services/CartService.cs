@@ -18,29 +18,29 @@ namespace ECommerce.CustomerSite.Services
 
 
         // Methods
-        public Task<List<ShowedCartDetailDTO>> GetAllCardDetailByCart(string userId, string jwt)
+        public async Task<List<ShowedCartDetailDTO>> GetAllCardDetailByCart(string userId, string jwt)
         {
-            return _cartInterface.GetAllCardDetailByCart(userId, jwt);
+            return await _cartInterface.GetAllCardDetailByCart(userId, jwt);
         }
 
-        public Task<List<ShowedCartDetailDTO>> GetAllCart()
+        public async Task<List<ShowedCartDetailDTO>> GetAllCart()
         {
-            return _cartInterface.GetAllCart();
+            return await _cartInterface.GetAllCart();
         }
 
-        public Task<string> CreateCartDetail(string userId, int productId, int number, string jwt)
+        public async Task CreateCartDetail(string userId, int productId, int number, string jwt)
         {
-            return _cartInterface.CreateCartDetail(userId, productId, number, jwt);
+            await _cartInterface.CreateCartDetail(userId, productId, number, jwt);
         }
 
-        public Task<string> DeleteCartDetail(string userId, int productId, int number, string jwt)
+        public async Task DeleteCartDetail(string userId, int productId, int number, string jwt)
         {
-            return _cartInterface.DeleteCartDetail(userId, productId, number, jwt);
+            await _cartInterface.DeleteCartDetail(userId, productId, number, jwt);
         }
 
-        public Task<string> UpdateCartDetail(string userId, int productId, int number, string jwt)
+        public async Task UpdateCartDetail(string userId, int productId, int number, string jwt)
         {
-            return _cartInterface.UpdateCartDetail(userId, productId, number, jwt);
+            await _cartInterface.UpdateCartDetail(userId, productId, number, jwt);
         }
     }
 }
