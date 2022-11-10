@@ -32,7 +32,7 @@ function Login() {
     const isNoneMobile = useMediaQuery("(min-width:600px)");
 
     const handleFormSubmit = async (values) => {
-        await axios.post(`https://localhost:7173/Auth/Login`, values, { 
+        await axios.post(`https://localhost:7173/Auth/Login_`, values, { 
             headers: {
                 'authorization': getCookie('jwt'),
                 'Accept' : 'application/json',
@@ -44,6 +44,7 @@ function Login() {
             document.cookie = `jwt=${jwt}`
             navigate("/dashboard");
         }).catch(error => {
+            console.log(error)
             alert("Login failed")
         })
     };
