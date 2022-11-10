@@ -16,7 +16,7 @@ namespace ECommerce.CustomerSite.Client
 
 
         [Get("/CartDetail/CreateCartDetail/{productId}")]
-        Task<string> CreateCartDetail([Query] string userId, int productId, [Body] int number);
+        Task<string> CreateCartDetail([Query] string userId, int productId, [Body] int number, [Header("Authorization")] string jwt);
 
 
         [Get("/CartDetail/UpdateCartDetail/{productId}")]

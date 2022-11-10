@@ -5,12 +5,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using SharedView.DTO.Account;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace ECommerce.CustomerSite.Controllers
 {
@@ -53,14 +50,11 @@ namespace ECommerce.CustomerSite.Controllers
                         Expires = DateTime.UtcNow.AddMinutes(10),
                         IsEssential = true
                     };
-                    Response.Cookies.Append("jwt", "Bearer " + stringData, cookieOption);
-                    Response.Cookies.Append("userId", tokenS.Claims.First(claim => claim.Type == "nameid").Value, cookieOption);
                     List<Claim> claims = new List<Claim>()
                     {
                         new Claim(ClaimTypes.NameIdentifier, tokenS.Claims.First(claim => claim.Type == "nameid").Value),
-                        new Claim(ClaimTypes.Hash, "Bearer " + stringData),
-                        //new Claim("jwt", "Bearer " + stringData),
-                        //new Claim("userId", tokenS.Claims.First(claim => claim.Type == "nameid").Value),
+                        new Claim("jwt", "Bearer " + stringData),
+                        new Claim("userId", tokenS.Claims.First(claim => claim.Type == "nameid").Value),
                     };
                     ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     AuthenticationProperties properties = new AuthenticationProperties()
@@ -87,8 +81,9 @@ namespace ECommerce.CustomerSite.Controllers
         [Authorize]
         public async Task<IActionResult> LogOut()
         {
+            string jwt = User.Claims.FirstOrDefault(u => u.Type == "jwt")?.Value;
             // Deactive token in API
-            String deactivateTokenResult = await identityUserService.LogOut();
+            String deactivateTokenResult = await identityUserService.LogOut(jwt);
             if (deactivateTokenResult == "Deactivate Token")
             {
                 Response.Cookies.Delete("jwt");

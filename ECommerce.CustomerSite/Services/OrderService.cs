@@ -8,27 +8,23 @@ namespace ECommerce.CustomerSite.Services
     public class OrderService : IOrderService
     {
         private readonly IOrder _order;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
 
         // Initialize
-        public OrderService(IHttpContextAccessor httpContextAccessor)
+        public OrderService()
         {
             _order = RestService.For<IOrder>("https://localhost:7173");
-            _httpContextAccessor = httpContextAccessor;
         }
 
 
         // Methods
-        public Task<List<ShowedOrderDetailDTO>> GetAllOrderDetailByOrder(string userId)
+        public Task<List<ShowedOrderDetailDTO>> GetAllOrderDetailByOrder(string userId, string jwt)
         {
-            string jwt = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
             return _order.GetAllOrderDetailByOrder(userId, jwt);
         }
 
-        public Task<ShowedOrderDetailDTO> GetOrderDetail(string userId, int orderDetailId)
+        public Task<ShowedOrderDetailDTO> GetOrderDetail(string userId, int orderDetailId, string jwt)
         {
-            string jwt = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
             return _order.GetOrderDetail(userId, orderDetailId, jwt);
         }
     }

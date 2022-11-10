@@ -28,9 +28,8 @@ namespace ECommerce.CustomerSite.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            string userId = Request.Cookies["userId"];
-            //ClaimsIdentity claimsIdentity = User.Identity as ClaimsIdentity;
-            //string userId = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            string userId = User.Claims.FirstOrDefault(u => u.Type == "userId")?.Value;
+
             List<AllCategoryDTO> allCategoryDTOs = await _categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
             if (!string.IsNullOrEmpty(userId))
@@ -43,9 +42,8 @@ namespace ECommerce.CustomerSite.Controllers
         [HttpGet]
         public async Task<IActionResult> Category([FromQuery] string? type, [FromQuery] string? pageIndex)
         {
-            string userId = Request.Cookies["userId"];
-            //ClaimsIdentity claimsIdentity = User.Identity as ClaimsIdentity;
-            //string userId = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            string userId = User.Claims.FirstOrDefault(u => u.Type == "userId")?.Value;
+
             // Call API
             List<AllCategoryDTO> allCategoryDTOs = await _categoryService.GetAllCategories();
             ShowedListProductDTO showedListProductDTO = await _productService.GetProductByTypeWithPageIndex(int.Parse(type), int.Parse(pageIndex));

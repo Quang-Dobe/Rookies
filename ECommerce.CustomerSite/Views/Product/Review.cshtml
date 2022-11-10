@@ -24,7 +24,7 @@
                     @{
                         foreach (AllCategoryDTO item in allCategoryDTOs)
                         {
-                            <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id asp-route-pageIndex=1>@item.name</a>
+                                <a class="nav-item nav-link" asp-controller="Home" asp-action="Category" asp-route-type=@item.id asp-route-pageIndex=1>@item.name</a>
                         }
                     }
                 </div>
@@ -48,24 +48,24 @@
                             }
                             else
                             {
-                                <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
-                                <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
+                                    <a class="nav-item nav-link" asp-controller="Product" asp-action="Buy">Shopping Cart</a>
+                                    <a class="nav-item nav-link" asp-controller="Product" asp-action="History">Checkout</a>
                             }
                         }
                     </div>
                     @{
                         if (isAuthorized != "true")
                         {
-                            <div class="navbar-nav ml-auto py-0">
-                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
-                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
-                            </div>
+                                <div class="navbar-nav ml-auto py-0">
+                                    <a class="nav-item nav-link" asp-controller="Auth" asp-action="Login">Login</a>
+                                    <a class="nav-item nav-link" asp-controller="Auth" asp-action="Register">Register</a>
+                                </div>
                         }
                         else
                         {
-                            <div class="navbar-nav ml-auto py-0">
-                                <a class="nav-item nav-link" asp-controller="Auth" asp-action="LogOut">Log out</a>
-                            </div>
+                                <div class="navbar-nav ml-auto py-0">
+                                    <a class="nav-item nav-link" asp-controller="Auth" asp-action="LogOut">Log out</a>
+                                </div>
                         }
                     }
                     
@@ -105,7 +105,7 @@
             <p id="productId" style="display:none; opacity:0;">@Model.showedProductDTO.id</p>
             <div class="d-flex mb-3">
                 <div class="text-primary mr-2">
-                    <i data-star=@Model.rating></i>
+                    <i data-star=@Model.showedProductDTO.rating></i>
                 </div>
             </div>
             <h3 class="font-weight-semi-bold mb-4">@Model.showedProductDTO.price.ToString("C2")</h3>
@@ -185,19 +185,14 @@
                 </div>
                 <script>
                     var rating = 4;
-                    var userId_ = `@ViewData["userId"]`;
-                    var jwt_ = "@ViewData["jwt"]";
-
-                    function getCookie(name) {
-                        const value = `; ${document.cookie}`;
-                        const parts = value.split(`; ${name}=`);
-                        if (parts.length === 2) return parts.pop().split(';').shift();
-                    }
+                    //var userId_ = `@ViewData["userId"]`;
+                    //var jwt_ = "@ViewData["jwt"]";
 
                     function addRating(value) {
                         clearRates();
                         addRates(value);
                         rating = value;
+                        @Model.rating = value;
                     }
 
                     function clearRates() {
@@ -220,33 +215,33 @@
                         })
                     }
 
-                    function AddReview() {
-                        document.querySelector(".btn-primary").onclick = function (e) {
-                            var userId = userId_;
-                            var orderDetailId = e.target.parentElement.querySelector("span").innerText;
-                            var reviewOrderDetailDTO = {
-                                comment: document.querySelector("textarea").value,
-                                rating: rating
-                            }
-                            fetch("https://localhost:7173/OrderDetail/UpdateOrderDetail/" + orderDetailId + "?userId=" + userId,
-                                {
-                                    method: 'POST',
-                                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': jwt_ },
-                                    body: JSON.stringify(reviewOrderDetailDTO)
-                                })
-                                .then(response =>
-                                    response.json())
-                                .then(data => {
-                                    console.log(data)
-                                    location.replace("https://localhost:7076/")
-                                })
-                                .catch(error => console.error('Unable to add item.', error));
+                    //function AddReview() {
+                    //    document.querySelector(".btn-primary").onclick = function (e) {
+                    //        var userId = userId_;
+                    //        var orderDetailId = e.target.parentElement.querySelector("span").innerText;
+                    //        var reviewOrderDetailDTO = {
+                    //            comment: document.querySelector("textarea").value,
+                    //            rating: rating
+                    //        }
+                    //        fetch("https://localhost:7173/OrderDetail/UpdateOrderDetail/" + orderDetailId + "?userId=" + userId,
+                    //            {
+                    //                method: 'POST',
+                    //                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': jwt_ },
+                    //                body: JSON.stringify(reviewOrderDetailDTO)
+                    //            })
+                    //            .then(response =>
+                    //                response.json())
+                    //            .then(data => {
+                    //                console.log(data)
+                    //                location.replace("https://localhost:7076/")
+                    //            })
+                    //            .catch(error => console.error('Unable to add item.', error));
 
-                        }
-                    }
+                    //    }
+                    //}
 
                     AddEventRating();
-                    AddReview();
+                    //AddReview();
                 </script>
             </div>
             <div class="d-flex pt-2">

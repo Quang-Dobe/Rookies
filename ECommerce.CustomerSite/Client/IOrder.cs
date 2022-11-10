@@ -12,5 +12,8 @@ namespace ECommerce.CustomerSite.Client
 
         [Get("/OrderDetail/GetOrderDetail/{orderDetailId}")]
         Task<ShowedOrderDetailDTO> GetOrderDetail([Query] string userId, int orderDetailId, [Header("Authorization")] string jwt);
+
+        [Post("/OrderDetail/GetOrderDetail/{orderDetailId}")]
+        Task<ShowedOrderDetailDTO> UpdateOrderDetail([Query] string userId, int orderDetailId, [Body] ReviewOrderDetailDTO reviewOrderDetailDTO, [Header("Authorization")] string jwt);
     }
 }

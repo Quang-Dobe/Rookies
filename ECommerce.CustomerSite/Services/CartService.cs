@@ -8,32 +8,18 @@ namespace ECommerce.CustomerSite.Services
     public class CartService : ICartService
     {
         private readonly ICart _cartInterface;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
 
         // Initialize
         public CartService(IHttpContextAccessor httpContextAccessor)
         {
-            this._httpContextAccessor = httpContextAccessor;
             _cartInterface = RestService.For<ICart>("https://localhost:7173");
         }
 
 
         // Methods
-        public Task<string> CreateCartDetail(string userId, int productId, int number)
+        public Task<List<ShowedCartDetailDTO>> GetAllCardDetailByCart(string userId, string jwt)
         {
-            return _cartInterface.CreateCartDetail(userId, productId, number);
-        }
-
-        public Task<string> DeleteCartDetail(string userId, int productId, int number)
-        {
-            string jwt = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
-            return _cartInterface.DeleteCartDetail(userId, productId, number, jwt);
-        }
-
-        public Task<List<ShowedCartDetailDTO>> GetAllCardDetailByCart(string userId)
-        {
-            string jwt = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
             return _cartInterface.GetAllCardDetailByCart(userId, jwt);
         }
 
@@ -42,9 +28,18 @@ namespace ECommerce.CustomerSite.Services
             return _cartInterface.GetAllCart();
         }
 
-        public Task<string> UpdateCartDetail(string userId, int productId, int number)
+        public Task<string> CreateCartDetail(string userId, int productId, int number, string jwt)
         {
-            string jwt = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
+            return _cartInterface.CreateCartDetail(userId, productId, number, jwt);
+        }
+
+        public Task<string> DeleteCartDetail(string userId, int productId, int number, string jwt)
+        {
+            return _cartInterface.DeleteCartDetail(userId, productId, number, jwt);
+        }
+
+        public Task<string> UpdateCartDetail(string userId, int productId, int number, string jwt)
+        {
             return _cartInterface.UpdateCartDetail(userId, productId, number, jwt);
         }
     }

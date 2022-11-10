@@ -31,9 +31,8 @@ namespace ECommerce.CustomerSite.Services
         }
 
 
-        public async Task<String> LogOut()
+        public async Task<String> LogOut(string jwt)
         {
-            string jwt = _httpContextAccessor.HttpContext.Request.Cookies["jwt"];
             return await _identityUser.LogOut(jwt);
         }
     }

@@ -33,11 +33,9 @@ namespace ECommerce.CustomerSite.Controllers
         [HttpGet]
         public async Task<IActionResult> Detail([FromQuery] int id)
         {
-            string userId = Request.Cookies["userId"];
-            string jwt = Request.Cookies["jwt"];
-            //ClaimsIdentity claimsIdentity = User.Identity as ClaimsIdentity;
-            //string userId = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            //string jwt = claimsIdentity?.FindFirst(ClaimTypes.Hash)?.Value;
+            string jwt = User.Claims.FirstOrDefault(u => u.Type == "jwt")?.Value;
+            string userId = User.Claims.FirstOrDefault(u => u.Type == "userId")?.Value;
+
             detailProductDTO productDTO = await productService.GetProductByID(id);
             List<AllCategoryDTO> allCategoryDTOs = await categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
@@ -54,13 +52,10 @@ namespace ECommerce.CustomerSite.Controllers
         [Authorize]
         public async Task<IActionResult> Buy()
         {
-            string userId = Request.Cookies["userId"];
-            string jwt = Request.Cookies["jwt"];
-            //ClaimsIdentity claimsIdentity = User.Identity as ClaimsIdentity;
-            //string userId = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            //string jwt = claimsIdentity?.FindFirst(ClaimTypes.Hash)?.Value;
-            Console.WriteLine(userId, jwt);
-            List<ShowedCartDetailDTO> showedCartDetailDTOs = await cartService.GetAllCardDetailByCart(userId);
+            string jwt = User.Claims.FirstOrDefault(u => u.Type == "jwt")?.Value;
+            string userId = User.Claims.FirstOrDefault(u => u.Type == "userId")?.Value;
+
+            List<ShowedCartDetailDTO> showedCartDetailDTOs = await cartService.GetAllCardDetailByCart(userId, jwt);
             List<AllCategoryDTO> allCategoryDTOs = await categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
             ViewData["userId"] = userId;
@@ -76,12 +71,10 @@ namespace ECommerce.CustomerSite.Controllers
         [Authorize]
         public async Task<IActionResult> History()
         {
-            string userId = Request.Cookies["userId"];
-            string jwt = Request.Cookies["jwt"];
-            //ClaimsIdentity claimsIdentity = User.Identity as ClaimsIdentity;
-            //string userId = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            //string jwt = claimsIdentity?.FindFirst(ClaimTypes.Hash)?.Value;
-            List<ShowedOrderDetailDTO> showedOrderDetailDTOs = await orderService.GetAllOrderDetailByOrder(userId);
+            string jwt = User.Claims.FirstOrDefault(u => u.Type == "jwt")?.Value;
+            string userId = User.Claims.FirstOrDefault(u => u.Type == "userId")?.Value;
+
+            List<ShowedOrderDetailDTO> showedOrderDetailDTOs = await orderService.GetAllOrderDetailByOrder(userId, jwt);
             List<AllCategoryDTO> allCategoryDTOs = await categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
             ViewData["userId"] = userId;
@@ -97,12 +90,10 @@ namespace ECommerce.CustomerSite.Controllers
         [Authorize]
         public async Task<IActionResult> Review([FromQuery] int id)
         {
-            string userId = Request.Cookies["userId"];
-            string jwt = Request.Cookies["jwt"];
-            //ClaimsIdentity claimsIdentity = User.Identity as ClaimsIdentity;
-            //string userId = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            //string jwt = claimsIdentity?.FindFirst(ClaimTypes.Hash)?.Value;
-            ShowedOrderDetailDTO showedOrderDetailDTO = await orderService.GetOrderDetail(userId, id);
+            string jwt = User.Claims.FirstOrDefault(u => u.Type == "jwt")?.Value;
+            string userId = User.Claims.FirstOrDefault(u => u.Type == "userId")?.Value;
+
+            ShowedOrderDetailDTO showedOrderDetailDTO = await orderService.GetOrderDetail(userId, id, jwt);
             List<AllCategoryDTO> allCategoryDTOs = await categoryService.GetAllCategories();
             ViewData["AllCategory"] = allCategoryDTOs;
             ViewData["userId"] = userId;
