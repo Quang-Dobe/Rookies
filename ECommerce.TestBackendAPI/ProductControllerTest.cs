@@ -10,6 +10,7 @@ using ECommerce.TestBackendAPI.MockData;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace ECommerce.TestBackendAPI
 {
@@ -103,6 +104,82 @@ namespace ECommerce.TestBackendAPI
             }
         }
 
+        [Fact]
+        public async void GetProductByType_WithParams_BadRequest_ListProductDTO()
+        {
+            Category category = MockData_Category.GetAllCategory().ElementAt(0);
+            // Arrange
+            _categoryRepository.Setup(_ => _.GetCategory(category.Id)).ReturnsAsync((Category)null);
+            _productRepository.Setup(_ => _.GetProductByType(0)).ReturnsAsync(MockData_Product.GetProductByType(0));
+
+            // Act
+            var actionResult = await _productController.GetProductByType(0);
+
+            var okActionResult = actionResult.Result as OkObjectResult;
+            var badrequestActionResult = actionResult.Result as BadRequestObjectResult;
+
+            List<ShowedProductDTO> okData = okActionResult?.Value as List<ShowedProductDTO>;
+            string badrequestData = badrequestActionResult?.Value as string;
+
+            // Assert
+            Assert.Null(okData);
+            Assert.NotNull(badrequestData);
+        }
+
+
+        [Fact]
+        public async void GetProductByTypeWithPageIndex_WithParams_Ok_ListProductDTO()
+        {
+            Category category = MockData_Category.GetAllCategory().ElementAt(0);
+            int Type = category.Id;
+            int PageIndex = 1;
+            // Arrange
+            _categoryRepository.Setup(_ => _.GetCategory(Type)).ReturnsAsync(category);
+            _productRepository.Setup(_ => _.GetProductByTypeWithPageIndex(Type, PageIndex)).ReturnsAsync(MockData_Product.GetProductByType(Type));
+            _productRepository.Setup(_ => _.GetTotalProductByType(Type)).ReturnsAsync(MockData_Product.GetProductByType(Type).Count);
+
+            // Act
+            var actionResult = await _productController.GetProductByTypeWithPageIndex(Type, PageIndex);
+
+            var okActionResult = actionResult.Result as OkObjectResult;
+            var badrequestActionResult = actionResult.Result as BadRequestObjectResult;
+
+            ShowedListProductDTO okData = okActionResult?.Value as ShowedListProductDTO;
+            string badrequestData = badrequestActionResult?.Value as string;
+
+            // Assert
+            Assert.NotNull(okData);
+            Assert.Equal(okData.totalProductDTO, MockData_Product.GetProductByType(Type).Count);
+
+            Assert.Null(badrequestData);
+        }
+
+        [Fact]
+        public async void GetProductByTypeWithPageIndex_WithParams_BadRequest_ListProductDTO()
+        {
+            Category category = MockData_Category.GetAllCategory().ElementAt(0);
+            int Type = category.Id;
+            int PageIndex = 1;
+            // Arrange
+            _categoryRepository.Setup(_ => _.GetCategory(Type)).ReturnsAsync((Category)null);
+            _productRepository.Setup(_ => _.GetProductByTypeWithPageIndex(Type, PageIndex)).ReturnsAsync(MockData_Product.GetProductByType(Type));
+            _productRepository.Setup(_ => _.GetTotalProductByType(Type)).ReturnsAsync(MockData_Product.GetProductByType(Type).Count);
+
+            // Act
+            var actionResult = await _productController.GetProductByTypeWithPageIndex(Type, PageIndex);
+
+            var okActionResult = actionResult.Result as OkObjectResult;
+            var badrequestActionResult = actionResult.Result as BadRequestObjectResult;
+
+            ShowedListProductDTO okData = okActionResult?.Value as ShowedListProductDTO;
+            string badrequestData = badrequestActionResult?.Value as string;
+
+            // Assert
+            Assert.Null(okData);
+
+            Assert.NotNull(badrequestData);
+        }
+
 
         [Fact]
         public async void GetProductByID_WithParams_Ok_ProductDTO()
@@ -123,6 +200,27 @@ namespace ECommerce.TestBackendAPI
             Assert.Equal(actualObject, expectedObject);
         }
 
+        [Fact]
+        public async void GetProductByID_WithParams_BadRequest_ProductDTO()
+        {
+            // Arrange
+            detailProductDTO detailProductDTO = MockData_Product.CreateDetailProductDTO().ElementAt(0);
+            _productRepository.Setup(_ => _.GetProductDetailById(0)).ReturnsAsync((detailProductDTO)null);
+
+            // Act
+            var actionResult = await _productController.GetProductByID(0);
+
+            var okActionResult = actionResult.Result as OkObjectResult;
+            var badrequestActionResult = actionResult.Result as BadRequestObjectResult;
+
+            detailProductDTO okData = okActionResult?.Value as detailProductDTO;
+            string badrequestData = badrequestActionResult?.Value as string;
+
+            // Assert
+            Assert.Null(okData);
+            Assert.NotNull(badrequestData);
+        }
+
 
         [Fact]
         public async void CreateNewProduct_WithParams_Ok_String()
@@ -138,13 +236,45 @@ namespace ECommerce.TestBackendAPI
 
             // Act
             var actionResult = await _productController.CreateNewProduct(allProductDTO);
-            var okActionResult = actionResult as OkObjectResult;
-            string data = okActionResult.Value as string;
 
+            var okActionResult = actionResult as OkObjectResult;
+            var badrequestActionResult = actionResult as BadRequestObjectResult;
+
+            string okData = okActionResult?.Value as string;
+            string badrequestData = badrequestActionResult?.Value as string;
 
             // Assert
-            Assert.NotNull(data);
-            Assert.Equal(data, "Success: Create successfully!");
+            Assert.NotNull(okData);
+            Assert.Equal(okData, "Success: Create successfully!");
+
+            Assert.Null(badrequestData);
+        }
+
+        [Fact]
+        public async void CreateNewProduct_WithParams_BadRequest_String()
+        {
+            // Arrange
+            Product product = MockData_Product.GetProducts().ElementAt(0);
+            AllProductDTO allProductDTO = MockData_Product.CreateAllProductDTO().ElementAt(0);
+            // Setup for Category Repository
+            _categoryRepository.Setup(_ => _.GetCategory(allProductDTO.CategoryId)).ReturnsAsync((Category)null);
+            // Setup for Product Repository
+            _productRepository.Setup(_ => _.CreateProduct(product));
+            _productRepository.Setup(_ => _.Save());
+
+            // Act
+            var actionResult = await _productController.CreateNewProduct(allProductDTO);
+
+            var okActionResult = actionResult as OkObjectResult;
+            var badrequestActionResult = actionResult as BadRequestObjectResult;
+
+            string okData = okActionResult?.Value as string;
+            string badrequestData = badrequestActionResult?.Value as string;
+
+            // Assert
+            Assert.Null(okData);
+
+            Assert.NotNull(badrequestData);
         }
 
 
@@ -159,14 +289,39 @@ namespace ECommerce.TestBackendAPI
 
             // Act
             var actionResult = await _productController.UpdateProduct(product.Id, MockData_Product.CreateAllProductDTO().ElementAt(0));
+
             var okActionResult = actionResult as OkObjectResult;
             var badrequestActionResult = actionResult as BadRequestObjectResult;
+
             string okData = okActionResult?.Value as string;
             string badrequestData = badrequestActionResult?.Value as string;
 
             // Assert
             Assert.NotNull(okData);
             Assert.Null(badrequestData);
+        }
+
+        [Fact]
+        public async void UpdateProduct_WithParams_BadRequest_String()
+        {
+            Product product = MockData_Product.GetProducts().ElementAt(0);
+            // Arrange
+            _productRepository.Setup(_ => _.GetProductById(product.Id)).ReturnsAsync((Product)null);
+            _productRepository.Setup(_ => _.UpdateProduct(product));
+            _productRepository.Setup(_ => _.Save());
+
+            // Act
+            var actionResult = await _productController.UpdateProduct(product.Id, MockData_Product.CreateAllProductDTO().ElementAt(0));
+
+            var okActionResult = actionResult as OkObjectResult;
+            var badrequestActionResult = actionResult as BadRequestObjectResult;
+
+            string okData = okActionResult?.Value as string;
+            string badrequestData = badrequestActionResult?.Value as string;
+
+            // Assert
+            Assert.Null(okData);
+            Assert.NotNull(badrequestData);
         }
 
 
@@ -183,14 +338,41 @@ namespace ECommerce.TestBackendAPI
 
             // Act
             var actionResult = await _productController.UpdateMultiProduct(allProductDTOs);
+
             var okActionResult = actionResult as OkObjectResult;
             var badrequestActionResult = actionResult as BadRequestObjectResult;
+
             string okData = okActionResult?.Value as string;
             string badrequestData = badrequestActionResult?.Value as string;
 
             // Assert
             Assert.NotNull(okData);
             Assert.Null(badrequestData);
+        }
+
+        [Fact]
+        public async void UpdateMultiProduct_WithParams_BadRequest_String()
+        {
+            List<AllProductDTO> allProductDTOs = MockData_Product.CreateAllProductDTO();
+            List<Product> products = MockData_Product.GetProducts();
+            // Arrange
+            for (int i = 0; i < allProductDTOs.Count; i++)
+            {
+                _productRepository.Setup(_ => _.GetProductById(allProductDTOs[i].id)).ReturnsAsync((Product)null);
+            }
+
+            // Act
+            var actionResult = await _productController.UpdateMultiProduct(allProductDTOs);
+
+            var okActionResult = actionResult as OkObjectResult;
+            var badrequestActionResult = actionResult as BadRequestObjectResult;
+
+            string okData = okActionResult?.Value as string;
+            string badrequestData = badrequestActionResult?.Value as string;
+
+            // Assert
+            Assert.Null(okData);
+            Assert.NotNull(badrequestData);
         }
 
 
@@ -205,14 +387,39 @@ namespace ECommerce.TestBackendAPI
 
             // Act
             var actionResult = await _productController.DeleteProduct(product.Id);
+
             var okActionResult = actionResult as OkObjectResult;
             var badrequestActionResult = actionResult as BadRequestObjectResult;
+
             string okData = okActionResult?.Value as string;
             string badrequestData = badrequestActionResult?.Value as string;
 
             // Assert
             Assert.NotNull(okData);
             Assert.Null(badrequestData);
+        }
+
+        [Fact]
+        public async void DeleteProduct_WithParams_BadRequest_String()
+        {
+            Product product = MockData_Product.GetProducts().ElementAt(0);
+            // Arrange
+            _productRepository.Setup(_ => _.GetProductById(product.Id)).ReturnsAsync((Product)null);
+            _productRepository.Setup(_ => _.DeleteProduct(product.Id));
+            _productRepository.Setup(_ => _.Save());
+
+            // Act
+            var actionResult = await _productController.DeleteProduct(product.Id);
+
+            var okActionResult = actionResult as OkObjectResult;
+            var badrequestActionResult = actionResult as BadRequestObjectResult;
+
+            string okData = okActionResult?.Value as string;
+            string badrequestData = badrequestActionResult?.Value as string;
+
+            // Assert
+            Assert.Null(okData);
+            Assert.NotNull(badrequestData);
         }
 
 
@@ -240,6 +447,32 @@ namespace ECommerce.TestBackendAPI
             // Assert
             Assert.NotNull(okData);
             Assert.Null(badrequestData);
+        }
+
+        [Fact]
+        public async void DeleteMultiProduct_WithParams_BadRequest_String()
+        {
+            List<int> ids = new List<int> { 1, 2, 3 };
+            // Arrange
+            foreach (int id in ids)
+            {
+                Product product = MockData_Product.GetProducts().ElementAt(id - 1);
+
+                _productRepository.Setup(_ => _.GetProductById(product.Id)).ReturnsAsync((Product)null);
+                _productRepository.Setup(_ => _.DeleteProduct(product.Id));
+                _productRepository.Setup(_ => _.Save());
+            }
+
+            // Act
+            var actionResult = await _productController.DeleteMultiProduct(ids);
+            var okActionResult = actionResult as OkObjectResult;
+            var badrequestActionResult = actionResult as BadRequestObjectResult;
+            string okData = okActionResult?.Value as string;
+            string badrequestData = badrequestActionResult?.Value as string;
+
+            // Assert
+            Assert.Null(okData);
+            Assert.NotNull(badrequestData);
         }
     }
 }

@@ -84,6 +84,10 @@ namespace ECommerce.BackendAPI.Controllers
             try
             {
                 OrderDetail orderDetail = await _orderDetailRepository.GetOrderDetail(orderDetailId);
+                if (orderDetail == null)
+                {
+                    return BadRequest("Invalid OrderDetailID");
+                }
                 Product product = await _productRepository.GetProductById(orderDetail.ProductId);
                 ShowedOrderDetailDTO showedOrderDetailDTO = new ShowedOrderDetailDTO
                 {

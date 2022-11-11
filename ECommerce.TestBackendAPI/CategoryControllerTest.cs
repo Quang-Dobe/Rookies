@@ -90,7 +90,7 @@ namespace ECommerce.TestBackendAPI
             _categoryRepository.Setup(_ => _.GetCategories()).ReturnsAsync(categories);
 
             // Act
-            var actionResult = await _categoryController.GetAllCategory();
+            var actionResult = await _categoryController.GetAllCategoryAdmin();
             var okActionResult = actionResult.Result as OkObjectResult;
             List<AllCategoryDTO> data = okActionResult.Value as List<AllCategoryDTO>;
 

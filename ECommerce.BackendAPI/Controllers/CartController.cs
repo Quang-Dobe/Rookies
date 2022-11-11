@@ -53,7 +53,10 @@ namespace ECommerce.BackendAPI.Controllers
             try
             {
                 Cart cart = await _cartRepository.GetCart(userId);
-                await _cartRepository.Save();
+                if (cart == null)
+                {
+                    return BadRequest("Invalid userId");
+                }
                 CartDTO cartDTO = _mapper.Map<CartDTO>(cart);
                 return Ok(cartDTO);
             }
@@ -71,6 +74,10 @@ namespace ECommerce.BackendAPI.Controllers
             try
             {
                 Cart cart = await _cartRepository.GetCart(userId);
+                if (cart == null)
+                {
+                    return BadRequest("Invalid userId");
+                }
                 _cartRepository.DeleteCart(cart);
                 await _cartRepository.Save();
                 return Ok("Delete sucessfully");

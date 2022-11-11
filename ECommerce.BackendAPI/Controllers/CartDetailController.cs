@@ -37,6 +37,10 @@ namespace ECommerce.BackendAPI.Controllers
             try
             {
                 CartDetail cartDetail = await _cartDetailRepository.GetCartDetail(id);
+                if (cartDetail == null)
+                {
+                    return BadRequest("Invalid CartID");
+                }
                 ShowedCartDetailDTO data = _mapper.Map<ShowedCartDetailDTO>(cartDetail);
                 return Ok(data);
             }
@@ -69,6 +73,10 @@ namespace ECommerce.BackendAPI.Controllers
             try
             {
                 Cart cart = await _cartRepository.GetCart(userid);
+                if (cart == null)
+                {
+                    return BadRequest("Invalid userId");
+                }
                 List<CartDetail> listCartDetail = await _cartDetailRepository.GetCartDetail(cart);
                 List<ShowedCartDetailDTO> showedCartDetailDTOs = new List<ShowedCartDetailDTO>();
                 for (int i = 0; i < listCartDetail.Count; i++)
@@ -102,6 +110,10 @@ namespace ECommerce.BackendAPI.Controllers
                 // I dont check cart exist or not because when a user register, I also create an empty cart for him/her
                 Cart cart = await _cartRepository.GetCart(userId);
                 Product product = await _productRepository.GetProductById(productId);
+                if (product == null)
+                {
+                    return BadRequest("Invalid productId");
+                }
                 CartDetail checkCartDetail = await _cartDetailRepository.GetCartDetail(cart.Id, productId);
                 if (checkCartDetail != null)
                 {

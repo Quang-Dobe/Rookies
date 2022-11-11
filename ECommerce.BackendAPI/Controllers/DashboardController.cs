@@ -17,7 +17,7 @@ namespace ECommerce.BackendAPI.Controllers
         private readonly ICategoryRepository _categoryRepository;
 
 
-        public DashboardController(IOrderDetailRepository orderDetailRepository, ICategoryRepository categoryRepository, IMapper mapper, ICartDetailRepository cartDetailRepository)
+        public DashboardController(IOrderDetailRepository orderDetailRepository, ICategoryRepository categoryRepository, ICartDetailRepository cartDetailRepository)
         {
             _orderDetailRepository = orderDetailRepository;
             _categoryRepository = categoryRepository;

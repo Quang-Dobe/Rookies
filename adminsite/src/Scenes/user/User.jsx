@@ -33,7 +33,7 @@ function User() {
     const colors = tokens(theme.palette.mode)
 
     useEffect(()=>{
-        axios.get(`https://localhost:7173/Auth/GetAllUser`,
+        axios.get(`https://localhost:7173/User/GetAllUser`,
         { 
             headers: {
                 'authorization': getCookie('jwt'),
@@ -45,7 +45,7 @@ function User() {
             setUserData(res.data)
         }).catch(error => console.log(error))
 
-        axios.get(`https://localhost:7173/Auth/GetAllRoles`,
+        axios.get(`https://localhost:7173/User/GetAllRoles`,
         { 
             headers: {
                 'authorization': getCookie('jwt'),
@@ -72,7 +72,7 @@ function User() {
 
                 const handleOnClick = async (e) => {
                     var changeRole = (data.role==="Admin") ? "User" : "Admin"
-                    await axios.post(`https://localhost:7173/Auth/UpdateUserRole?userId=${data.id}`, changeRole,
+                    await axios.post(`https://localhost:7173/User/UpdateUserRole?userId=${data.id}`, changeRole,
                     { 
                         headers: {
                             'authorization': getCookie('jwt'),
@@ -82,7 +82,7 @@ function User() {
                     })
                     .then(res => console.log(res.data)).catch(error => console.log(error))
 
-                    await axios.get(`https://localhost:7173/Auth/GetAllUser`,
+                    await axios.get(`https://localhost:7173/User/GetAllUser`,
                     { 
                         headers: {
                             'authorization': getCookie('jwt'),

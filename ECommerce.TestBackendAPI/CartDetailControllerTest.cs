@@ -39,21 +39,52 @@ namespace ECommerce.TestBackendAPI
         [Fact]
         public async void GetCartDetail_WithParams_Ok_ShowedCartDetailDTO()
         {
-            // Arrange
             int id = 1;
+            // Arrange
             // Setup for CartDetailRepository
             Cart cart = MockData_CartDetail.GetListCart().ElementAt(0);
             _cartDetailRepository.Setup(_ => _.GetCartDetail(id)).ReturnsAsync(MockData_CartDetail.GetListCartDetail(cart).ElementAt(0));
 
             // Act
             var actionResult = await _cartDetailController.GetCartDetail(id);
+
             var okActionResult = actionResult.Result as OkObjectResult;
-            ShowedCartDetailDTO data = okActionResult.Value as ShowedCartDetailDTO;
+            var badrequestActionResult = actionResult.Result as BadRequestObjectResult;
+
+            ShowedCartDetailDTO okData = okActionResult?.Value as ShowedCartDetailDTO;
+            string badrequestData = badrequestActionResult?.Value as string;
 
             // Assert
-            Assert.NotNull(data);
-            Assert.Equal(data.Id, id);
-            Assert.Equal(data.showedProductDTO.productName, MockData_CartDetail.GetListCartDetail(cart).ElementAt(0).Product.ProductName);
+            Assert.NotNull(okData);
+            Assert.Equal(okData.Id, id);
+            Assert.Equal(okData.showedProductDTO.productName, MockData_CartDetail.GetListCartDetail(cart).ElementAt(0).Product.ProductName);
+
+            Assert.Null(badrequestData);
+        }
+
+        [Fact]
+        public async void GetCartDetail_WithParams_BadRequest_ShowedCartDetailDTO()
+        {
+            int id = 1;
+            // Arrange
+            // Setup for CartDetailRepository
+            Cart cart = MockData_CartDetail.GetListCart().ElementAt(0);
+            _cartDetailRepository.Setup(_ => _.GetCartDetail(id)).ReturnsAsync((CartDetail)null);
+
+            // Act
+            var actionResult = await _cartDetailController.GetCartDetail(id);
+
+            var okActionResult = actionResult.Result as OkObjectResult;
+            var badrequestActionResult = actionResult.Result as BadRequestObjectResult;
+
+            ShowedCartDetailDTO okData = okActionResult?.Value as ShowedCartDetailDTO;
+            string badrequestData = badrequestActionResult?.Value as string;
+
+            // Assert
+            Assert.Null(okData);
+
+            Assert.NotNull(badrequestData);
+            Assert.Equal(badrequestData, "Invalid CartID");
         }
 
 
@@ -83,8 +114,8 @@ namespace ECommerce.TestBackendAPI
         [Fact]
         public async void GetAllCardDetailByCart_WithParams_Ok_ListShowedCartDetailDTO()
         {
-            // Arrange
             string userId = "05235465-f941-4e00-98bb-5306da1de482";
+            // Arrange
             // Setup for CartRepository
             Cart cart = MockData_CartDetail.GetListCart().ElementAt(0);
             _cartRepository.Setup(_ => _.GetCart(userId)).ReturnsAsync(cart);
@@ -99,16 +130,54 @@ namespace ECommerce.TestBackendAPI
 
             // Act
             var actionResult = await _cartDetailController.GetAllCardDetailByCart(userId);
+
             var okActionResult = actionResult.Result as OkObjectResult;
-            List<ShowedCartDetailDTO> data = okActionResult.Value as List<ShowedCartDetailDTO>;
+            var badrequestActionResult = actionResult.Result as BadRequestObjectResult;
+
+            List<ShowedCartDetailDTO> okData = okActionResult?.Value as List<ShowedCartDetailDTO>;
+            string badrequestData = badrequestActionResult?.Value as string;
 
             // Assert
-            Assert.NotNull(data);
-            Assert.Equal(data.Count, cartDetails.Count);
+            Assert.NotNull(okData);
+            Assert.Equal(okData.Count, cartDetails.Count);
             for(int i=0; i<cartDetails.Count; i++)
             {
-                Assert.Equal(data[i].showedProductDTO.id, cartDetails[i].ProductId);
+                Assert.Equal(okData[i].showedProductDTO.id, cartDetails[i].ProductId);
             }
+
+            Assert.Null(badrequestData);
+        }
+
+        [Fact]
+        public async void GetAllCardDetailByCart_WithParams_BadRequest_ListShowedCartDetailDTO()
+        {
+            string userId = "Invalid";
+            // Arrange
+            // Setup for CartRepository
+            Cart cart = MockData_CartDetail.GetListCart().ElementAt(0);
+            _cartRepository.Setup(_ => _.GetCart(userId)).ReturnsAsync((Cart)null);
+            // Setup for CartDetailRepository
+            List<CartDetail> cartDetails = MockData_CartDetail.GetListCartDetail(cart);
+            _cartDetailRepository.Setup(_ => _.GetCartDetail(cart)).ReturnsAsync(cartDetails);
+            // Setup for ProductRepository
+            for (int i = 0; i < cartDetails.Count; i++)
+            {
+                _productRepository.Setup(_ => _.GetProductById(cartDetails[i].ProductId)).ReturnsAsync(cartDetails[i].Product);
+            }
+
+            // Act
+            var actionResult = await _cartDetailController.GetAllCardDetailByCart(userId);
+
+            var okActionResult = actionResult.Result as OkObjectResult;
+            var badrequestActionResult = actionResult.Result as BadRequestObjectResult;
+
+            List<ShowedCartDetailDTO> okData = okActionResult?.Value as List<ShowedCartDetailDTO>;
+            string badrequestData = badrequestActionResult?.Value as string;
+
+            // Assert
+            Assert.Null(okData);
+
+            Assert.NotNull(badrequestData);
         }
 
 
@@ -136,36 +205,80 @@ namespace ECommerce.TestBackendAPI
 
             // Act
             var actionResult = await _cartDetailController.CreateCartDetail(userId, productId, number);
+
             var okActionResult = actionResult as OkObjectResult;
-            string data = okActionResult.Value as string;
+            var badrequestActionResult = actionResult as BadRequestObjectResult;
+
+            string okData = okActionResult?.Value as string;
+            string badrequestData = badrequestActionResult?.Value as string;
 
             // Assert
-            Assert.NotNull(data);
-            Assert.True(data=="Update your cart instead of adding new one" || data=="Create CartDetail sucessfully");
+            Assert.NotNull(okData);
+            Assert.True(okData == "Update your cart instead of adding new one" || okData == "Create CartDetail sucessfully");
+
+            Assert.Null(badrequestData);
+        }
+
+        [Fact]
+        public async void CreateCartDetail_WithParams_BadRequest_String()
+        {
+            // Arrange
+            string userId = "05235465-f941-4e00-98bb-5306da1de482";
+            int productId = 0;
+            int number = 1;
+            // Setup for CartRepository
+            Cart cart = MockData_CartDetail.GetListCart().ElementAt(0);
+            _cartRepository.Setup(_ => _.GetCart(userId)).ReturnsAsync(cart);
+
+            // Setup for ProductRepository
+            Product product = MockData_CartDetail.GetListCartDetail(cart).ElementAt(0).Product;
+            _productRepository.Setup(_ => _.GetProductById(productId)).ReturnsAsync((Product)null);
+
+            // Setup for CartDetailRepository
+            CartDetail cartDetail = MockData_CartDetail.GetListCartDetail(cart).ElementAt(0);
+            _cartDetailRepository.Setup(_ => _.GetCartDetail(cart.Id, productId)).ReturnsAsync(cartDetail);
+            
+            _cartDetailRepository.Setup(_ => _.Save());
+            _cartDetailRepository.Setup(_ => _.CreateCartDetail(cartDetail));
+
+            // Act
+            var actionResult = await _cartDetailController.CreateCartDetail(userId, productId, number);
+
+            var okActionResult = actionResult as OkObjectResult;
+            var badrequestActionResult = actionResult as BadRequestObjectResult;
+
+            string okData = okActionResult?.Value as string;
+            string badrequestData = badrequestActionResult?.Value as string;
+
+            // Assert
+            Assert.Null(okData);
+            Assert.NotNull(badrequestData);
         }
 
 
         [Fact]
         public async void UpdateCartDetail_WithParams_Ok_String()
         {
-            // Arrange
             string userId = "05235465-f941-4e00-98bb-5306da1de482";
             int productId = 1;
             int number = 1;
+            // Arrange
             // Setup for CartRepository
             Cart cart = MockData_CartDetail.GetListCart().ElementAt(0);
             _cartRepository.Setup(_ => _.GetCart(userId)).ReturnsAsync(cart);
             // Setup for CartDetailRepository
             CartDetail cartDetail = MockData_CartDetail.GetListCartDetail(cart).ElementAt(0);
             _cartDetailRepository.Setup(_ => _.GetCartDetail(cart.Id, productId)).ReturnsAsync(cartDetail);
-            // Other Setup but I think It's not important
+            
             _cartDetailRepository.Setup(_ => _.UpdateCartDetail(cartDetail));
             _cartDetailRepository.Setup(_ => _.Save());
 
             // Act
             var actionResult = await _cartDetailController.UpdateCartDetail(userId, productId, number);
+            
             var okActionResult = actionResult as OkObjectResult;
             var badrequestActionResult = actionResult as BadRequestObjectResult;
+            
             string okData = okActionResult?.Value as string;
             string badrequestData = badrequestActionResult?.Value as string;
 
@@ -174,34 +287,98 @@ namespace ECommerce.TestBackendAPI
             Assert.Null(badrequestData);
         }
 
+        [Fact]
+        public async void UpdateCartDetail_WithParams_BadRequest_String()
+        {
+            string userId = "05235465-f941-4e00-98bb-5306da1de482";
+            int productId = 0;
+            int number = 1;
+            // Arrange
+            // Setup for CartRepository
+            Cart cart = MockData_CartDetail.GetListCart().ElementAt(0);
+            _cartRepository.Setup(_ => _.GetCart(userId)).ReturnsAsync(cart);
+            // Setup for CartDetailRepository
+            CartDetail cartDetail = MockData_CartDetail.GetListCartDetail(cart).ElementAt(0);
+            _cartDetailRepository.Setup(_ => _.GetCartDetail(cart.Id, productId)).ReturnsAsync((CartDetail)null);
+
+            _cartDetailRepository.Setup(_ => _.UpdateCartDetail(cartDetail));
+            _cartDetailRepository.Setup(_ => _.Save());
+
+            // Act
+            var actionResult = await _cartDetailController.UpdateCartDetail(userId, productId, number);
+
+            var okActionResult = actionResult as OkObjectResult;
+            var badrequestActionResult = actionResult as BadRequestObjectResult;
+
+            string okData = okActionResult?.Value as string;
+            string badrequestData = badrequestActionResult?.Value as string;
+
+            // Assert
+            Assert.Null(okData);
+            Assert.NotNull(badrequestData);
+        }
+
 
         [Fact]
         public async void DeleteCartDetail_WithParams_Ok_String()
         {
-            // Arrange
             string userId = "05235465-f941-4e00-98bb-5306da1de482";
             int productId = 1;
             int number = 1;
+            // Arrange
             // Setup for CartRepository
             Cart cart = MockData_CartDetail.GetListCart().ElementAt(0);
             _cartRepository.Setup(_ => _.GetCart(userId)).ReturnsAsync(cart);
             // Setup for CartDetailRepository
             CartDetail cartDetail = MockData_CartDetail.GetListCartDetail(cart).ElementAt(0);
             _cartDetailRepository.Setup(_ => _.GetCartDetail(cart.Id, productId)).ReturnsAsync(cartDetail);
-            // Other Setup but I think It's not important
+            
             _cartDetailRepository.Setup(_ => _.DeleteCartDetail(cartDetail));
             _cartDetailRepository.Setup(_ => _.Save());
 
             // Act
             var actionResult = await _cartDetailController.DeleteCartDetail(userId, productId, number);
+            
             var okActionResult = actionResult as OkObjectResult;
             var badrequestActionResult = actionResult as BadRequestObjectResult;
+            
             string okData = okActionResult?.Value as string;
             string badrequestData = badrequestActionResult?.Value as string;
 
             // Assert
             Assert.NotNull(okData);
             Assert.Null(badrequestData);
+        }
+
+        [Fact]
+        public async void DeleteCartDetail_WithParams_BadRequest_String()
+        {
+            string userId = "05235465-f941-4e00-98bb-5306da1de482";
+            int productId = 1;
+            int number = 1;
+            // Arrange
+            // Setup for CartRepository
+            Cart cart = MockData_CartDetail.GetListCart().ElementAt(0);
+            _cartRepository.Setup(_ => _.GetCart(userId)).ReturnsAsync(cart);
+            // Setup for CartDetailRepository
+            CartDetail cartDetail = MockData_CartDetail.GetListCartDetail(cart).ElementAt(0);
+            _cartDetailRepository.Setup(_ => _.GetCartDetail(cart.Id, productId)).ReturnsAsync((CartDetail)null);
+
+            _cartDetailRepository.Setup(_ => _.DeleteCartDetail(cartDetail));
+            _cartDetailRepository.Setup(_ => _.Save());
+
+            // Act
+            var actionResult = await _cartDetailController.DeleteCartDetail(userId, productId, number);
+
+            var okActionResult = actionResult as OkObjectResult;
+            var badrequestActionResult = actionResult as BadRequestObjectResult;
+
+            string okData = okActionResult?.Value as string;
+            string badrequestData = badrequestActionResult?.Value as string;
+
+            // Assert
+            Assert.Null(okData);
+            Assert.NotNull(badrequestData);
         }
     }
 }

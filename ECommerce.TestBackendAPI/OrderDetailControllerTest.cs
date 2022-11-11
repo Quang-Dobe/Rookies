@@ -42,8 +42,8 @@ namespace ECommerce.TestBackendAPI
         [Fact]
         public async void GetAllOrderDetailByOrder_WithParams_Ok_ListShowedOrderDetailDTO()
         {
-            // Arrange
             string userId = "05235465-f941-4e00-98bb-5306da1de482";
+            // Arrange
             // Setup for MockOrderRepository
             Order order = MockData_OrderDetail.GetListOrder().ElementAt(0);
             _orderRepository.Setup(_ => _.GetOrder(userId)).ReturnsAsync(order);
@@ -78,9 +78,9 @@ namespace ECommerce.TestBackendAPI
         [Fact]
         public async void GetOrderDetail_WithParams_Ok_ShowedOrderDetailDTO()
         {
-            // Arrange
             string userId = "05235465-f941-4e00-98bb-5306da1de482";
             int orderDetailId = 1;
+            // Arrange
             // Setup OrderDetailRepository
             Order order = MockData_OrderDetail.GetListOrder().ElementAt(0);
             OrderDetail orderDetail = MockData_OrderDetail.GetListOrderDetail(order).ElementAt(0);
@@ -91,24 +91,59 @@ namespace ECommerce.TestBackendAPI
 
             // Act
             var actionResult = await _orderDetailController.GetOrderDetail(userId, orderDetailId);
+
             var okActionResult = actionResult.Result as OkObjectResult;
-            ShowedOrderDetailDTO data = okActionResult.Value as ShowedOrderDetailDTO;
+            var badrequestActionResult = actionResult.Result as BadRequestObjectResult;
+
+            ShowedOrderDetailDTO okData = okActionResult?.Value as ShowedOrderDetailDTO;
+            string badrequestData = badrequestActionResult?.Value as string;
 
             // Assert
-            Assert.NotNull(data);
-            Assert.Equal(data.Id, orderDetail.Id);
-            Assert.Equal(data.showedProductDTO.id, product.Id);
-            Assert.Equal(data.showedProductDTO.productName, product.ProductName);
+            Assert.NotNull(okData);
+            Assert.Equal(okData.Id, orderDetail.Id);
+            Assert.Equal(okData.showedProductDTO.id, product.Id);
+            Assert.Equal(okData.showedProductDTO.productName, product.ProductName);
+
+            Assert.Null(badrequestData);
+        }
+
+        [Fact]
+        public async void GetOrderDetail_WithParams_BadRequest_ShowedOrderDetailDTO()
+        {
+            string userId = "05235465-f941-4e00-98bb-5306da1de482";
+            int orderDetailId = -1;
+            // Arrange
+            // Setup OrderDetailRepository
+            Order order = MockData_OrderDetail.GetListOrder().ElementAt(0);
+            OrderDetail orderDetail = MockData_OrderDetail.GetListOrderDetail(order).ElementAt(0);
+            _orderDetailRepository.Setup(_ => _.GetOrderDetail(orderDetailId)).ReturnsAsync((OrderDetail)null);
+            // Setup ProductRepository
+            Product product = orderDetail.Product;
+            _productRepository.Setup(_ => _.GetProductById(orderDetail.ProductId)).ReturnsAsync(product);
+
+            // Act
+            var actionResult = await _orderDetailController.GetOrderDetail(userId, orderDetailId);
+
+            var okActionResult = actionResult.Result as OkObjectResult;
+            var badrequestActionResult = actionResult.Result as BadRequestObjectResult;
+
+            ShowedOrderDetailDTO okData = okActionResult?.Value as ShowedOrderDetailDTO;
+            string badrequestData = badrequestActionResult?.Value as string;
+
+            // Assert
+            Assert.Null(okData);
+
+            Assert.NotNull(badrequestData);
         }
 
 
         [Fact]
         public async void CreateOrderDetail_WithParams_Ok_String()
         {
-            // Arrange
             string userId = "05235465-f941-4e00-98bb-5306da1de482";
-            List<OrderDetailDTO> orderDetailDTOs = MockData_OrderDetail.GetListOrderDetailDTO();
+            // Arrange
             // Setup for OrderRepository
+            List<OrderDetailDTO> orderDetailDTOs = MockData_OrderDetail.GetListOrderDetailDTO();
             Order order = MockData_OrderDetail.GetListOrder().ElementAt(0);
             _orderRepository.Setup(_ => _.GetOrder(userId)).ReturnsAsync(order);
             // Setup for CartRepository
@@ -130,8 +165,10 @@ namespace ECommerce.TestBackendAPI
 
             // Act
             var actionResult = await _orderDetailController.CreateOrderDetail(userId, orderDetailDTOs);
+
             var okActionResult = actionResult as OkObjectResult;
             var badrequestActionResult = actionResult as BadRequestObjectResult;
+
             string okData = okActionResult?.Value as string;
             string badrequestData = badrequestActionResult?.Value as string;
 
@@ -140,6 +177,46 @@ namespace ECommerce.TestBackendAPI
             Assert.Null(badrequestData);
             // Attention: If I change the return string inside this logic, this test is failed
             Assert.Equal(okData, "Order sucessfully!");
+        }
+
+        [Fact]
+        public async void CreateOrderDetail_WithParams_BadRequest_String()
+        {
+            string userId = "05235465-f941-4e00-98bb-5306da1de482";
+            // Arrange
+            // Setup for OrderRepository
+            List<OrderDetailDTO> orderDetailDTOs = MockData_OrderDetail.GetListOrderDetailDTO();
+            Order order = MockData_OrderDetail.GetListOrder().ElementAt(0);
+            _orderRepository.Setup(_ => _.GetOrder(userId)).ReturnsAsync(order);
+            // Setup for CartRepository
+            Cart cart = MockData_CartDetail.GetListCart().ElementAt(0);
+            _cartRepository.Setup(_ => _.GetCart(userId)).ReturnsAsync(cart);
+            // Setup for ProductRepository and CartDetailRepository
+            List<CartDetail> cartDetails = MockData_CartDetail.GetListCartDetail(cart);
+            for (int i = 0; i < orderDetailDTOs.Count; i++)
+            {
+                // Here, I setted up that:
+                // + In orderDetailDTOs, there are only 2 orderDetailDTO: { productId: 1, number: 1 } and { productId: 2, number: 2 }
+                // + In cartDetails, there are also only 2 CartDetail:
+                //   { Id: 1, ... , product: { productId: 1, ...}, ... , number: 1 }
+                //   { Id: 2, ... , product: { productId: 2, ...}, ... , number: 2 }
+                // So It's Ok to think that all of orderDetailDTOs are already in cartDetails
+                _productRepository.Setup(_ => _.GetProductById(orderDetailDTOs[i].productId)).ReturnsAsync(cartDetails[i].Product);
+                _cartDetailRepository.Setup(_ => _.GetCartDetail(cart.Id, orderDetailDTOs[i].productId)).ReturnsAsync((CartDetail)null);
+            }
+
+            // Act
+            var actionResult = await _orderDetailController.CreateOrderDetail(userId, orderDetailDTOs);
+
+            var okActionResult = actionResult as OkObjectResult;
+            var badrequestActionResult = actionResult as BadRequestObjectResult;
+
+            string okData = okActionResult?.Value as string;
+            string badrequestData = badrequestActionResult?.Value as string;
+
+            // Assert
+            Assert.Null(okData);
+            Assert.NotNull(badrequestData);
         }
 
 
@@ -162,8 +239,10 @@ namespace ECommerce.TestBackendAPI
 
             // Act
             var actionResult = await _orderDetailController.UpdateOrderDetail(userId, orderDetailId, reviewOrderDetailDTO);
+
             var okActionResult = actionResult as OkObjectResult;
             var badrequestResult = actionResult as BadRequestObjectResult;
+
             string okData = okActionResult?.Value as string;
             string badrequestData = badrequestResult?.Value as string;
 
@@ -171,6 +250,37 @@ namespace ECommerce.TestBackendAPI
             Assert.NotNull(okData);
             Assert.Null(badrequestData);
             Assert.Equal(okData, "Update OrderDetail sucessfully");
+        }
+
+        [Fact]
+        public async void UpdateOrderDetail_WithParams_BadRequest_String()
+        {
+            // Arrange
+            string userId = "05235465-f941-4e00-98bb-5306da1de482";
+            int orderDetailId = 1;
+            ReviewOrderDetailDTO reviewOrderDetailDTO = new ReviewOrderDetailDTO
+            {
+                comment = "This is just a test comment",
+                rating = 5
+            };
+            // Setup for OrderDetailRepository
+            Order order = MockData_OrderDetail.GetListOrder().ElementAt(0);
+            OrderDetail orderDetail = MockData_OrderDetail.GetListOrderDetail(order).ElementAt(0);
+            _orderDetailRepository.Setup(_ => _.GetOrderDetail(orderDetailId)).ReturnsAsync((OrderDetail)null);
+            //_orderDetailRepository.Setup(_ => _.UpdateOrderDetail(orderDetail));
+
+            // Act
+            var actionResult = await _orderDetailController.UpdateOrderDetail(userId, orderDetailId, reviewOrderDetailDTO);
+
+            var okActionResult = actionResult as OkObjectResult;
+            var badrequestResult = actionResult as BadRequestObjectResult;
+
+            string okData = okActionResult?.Value as string;
+            string badrequestData = badrequestResult?.Value as string;
+
+            // Assert
+            Assert.Null(okData);
+            Assert.NotNull(badrequestData);
         }
     }
 }

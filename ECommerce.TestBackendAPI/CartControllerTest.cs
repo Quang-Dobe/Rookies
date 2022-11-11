@@ -6,6 +6,7 @@ using ECommerce.Data.Model;
 using ECommerce.SharedView.DTO;
 using ECommerce.TestBackendAPI.MockData;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Moq;
 
 namespace ECommerce.TestBackendAPI
@@ -36,10 +37,9 @@ namespace ECommerce.TestBackendAPI
         [Fact]
         public async void CreateCart_WithParams_Ok_String()
         {
-            // Arrange
             string userId = "05235465-f941-4e00-98bb-5306da1de482";
+            // Arrange
             // Setup for CartRepository
-            //Cart cart = MockData_CartDetail.GetListCart().ElementAt(0);
             _cartRepository.Setup(_ => _.CreateCart(userId));
             _cartRepository.Setup(_ => _.Save());
 
@@ -57,29 +57,60 @@ namespace ECommerce.TestBackendAPI
         [Fact]
         public async void GetCartByUserId_WithParams_Ok_CartDTO()
         {
-            // Arrange
             string userId = "05235465-f941-4e00-98bb-5306da1de482";
+            // Arrange
             // Setup for CartRepository
             Cart cart = MockData_CartDetail.GetListCart().ElementAt(0);
             _cartRepository.Setup(_ => _.GetCart(userId)).ReturnsAsync(cart);
 
             // Act
             var actionResult = await _cartController.GetCartByUserId(userId);
+
             var okActionResult = actionResult.Result as OkObjectResult;
-            CartDTO data = okActionResult?.Value as CartDTO;
+            var badrequestActionResult = actionResult.Result as BadRequestObjectResult;
+
+            CartDTO okData = okActionResult?.Value as CartDTO;
+            var badrequestData = badrequestActionResult?.Value;
 
             // Assert
-            Assert.NotNull(data);
-            Assert.Equal(data.userId, userId);
-            Assert.Equal(data.total, cart.Total);
+            Assert.NotNull(okData);
+            Assert.Equal(okData.userId, userId);
+            Assert.Equal(okData.total, cart.Total);
+
+            Assert.Null(badrequestData);
+        }
+
+
+        [Fact]
+        public async void GetCartByUserId_WithParams_BadRequest_CartDTO()
+        {
+            string userId = "Invalid";
+            // Arrange
+            // Setup for CartRepository
+            _cartRepository.Setup(_ => _.GetCart(userId)).ReturnsAsync((Cart)null);
+
+            // Act
+            var actionResult = await _cartController.GetCartByUserId(userId);
+
+            var okActionResult = actionResult.Result as OkObjectResult;
+            var badrequestActionResult = actionResult.Result as BadRequestObjectResult;
+
+            CartDTO okData = okActionResult?.Value as CartDTO;
+            var badrequestData = badrequestActionResult?.Value;
+
+            // Assert
+            Assert.Null(okData);
+
+            Assert.NotNull(badrequestData);
+            Assert.Equal(badrequestData, "Invalid userId");
         }
 
 
         [Fact]
         public async void DeleteCart_WithParams_Ok_String()
         {
-            // Arrange
             string userId = "05235465-f941-4e00-98bb-5306da1de482";
+            // Arrange
             // Setup for CartRepository
             Cart cart = MockData_CartDetail.GetListCart().ElementAt(0);
             _cartRepository.Setup(_ => _.GetCart(userId)).ReturnsAsync(cart);
@@ -88,12 +119,46 @@ namespace ECommerce.TestBackendAPI
 
             // Act
             var actionResult = await _cartController.DeleteCart(userId);
+
             var okActionResult = actionResult as OkObjectResult;
+            var badrequestActionResult = actionResult as BadRequestObjectResult;
+
             string okData = okActionResult?.Value as string;
+            string badrequestData = badrequestActionResult?.Value as string;
 
             // Assert
             Assert.NotNull(okData);
             Assert.Equal(okData, "Delete sucessfully");
+
+            Assert.Null(badrequestData);
+        }
+
+
+        [Fact]
+        public async void DeleteCart_WithParams_BadRequest_String()
+        {
+            string userId = "05235465-f941-4e00-98bb-5306da1de482";
+            // Arrange
+            // Setup for CartRepository
+            Cart cart = MockData_CartDetail.GetListCart().ElementAt(0);
+            _cartRepository.Setup(_ => _.GetCart(userId)).ReturnsAsync((Cart)null);
+            _cartRepository.Setup(_ => _.DeleteCart(cart));
+            _cartRepository.Setup(_ => _.Save());
+
+            // Act
+            var actionResult = await _cartController.DeleteCart(userId);
+
+            var okActionResult = actionResult as OkObjectResult;
+            var badrequestActionResult = actionResult as BadRequestObjectResult;
+
+            string okData = okActionResult?.Value as string;
+            string badrequestData = badrequestActionResult?.Value as string;
+
+            // Assert
+            Assert.Null(okData);
+
+            Assert.NotNull(badrequestData);
+            Assert.Equal(badrequestData, "Invalid userId");
         }
     }
 }
