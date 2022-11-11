@@ -20,7 +20,7 @@ ChartJS.register(
 )
 
 
-function BarChart({ title, labelsProp, dataProp }){
+function BarChart({ title, labelsProp, dataProp, label }){
     const options = React.useMemo(() => ({
         responsive: true,
         maintainAspectRatio: false,
@@ -41,7 +41,7 @@ function BarChart({ title, labelsProp, dataProp }){
         labels: labelsProp,
         datasets: [
             {
-                label: "Dataset 1",
+                label: label,
                 data: dataProp,
                 backgroundColor: `#${Math.floor(Math.random()*16777215).toString(16)}`
             }

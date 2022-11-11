@@ -22,12 +22,12 @@ ChartJS.register(
 )
 
 
-function LineChart({ title, labelsProp, dataProp }) {
+function LineChart({ title, labelsProp, dataProp, label }) {
     var data = {
         labels: labelsProp,
         datasets: [
             {
-                label: "Dataset 1",
+                label: label,
                 data: dataProp,
                 borderColor: `#${Math.floor(Math.random()*16777215).toString(16)}`,
                 backgroundColor: `#${Math.floor(Math.random()*16777215).toString(16)}`

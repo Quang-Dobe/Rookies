@@ -32,7 +32,7 @@ namespace ECommerce.BackendAPI.Repository
 
         public async Task<IdentityUser> GetUserByEmail(string userEmail)
         {
-            return await eCommerceDBContext.Users.FirstAsync();
+            return await eCommerceDBContext.Users.FirstAsync(x => x.Email == userEmail);
         }
 
         public async Task CreateUser(IdentityUser identityUser)

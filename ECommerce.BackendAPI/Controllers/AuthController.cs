@@ -168,6 +168,7 @@ namespace ECommerce.BackendAPI.Controllers
             return Unauthorized("Invalid account");
         }
 
+
         [HttpPost]
         public async Task<ActionResult> Register([FromBody] RegisterRequestDTO registerRequestModel)
         {
@@ -184,7 +185,7 @@ namespace ECommerce.BackendAPI.Controllers
                     //await roleManager.CreateAsync(new IdentityRole("Admin"));
 
                     // Get IdentityRole from RoleName in Table ASPNetRole
-                    var adminRole = roleManager.FindByNameAsync("Admin").Result;
+                    var adminRole = roleManager.FindByNameAsync("User").Result;
                     // Create Role-User for user when registering
                     if (adminRole != null)
                     {

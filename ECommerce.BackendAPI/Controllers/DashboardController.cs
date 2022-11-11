@@ -27,7 +27,7 @@ namespace ECommerce.BackendAPI.Controllers
 
         [HttpGet]
         [EnableCors("_myAdminSite")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<TotalOrderInCategoryDTO>>> OrderByOrderAndCart()
         {
             try
@@ -57,7 +57,7 @@ namespace ECommerce.BackendAPI.Controllers
 
         [HttpGet]
         [EnableCors("_myAdminSite")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<int>>> TotalInThreeDays()
         {
             try
@@ -66,6 +66,7 @@ namespace ECommerce.BackendAPI.Controllers
                 result.Add(await _orderDetailRepository.GetTotalByDate(DateTime.Today.AddDays(-1)));
                 result.Add(await _orderDetailRepository.GetTotalByDate(DateTime.Today.AddDays(-2)));
                 result.Add(await _orderDetailRepository.GetTotalByDate(DateTime.Today.AddDays(-3)));
+                result.Reverse();
                 return Ok(result);
             }
             catch(Exception ex)
@@ -77,7 +78,7 @@ namespace ECommerce.BackendAPI.Controllers
 
         [HttpGet]
         [EnableCors("_myAdminSite")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<int>>> OrderInThreeDays()
         {
             try
@@ -86,6 +87,7 @@ namespace ECommerce.BackendAPI.Controllers
                 result.Add(await _orderDetailRepository.GetTotalOrderByDate(DateTime.Today.AddDays(-1)));
                 result.Add(await _orderDetailRepository.GetTotalOrderByDate(DateTime.Today.AddDays(-2)));
                 result.Add(await _orderDetailRepository.GetTotalOrderByDate(DateTime.Today.AddDays(-3)));
+                result.Reverse();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -97,7 +99,7 @@ namespace ECommerce.BackendAPI.Controllers
 
         [HttpGet]
         [EnableCors("_myAdminSite")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<TotalInCategoryDTO>>> TotalOfEachCategory()
         {
             try

@@ -103,6 +103,7 @@ function Dashboard(){
                         title="Product purchase rate of each category" 
                         labelsProp={barChart.reduce((init, current) => [...init, current.categoryName], [])}
                         dataProp={barChart.reduce((init, current) => [...init, current.total], [])}
+                        label="Category Type"
                     />
                 </Box>
 
@@ -134,6 +135,7 @@ function Dashboard(){
                         title="Revenue in the last 3 days"
                         labelsProp={["3 days ago", "2 days ago", "Yesterday"]}
                         dataProp={lineChart1}
+                        label="Revenue"
                     />
                 </Box>
 
@@ -147,6 +149,7 @@ function Dashboard(){
                         title="Number of orders in the last 3 days"
                         labelsProp={["3 days ago", "2 days ago", "Yesterday"]}
                         dataProp={lineChart2}
+                        label="Number of orders"
                     />
                 </Box>
             </Box>
